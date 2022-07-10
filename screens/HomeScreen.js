@@ -2,7 +2,7 @@ import { View, Text, Dimensions, Image, Pressable, TextInput, ScrollView } from 
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 const window = Dimensions.get("window");
-const HomeScreen = () => {
+const Homescreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState({ window });
 
   useEffect(() => {
@@ -36,4 +36,4 @@ background: 'radial-gradient(circle, rgba(0,204,187,1) 0%, rgba(6,182,212,1) 100
   );
 };
 
-export default HomeScreen;
+export default Homescreen;

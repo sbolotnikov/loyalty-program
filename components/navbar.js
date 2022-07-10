@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import React from 'react';
 import Svg, { Path, Polygon, G } from 'react-native-svg';
 const Navbar = ({ textSize, size1, color, names }) => {
@@ -20,7 +20,9 @@ const Navbar = ({ textSize, size1, color, names }) => {
       style={{ margin: 'auto' }}
     >
        {names.map((item, key) => {
-        return <View key={key} className="flex justify-center items-center relative flex-wrap mt-1">
+        return <Pressable key={key} className="flex justify-center items-center relative flex-wrap mt-1" onPress={() =>
+        navigation.navigate(item.link, )
+      }>
           <Svg
             xmlns="http://www.w3.org/2000/svg"
             fill={color}
@@ -39,7 +41,7 @@ const Navbar = ({ textSize, size1, color, names }) => {
           >
             {item.title}
           </Text>
-        </View>;
+        </Pressable>;
       })}
     </View>
   );

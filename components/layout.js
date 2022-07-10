@@ -55,8 +55,6 @@ const Layout = ({ children }) => {
     setVisNav(!visNav);
   };
  
-
-
       const array = [
         {
           svgPath: [
@@ -70,6 +68,7 @@ const Layout = ({ children }) => {
           svgPolygon:[],
           svgG:"",
           title: 'Activity',
+          link:"activity",
         },
         {
             svgPath: [
@@ -80,6 +79,7 @@ const Layout = ({ children }) => {
             svgPolygon:[],
             svgG:"",
             title: 'Calendar',
+            link: "calendar",
           },
           {
             svgPath: [
@@ -92,6 +92,7 @@ const Layout = ({ children }) => {
             ],
             svgG:"",
             title: 'Home',
+            link: "home",
           },
           {
             svgPath: [
@@ -118,6 +119,7 @@ const Layout = ({ children }) => {
             svgPolygon:[],
             svgG:"translate(0.000000,511.000000) scale(0.100000,-0.100000)",
             title: 'Get Stars',
+            link: "getstars",
           },
           {
             svgPath: [
@@ -131,6 +133,7 @@ const Layout = ({ children }) => {
             svgPolygon:[],
             svgG:"translate(0.000000,511.000000) scale(0.100000,-0.100000)",
             title: 'Use Stars',
+            link:'usestars',
           },
       ];
 
