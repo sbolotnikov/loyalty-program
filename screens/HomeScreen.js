@@ -1,19 +1,20 @@
-import { View, Text, Dimensions, Image, Pressable, TextInput, ScrollView } from 'react-native';
+import { View, Text, Dimensions, Image, Pressable, Button} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout';
+import { useNavigation } from '@react-navigation/native';
 const window = Dimensions.get("window");
-const Homescreen = ({ navigation }) => {
+const Homescreen = () => {
   const [dimensions, setDimensions] = useState({ window });
-
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener(
-      "change",
-      ({ window, screen }) => {
-        setDimensions({ window, screen });
-      }
-    );
-    return () => subscription?.remove();
-  });
+  const navigation = useNavigation();
+  // useEffect(() => {
+  //   const subscription = Dimensions.addEventListener(
+  //     "change",
+  //     ({ window }) => {
+  //       setDimensions({ window });
+  //     }
+  //   );
+  //   return () => subscription?.remove();
+  // });
     
   return (
     <Layout > 
@@ -28,10 +29,14 @@ background: 'radial-gradient(circle, rgba(0,204,187,1) 0%, rgba(6,182,212,1) 100
           <Text className="text-bold text-xl">
             Home
           </Text>
+          <Button
+      title="Go to Jane's profile"
+      onPress={() =>
+        navigation.navigate('Calendar',)
+      }
+    />
         </View>
-       
-        {/* Body */}
-       
+
     </Layout>
   );
 };

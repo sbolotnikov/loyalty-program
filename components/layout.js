@@ -68,7 +68,7 @@ const Layout = ({ children }) => {
           svgPolygon:[],
           svgG:"",
           title: 'Activity',
-          link:"activity",
+          link:"Activity",
         },
         {
             svgPath: [
@@ -79,7 +79,7 @@ const Layout = ({ children }) => {
             svgPolygon:[],
             svgG:"",
             title: 'Calendar',
-            link: "calendar",
+            link: "Calendar",
           },
           {
             svgPath: [
@@ -92,7 +92,7 @@ const Layout = ({ children }) => {
             ],
             svgG:"",
             title: 'Home',
-            link: "home",
+            link: "Home",
           },
           {
             svgPath: [
@@ -119,7 +119,7 @@ const Layout = ({ children }) => {
             svgPolygon:[],
             svgG:"translate(0.000000,511.000000) scale(0.100000,-0.100000)",
             title: 'Get Stars',
-            link: "getstars",
+            link: "Getstars",
           },
           {
             svgPath: [
@@ -133,7 +133,7 @@ const Layout = ({ children }) => {
             svgPolygon:[],
             svgG:"translate(0.000000,511.000000) scale(0.100000,-0.100000)",
             title: 'Use Stars',
-            link:'usestars',
+            link:'Usestars',
           },
       ];
 
