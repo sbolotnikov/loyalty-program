@@ -1,25 +1,19 @@
-import { View, Text, Image } from 'react-native';
-import React from 'react';
+import { View, Text, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout';
-
+import { useNavigation } from '@react-navigation/native';
 const Activityscreen = () => {
+  const navigation = useNavigation();
+
   return (
     <Layout>
-      <View
-        className=" w-full flex justify-center items-center"
-        style={{
-          background: 'rgb(0,204,187)',
 
-        }}
-      >
-        <Image
-          source={require('../assets/icon.png')}
-          className="h-7 w-7 bg-gray-300 p-4 rounded-full"
-        />
-        <Text className="text-bold text-xl">ActivityScreen</Text>
-      </View>
+          <Image
+            source={require('../assets/icon.png')}
+            className="h-7 w-7 bg-gray-300 p-4 rounded-full"
+          />
+          <Text className="text-bold text-xl">Activity Screen</Text>
 
-      {/* Body */}
     </Layout>
   );
 };
