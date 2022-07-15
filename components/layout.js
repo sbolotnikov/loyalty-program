@@ -18,7 +18,7 @@ import Burger from './svg/burger';
 import Navbar from './navbar';
 
 const Layout = ({ children }) => {
-  const [visNav, setVisNav] = useState(false);
+  const [visNav, setVisNav] = useState(true);
   const [size1, setSize] = useState(0);
   const [textSize, setTextSize] = useState(0);
   const screen = Dimensions.get('screen');
@@ -213,10 +213,10 @@ const Layout = ({ children }) => {
             style={{ transform: 'translate(-50%, -50%)' }}
           >
             <Pressable
-              className="bg-slate-200 rounded-t-full flex justify-center items-center"
+              className=" flex justify-center items-center relative"
               onPress={onPressFunction}
             >
-              <Burger status={!visNav} color={'#00CCBB'} />
+              <Burger status={!visNav} color={'#00CCBB'}/>
             </Pressable>
           </View>
           <View

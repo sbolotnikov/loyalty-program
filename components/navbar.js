@@ -22,7 +22,7 @@ const Navbar = ({ textSize, size1, color, names }) => {
     >
        {names.map((item, key) => {
         return <Pressable key={key} className="flex justify-center items-center relative flex-wrap mt-1" onPress={() =>
-        navigation.navigate(item.link,{name:item.title})
+        navigation.navigate(item.link,)
       }>
           <Svg
             xmlns="http://www.w3.org/2000/svg"

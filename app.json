@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/dancerslogo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "host.exp.exponent"
     },
     "web": {
       "favicon": "./assets/dancerslogo.png"
