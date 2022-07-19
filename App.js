@@ -1,4 +1,3 @@
-import { TailwindProvider } from 'tailwindcss-react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import { store } from './store';
@@ -10,7 +9,6 @@ import StackNavigator from './StackNavigator';
 
 export default function App() {
   return (
-    <TailwindProvider>
       <NavigationContainer>
         <Provider store={store}>
           <AuthProvider>
@@ -18,6 +16,5 @@ export default function App() {
           </AuthProvider>
         </Provider>
       </NavigationContainer>
-    </TailwindProvider>
   );
 }

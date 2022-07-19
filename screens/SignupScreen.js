@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth';
 import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
 import validateEmail from '../util/functions';
-
+import tw from 'twrnc';
 const SignupScreen = () => {
   const navigation = useNavigation();
   const [error, setError] = useState('');
@@ -31,16 +31,16 @@ const SignupScreen = () => {
     if (validateEmail(email)) {
       if (pwd.length < 6) setError('Password should be at least 6 characters');
       else if (pwd == pwd2) {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, pwd)
-          .then(() => {
-            navigation.replace('Login');
-          })
-          .catch((error) => {
-            setError(error.message);
-            // ..
-          });
+        // firebase
+        //   .auth()
+        //   .createUserWithEmailAndPassword(email, pwd)
+        //   .then(() => {
+        //     navigation.replace('Login');
+        //   })
+        //   .catch((error) => {
+        //     setError(error.message);
+        //     // ..
+        //   });
       } else {
         setError('Passwords are different!');
       }
@@ -49,11 +49,11 @@ const SignupScreen = () => {
     }
   }
   return (
-    <Layout>
-      <View className="max-w-[800px] w-full justify-center items-center">
-        <Text className="text-4xl font-extrabold mb-5">Sign In</Text>
-        <Text className="text-red-600 text-xl">{error?error:""}</Text>
-        <Text className="text-yellow-400 text-xl">{message?message:""}</Text>
+     <Layout>
+      <View style={tw`max-w-[800px] w-full justify-center items-center`}>
+        <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>Sign Up</Text>
+        <Text style={tw`text-red-600 text-xl ${error?'flex':'hidden'}`}>{error?error:""}</Text>
+        <Text style={tw`text-yellow-400 text-xl ${message?'flex':'hidden'}`}>{message?message:""}</Text>
         <TextBox
           placeholder="Email Address"
           onChangeText={(text) => handleChange(text, 'email')}
@@ -68,18 +68,11 @@ const SignupScreen = () => {
           secureTextEntry={true}
           onChangeText={(text) => handleChange(text, 'pwd2')}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '92%',
-          }}
-        >
+        <View style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}>
           <Btn
             onClick={() => SignUp()}
             title="Sign Up"
-            style={{ width: '48%' }}
+            style={{ width: '48%', backgroundColor: '#0B3270' }}
           />
           <Btn
             onClick={() => navigation.replace('Login')}
@@ -88,8 +81,9 @@ const SignupScreen = () => {
           />
         </View>
       </View>
-    </Layout>
+     </Layout>
   );
 };
 
 export default SignupScreen;
+

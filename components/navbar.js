@@ -2,43 +2,21 @@ import { View, Text, Pressable } from 'react-native';
 import React from 'react';
 import Svg, { Path, Polygon, G } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
+import tw from 'twrnc';
+import ShowIcon from './svg/showIcon';
 const Navbar = ({ textSize, size1, color, names }) => {
     const navigation = useNavigation();
-  const mappingPaths = (paths) => {
-    return paths.map((d, key1) => <Path d={d} key={`path` + key1} />);
-  };
-  const mappingPoly = (polygons) => {
-    return polygons.length > 0
-      ? polygons.map((points, key2) => (
-          <Polygon points={points} key={'poly' + key2} />
-        ))
-      : '';
-  };
-
   return (
     <View
-      className="flex-row justify-around w-full max-w-6xl"
-      style={{ margin: 'auto' }}
+      style={tw.style(`flex-row justify-around w-full max-w-6xl`,{ margin: 'auto' })}
     >
        {names.map((item, key) => {
-        return <Pressable key={key} className="flex justify-center items-center relative flex-wrap mt-1" onPress={() =>
+        return <Pressable key={key} style={tw`flex justify-center items-center relative flex-wrap mt-1`} onPress={() =>
         navigation.navigate(item.link,)
       }>
-          <Svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill={color}
-            width={size1}
-            height={size1}
-            viewBox="0 0 1000 1000"
-          >
-           
-            <G transform={item.svgG}>
-            {mappingPaths(item.svgPath)}
-            {mappingPoly(item.svgPolygon)}
-            </G>
-          </Svg>
+          <ShowIcon icon={item.title} color={color} width={size1} height={size1}/>
           <Text
-            className={`font-extrabold text-${textSize} text-navMain text-center`}
+            style={tw`font-extrabold text-${textSize} text-[${color}] text-center`}
           >
             {item.title}
           </Text>

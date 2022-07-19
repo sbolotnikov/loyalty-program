@@ -1,22 +1,66 @@
-import { View, } from 'react-native';
-import React from 'react';
-import Svg, { Path, G } from "react-native-svg";
-
-function Burger({status, color}) {
-
-    
+import { View, Animated, Easing } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Svg, { Path, G } from 'react-native-svg';
+import tw from 'twrnc';
+function Burger({ status, color }) {
+  const [rotateValue, setRotateValue] = useState(new Animated.Value(0));
+  useEffect(() => {
+    Animated.timing(rotateValue, {
+      toValue: status ? 1 : 0,
+      duration: 300,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: false,
+    }).start();
+ 
+  }, [status]);
+  const rotateData = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '45deg'],
+  });
+  const rotateData2 = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '-45deg'],
+  });
+  const middleBar = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 40],
+  });
+  const changeX = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -10],
+  });
+  const changeY = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 8],
+  });
+  const changeY2 = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
   return (
-    <View className="absolute top-0 left-0 bg-slate-200 rounded-t-full" style={{ transform: 'translate(-50%, -50%)' }}>  
-    <View id="containerSVG" className="relative h-10 w-10 m-4 overflow-hidden " >
-                  <Svg id="topbar"
-            className={`h-10 w-10 absolute top-0 left-0 transition duration-300 ease-in-out origin-top-left ${status?"rotate-45 translate-x-1 translate-y-4":""}`}
+    <View
+      style={tw.style(`absolute top-0 left-0 bg-white rounded-t-full`, {
+        transform: [{ translateX: -18 }, { translateY: -18 }],
+      })}
+    >
+      <View
+        id="containerSVG"
+        style={tw`relative h-9 w-9  m-4  overflow-hidden `}
+      >
+        <Animated.View style={tw.style(`h-9 w-9 absolute top-0 left-0`, 
+        { transform: [{ rotate: rotateData }],
+            top: changeY,
+            left:changeX
+          })}>
+          <Svg
+            id="topbar"
+            style={tw.style(`h-9 w-9`)}
             viewBox="0 0 70 70"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style={{transitionTimingFunction: 'ease-in-out', transitionDuration: '600ms'}}
           >
-            <G >
-              <Path            
+            <G>
+              <Path
                 d="M5 13H65.5"
                 stroke={color}
                 strokeWidth="8"
@@ -24,36 +68,40 @@ function Burger({status, color}) {
               />
             </G>
           </Svg>
-          <Svg id="middlebar"
-            className={`h-10 w-10  absolute top-0 left-0 transition duration-300 ease-in-out ${status?" translate-x-14 translate-y-2":""}`}
+        </Animated.View>
+        <Animated.View style={tw.style(`h-9 w-9 absolute top-0`, 
+        {left: middleBar })}>
+          <Svg
+            id="middlebar"
+            style={tw.style(`h-9 w-9`)}
             viewBox="0 0 70 70"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style={{transitionTimingFunction: 'ease-in-out', transitionDuration: '600ms'}}
           >
             <G>
-
               <Path
-                
                 d="M5 35H65.5"
                 stroke={color}
                 strokeWidth="8"
                 strokeLinecap="round"
               />
-
             </G>
           </Svg>
-          <Svg  id="bottombar"
-            className={`h-10 w-10 absolute top-0 left-0 transition duration-300 ease-in-out origin-bottom-left ${status?"-rotate-45 -translate-x-1 -translate-y-2":""}`}
+        </Animated.View>
+        <Animated.View style={tw.style(`h-9 w-9 absolute top-0 left-0 `, 
+        {transform: [{ rotate: rotateData2 }],
+            top: changeY2,
+            left:changeX
+          })}>
+          <Svg
+            id="bottombar"
+            style={tw.style(`h-9 w-9`)}
             viewBox="0 0 70 70"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style={{transitionTimingFunction: 'ease-in-out', transitionDuration: '600ms'}}
           >
             <G>
-
               <Path
-               
                 d="M5 57H65.5"
                 stroke={color}
                 strokeWidth="8"
@@ -61,9 +109,10 @@ function Burger({status, color}) {
               />
             </G>
           </Svg>
+        </Animated.View>
+      </View>
     </View>
-    </View>
-  )
+  );
 }
 
-export default Burger
+export default Burger;

@@ -7,7 +7,7 @@ const Calendarscreen = () => {
 
   return (
     <Layout>
-          <Text className="text-bold text-xl">Calendar Screen</Text>
+          <Text style={tw`text-bold text-xl`}>Calendar Screen</Text>
           {/* Body */}
     </Layout>
   );

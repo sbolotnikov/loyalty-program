@@ -1,8 +1,9 @@
-import React from 'react'
-import {View, TextInput} from "react-native"
 
+import React from 'react'
+import {View, TextInput, StyleSheet} from "react-native"
+import tw from 'twrnc';
 export default function TextBox(props){
-    return <View className="h-11 w-[92%]  mt-5">
-        <TextInput  className="h-11 mt-0 border rounded-full border-[#0B3270] pl-4 w-full" {...props} />
+    return <View style={tw`h-11 w-[92%] rounded-full mt-5 bg-white justify-center items-start`}>
+        <TextInput style={tw`mt-0 h-11 pl-3 w-full rounded-full border-2 border-[#C9AB78]`} {...props} />
     </View>
 }

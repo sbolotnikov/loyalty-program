@@ -10,9 +10,9 @@ const Activityscreen = () => {
 
           <Image
             source={require('../assets/icon.png')}
-            className="h-7 w-7 bg-gray-300 p-4 rounded-full"
+            style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
           />
-          <Text className="text-bold text-xl">Activity Screen</Text>
+          <Text style={tw`text-bold text-xl`}>Activity Screen</Text>
 
     </Layout>
   );

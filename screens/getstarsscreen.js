@@ -6,7 +6,7 @@ const Getstarsscreen = () => {
   return (
     <Layout>
   
-      <Text className="text-bold text-xl">GetStarsScreen</Text>
+      <Text style={tw`text-bold text-xl`}>GetStarsScreen</Text>
 
   </Layout>
 

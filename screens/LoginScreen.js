@@ -1,4 +1,4 @@
-import { View, Text, Button, Image } from 'react-native';
+import { View, Text, Button, Image, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth';
 import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
 import validateEmail from '../util/functions';
-
+import tw from 'twrnc';
 const LoginScreen = () => {
   const { signInWithGoogle } = useAuth();
   const [error, setError] = useState('');
@@ -32,14 +32,14 @@ const LoginScreen = () => {
     if (validateEmail(email)) {
       if (pwd.length < 6) setError('Password should be at least 6 characters');
       else {
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(email, pwd)
-          .then(() => {})
-          .catch((error) => {
-            setError(error.message);
-            // ..
-          });
+        // firebase
+        //   .auth()
+        //   .signInWithEmailAndPassword(email, pwd)
+        //   .then(() => {})
+        //   .catch((error) => {
+        //     setError(error.message);
+            
+        //   });
       }
     } else {
       setError('Enter valid email');
@@ -47,10 +47,10 @@ const LoginScreen = () => {
   }
   return (
     <Layout>
-      <View className="max-w-[800px] w-full justify-center items-center">
-        <Text className="text-4xl font-extrabold mb-5">Login</Text>
-        <Text className="text-red-600 text-xl">{error?error:""}</Text>
-        <Text className="text-yellow-400 text-xl">{message?message:""}</Text>
+      <View style={tw`max-w-[800px] w-full justify-center items-center`}>
+        <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>Login</Text>
+        <Text style={tw`text-red-600 text-xl ${error?'flex':'hidden'}`}>{error?error:""}</Text>
+        <Text style={tw`text-yellow-400 text-xl ${message?'flex':'hidden'}`}>{message?message:""}</Text>
 
         <TextBox
           placeholder="Email Address"
@@ -61,8 +61,8 @@ const LoginScreen = () => {
           onChangeText={(text) => handleChange(text, 'pwd')}
           secureTextEntry={true}
         />
-        <View className="flex-row justify-around items-center flex-wrap w-[92%]">
-          <Btn onClick={() => login()} title="Login" style={{ width: '48%' }} />
+        <View style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}>
+          <Btn onClick={() => login()} title="Login" style={{ width: '48%', backgroundColor: '#0B3270' }} />
           <Btn
             onClick={() => navigation.navigate('Signup')}
             title="Sign Up"
@@ -71,7 +71,7 @@ const LoginScreen = () => {
           <Btn
             onClick={() => signInWithGoogle}
             title="Google"
-            style={{ width: '48%' }}
+            style={{ width: '48%', backgroundColor: '#0B3270' }}
           />
           <Btn
             onClick={() => navigation.navigate('Resetpass')}
@@ -80,7 +80,7 @@ const LoginScreen = () => {
           />
         </View>
       </View>
-    </Layout>
+     </Layout>
   );
 };
 
