@@ -8,6 +8,7 @@ import StackNavigator from './StackNavigator';
 
 
 export default function App() {
+  
   return (
       <NavigationContainer>
         <Provider store={store}>

@@ -1,4 +1,5 @@
-import { View, Text, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, Button } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -7,8 +8,11 @@ import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
 import validateEmail from '../util/functions';
 import tw from 'twrnc';
+
 const LoginScreen = () => {
-  const { signInWithGoogle } = useAuth();
+
+  const { login, signInWithGoogle } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigation = useNavigation();
@@ -27,25 +31,29 @@ const LoginScreen = () => {
     
   }
 
-  function login() {
+  async function submitCredentials(e) {
     const { email, pwd } = values;
+    e.preventDefault();
     if (validateEmail(email)) {
       if (pwd.length < 6) setError('Password should be at least 6 characters');
       else {
-        // firebase
-        //   .auth()
-        //   .signInWithEmailAndPassword(email, pwd)
-        //   .then(() => {})
-        //   .catch((error) => {
-        //     setError(error.message);
-            
-        //   });
+        try {
+          setError('');
+          setLoading(true);
+          await login(email, pwd);
+        } catch(err) {
+          console.log(err)
+          setError('Failed to log in');
+        }
+    
+        setLoading(false);
       }
     } else {
       setError('Enter valid email');
     }
   }
   return (
+    <KeyboardAwareScrollView>
     <Layout>
       <View style={tw`max-w-[800px] w-full justify-center items-center`}>
         <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>Login</Text>
@@ -62,25 +70,33 @@ const LoginScreen = () => {
           secureTextEntry={true}
         />
         <View style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}>
-          <Btn onClick={() => login()} title="Login" style={{ width: '48%', backgroundColor: '#0B3270' }} />
+          <Btn onClick={(e) => submitCredentials(e)} title="Login" style={{ width: '48%', backgroundColor: '#0B3270' }} />
           <Btn
             onClick={() => navigation.navigate('Signup')}
             title="Sign Up"
             style={{ width: '48%', backgroundColor: '#344869' }}
           />
+          <View style={tw`w-[48%] ios:hidden android:hidden`}>
           <Btn
-            onClick={() => signInWithGoogle}
+            onClick={signInWithGoogle}
             title="Google"
-            style={{ width: '48%', backgroundColor: '#0B3270' }}
-          />
+            style={{ width: '100%', backgroundColor: '#0B3270' }}
+          /></View>
           <Btn
             onClick={() => navigation.navigate('Resetpass')}
             title="Forgot Password"
             style={{ width: '48%', backgroundColor: '#344869' }}
           />
+          <Button
+      title="Go to scanner"
+      onPress={() =>
+        navigation.navigate('Scan',)
+      }
+    />
         </View>
       </View>
      </Layout>
+     </KeyboardAwareScrollView>
   );
 };
 

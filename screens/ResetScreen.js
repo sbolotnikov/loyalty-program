@@ -1,6 +1,7 @@
-import { View, Text, Button, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, Text, } from 'react-native';
+import React, { useState } from 'react';
 import Layout from '../components/layout';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import useAuth from '../hooks/useAuth';
 import TextBox from '../components/TextBox';
@@ -8,7 +9,7 @@ import Btn from '../components/Btn';
 import validateEmail from '../util/functions';
 import tw from 'twrnc';
 const ResetScreen = () => {
-
+  const { resetPassword } = useAuth();
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigation = useNavigation();
@@ -26,13 +27,10 @@ const ResetScreen = () => {
     
   }
 
-  function Login() {
+  function submitReset() {
     const { email} = values;
     if (validateEmail(email)) {
-     a
-        firebase
-          .auth()
-          .sendPasswordResetEmail(email)
+      resetPassword(email)
           .then(() => {
             setMessage("Check your email for further instructions");
           })
@@ -46,6 +44,7 @@ const ResetScreen = () => {
     }
   }
   return (
+    <KeyboardAwareScrollView>
     <Layout>
       <View style={tw`max-w-[800px] w-full justify-center items-center`}>
         <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}className="text-4xl font-extrabold mb-5 text-[#0B3270]">Reset Password</Text>
@@ -56,7 +55,7 @@ const ResetScreen = () => {
           onChangeText={(text) => handleChange(text, 'email')}
         />
         <View style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}>
-          <Btn onClick={() => Login()} title="Submit" style={{ width: '48%' }} />
+          <Btn onClick={() => submitReset()} title="Submit" style={{ width: '48%' }} />
           <Btn
             onClick={() => navigation.navigate('Signup')}
             title="Sign Up"
@@ -70,6 +69,7 @@ const ResetScreen = () => {
         </View>
       </View>
     </Layout>
+    </KeyboardAwareScrollView>
   );
 };
 
