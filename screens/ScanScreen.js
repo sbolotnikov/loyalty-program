@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, Platform } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
+
 import Btn from '../components/Btn';
 import Layout from '../components/layout'
 import tw from 'twrnc';
@@ -9,7 +11,7 @@ const ScanScreen = () => {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [text, setText] = useState('Not yet scanned')
-  
+  console.log(Platform.OS)
     const askForCameraPermission = () => {
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -19,7 +21,7 @@ const ScanScreen = () => {
   
     // Request Camera Permission
     useEffect(() => {
-      askForCameraPermission();
+       if (Platform.OS!=='web') askForCameraPermission();
     }, []);
   
     // What happens when we scan the bar code
@@ -30,7 +32,8 @@ const ScanScreen = () => {
     };
   
     // Check permissions and return the screens
-    if (hasPermission === null) {
+    
+    if (Platform.OS!=='web') {if (hasPermission === null) {
       return (
         <View style={styles.container}>
           <Text>Requesting for camera permission</Text>
@@ -43,14 +46,26 @@ const ScanScreen = () => {
           <Button title={'Allow Camera'} onPress={() => askForCameraPermission()} />
         </View>)
     }
-  
+}
     // Return the View
     return (
       <View style={styles.container}>
         <View style={styles.barcodebox}>
-          <BarCodeScanner
+        {(Platform.OS === 'ios'||Platform.OS === 'android') &&<BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={{ height: 400, width: 400 }} />
+            style={{ height: 400, width: 400 }} />}
+        {Platform.OS==='web' && 
+        <BarcodeScannerComponent
+        width={300}
+        height={300}
+        onUpdate={(err, result) => {
+          if (result) {setScanned(true); setText(result.text)}
+          console.log(err)
+        }}
+      />
+        
+        
+       }
         </View>
         <Text style={styles.maintext}>{text}</Text>
   

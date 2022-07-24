@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   
       // The signed-in user info.
       // setCurrentUser(result.user)
-      console.log(result.user);
+      console.log(result);
     }).catch((error) => {
       // Handle Errors here.
       console.log(error.message)
