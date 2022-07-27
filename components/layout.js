@@ -147,7 +147,7 @@ const Layout = ({ children }) => {
 
   return (
     <SafeAreaView
-      style={tw` bg-white pt-5 h-full w-full relative overflow-hidden`}
+      style={tw` bg-white pt-5 h-full w-full relative`}
     >
       {/* Header */}
       <View
@@ -201,7 +201,7 @@ const Layout = ({ children }) => {
             <View
               style={tw`w-full h-[${
                 Dimensions.get('window').height - 56
-              }px] flex justify-center items-center overflow-scroll absolute top-0 left-0`}
+              }px] flex justify-center items-center overflow-auto absolute top-0 left-0`}
             >
               {/* Body */}
               {children}

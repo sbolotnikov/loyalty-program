@@ -3,36 +3,34 @@ import { auth, db, app } from '../firebase';
 import firebase from 'firebase/compat/app';
 const AuthContext = createContext({});
 import { doc, setDoc, getDoc, Timestamp } from "firebase/firestore";
-import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged,sendPasswordResetEmail, signInWithRedirect, GoogleAuthProvider } from "firebase/auth"; 
-// import * as Google from 'expo-auth-session/providers/google';
-// import * as WebBrowser from 'expo-web-browser';
-// WebBrowser.maybeCompleteAuthSession();
+import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged,sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider } from "firebase/auth"; 
+import { Platform } from 'react-native';
+import * as AuthSession from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // const [accessToken, setAccessToken] = useState();
+  const [accessToken, setAccessToken] = useState();
   // const [message, setMessage] = useState();
-  // const [request, response, promptAsync] = Google.useAuthRequest({
-  //   androidClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-  //   iosClientId:process.env.REACT_APP_IOS_CLIENT_ID,
-  //   webClientId:process.env.REACT_APP_CLIENT_ID
-  // });
-  // useEffect(() => {
-  //   setMessage(JSON.stringify(response));
-  //   if (response?.type === "success") {
-  //     setAccessToken(response.authentication.accessToken);
-  //   }
-  // }, [response]);
-  // useEffect(async() => {
-  //   let userInfoResponse = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-  //     headers: { Authorization: `Bearer ${accessToken}`}
-  //   });
-  //   userInfoResponse.json().then(data => {
-  //     console.log(data)
-  //   });
-  // }, [accessToken]);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId:process.env.REACT_APP_GOOGLE_CLIENT_ID,
+    androidClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+    iosClientId:process.env.REACT_APP_IOS_CLIENT_ID,
+    webClientId:process.env.REACT_APP_CLIENT_ID,
+    scopes: ['profile', 'email'],
+    // permissions: ["public_profile", "email", "gender", "location"],
+  });
+  WebBrowser.maybeCompleteAuthSession();
+  useEffect(() => {
+    if (response?.type === 'success') {
+      console.log( response);
+      setCurrentUser(response.user)
+      }
+  }, [response]);
 
   const signup = async (email, password) => {
     try {
@@ -51,18 +49,23 @@ export const AuthProvider = ({ children }) => {
     console.log('in google signin');
 
     const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth,provider)
+    if (Platform.OS!=='web') {
+      promptAsync({useProxy: false, showInRecents: true})
+
+    } else signInWithPopup(auth,provider)
     .then((result) => {
       // This gives you a Google Access Token. You can use it to access Google APIs.
-      // const credential = GoogleAuthProvider.credentialFromResult(result);
-      // const token = credential.accessToken;
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      // const user = result.user;
   
       // The signed-in user info.
-      // setCurrentUser(result.user)
+      setCurrentUser(result.user)
       console.log(result);
     }).catch((error) => {
       // Handle Errors here.
-      console.log(error.message)
+      console.log("error after:",error.message)
       const errorCode = error.code;
       const errorMessage = error.message;
       // The email of the user's account used.

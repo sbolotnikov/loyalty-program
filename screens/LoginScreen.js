@@ -76,7 +76,7 @@ const LoginScreen = () => {
             title="Sign Up"
             style={{ width: '48%', backgroundColor: '#344869' }}
           />
-          <View style={tw`w-[48%] ios:hidden android:hidden`}>
+          <View style={tw`w-[48%] ios:hidden `}>
           <Btn
             onClick={signInWithGoogle}
             title="Google"
