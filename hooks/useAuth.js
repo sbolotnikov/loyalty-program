@@ -3,7 +3,7 @@ import { auth, db, app } from '../firebase';
 import firebase from 'firebase/compat/app';
 const AuthContext = createContext({});
 import { doc, setDoc, getDoc, Timestamp } from "firebase/firestore";
-import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged,sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider } from "firebase/auth"; 
+import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged,sendPasswordResetEmail,updateProfile,updatePassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"; 
 import { Platform } from 'react-native';
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
@@ -109,19 +109,29 @@ export const AuthProvider = ({ children }) => {
     return currentUser.updateEmail(email);
   }
 
-  function updatePassword(password) {
-    return currentUser.updatePassword(password);
+  async function updatePass(password) {
+    return await updatePassword(auth.currentUser, password);
   }
 
   function updateUser(name, url) {
     console.log('setting profile ' + name + url);
-    console.log(currentUser);
-    return currentUser
-      .updateProfile({
-        displayName: name,
-        photoURL: url,
-      })
-      .then(function () {
+    console.log(currentUser.photoURL,url);
+
+    // const storageRef = ref(storage, `images/${uuidv4() + '.png'}`);
+
+
+
+    return updateProfile(auth.currentUser, {
+      displayName: name, photoURL: url
+    }).then(function () {
+      const docRef = doc(db, 'users', currentUser.uid);
+      setDoc(docRef,            
+        {
+          photoURL: url,
+          displayName: name,
+          lastSeen: Timestamp.now(),
+        },
+        { merge: true });
         // Update successful.
       })
       .catch(function (error) {
@@ -131,13 +141,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log(user);
       if (user) {
 
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log('Document data:', docSnap.data().status);
           let userChange={...user, status:docSnap.data().status}
           setCurrentUser(userChange);
           setDoc(docRef,            
@@ -197,9 +205,10 @@ export const AuthProvider = ({ children }) => {
     logout,
     resetPassword,
     updateEmail,
-    updatePassword,
+    updatePass,
     updateUser,
     signInWithGoogle,
+    loading
   };
 
   return (

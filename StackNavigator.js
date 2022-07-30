@@ -15,7 +15,6 @@ import Profilescreen from './screens/Profilescreen';
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
     const {currentUser}=useAuth();
-    console.log("current",currentUser);
   return (
     <Stack.Navigator>
     {currentUser && currentUser.email ? (currentUser.status=="student"?(

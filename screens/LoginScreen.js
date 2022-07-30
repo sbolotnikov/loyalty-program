@@ -12,7 +12,7 @@ import tw from 'twrnc';
 const LoginScreen = () => {
 
   const { login, signInWithGoogle } = useAuth();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigation = useNavigation();
@@ -39,14 +39,14 @@ const LoginScreen = () => {
       else {
         try {
           setError('');
-          setLoading(true);
+          // setLoading(true);
           await login(email, pwd);
         } catch(err) {
           console.log(err)
           setError('Failed to log in');
         }
     
-        setLoading(false);
+        // setLoading(false);
       }
     } else {
       setError('Enter valid email');
@@ -70,7 +70,7 @@ const LoginScreen = () => {
           secureTextEntry={true}
         />
         <View style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}>
-          <Btn onClick={(e) => submitCredentials(e)} title="Login" style={{ width: '48%', backgroundColor: '#0B3270' }} />
+          <Btn onClick={(e)=>submitCredentials(e)} title="Login" style={{ width: '48%', backgroundColor: '#0B3270' }} />
           <Btn
             onClick={() => navigation.navigate('Signup')}
             title="Sign Up"

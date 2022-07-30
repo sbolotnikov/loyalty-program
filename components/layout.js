@@ -30,7 +30,7 @@ const Layout = ({ children }) => {
   const [dimensions, setDimensions] = useState({ screen });
   const logo = require('../assets/dancerslogo.png');
   const navigation = useNavigation();
-  const { currentUser } = useAuth();
+  const { currentUser, loading } = useAuth();
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ screen }) => {
       setDimensions({ screen });
@@ -102,7 +102,6 @@ const Layout = ({ children }) => {
     navigation.navigate('Home');
   };
   let profile;
-  console.log( currentUser)
    currentUser!==null && currentUser.status!==undefined ? profile=currentUser.status: profile="default"
   const array = {
     student: [
@@ -154,7 +153,6 @@ const Layout = ({ children }) => {
         style={tw`flex-row pb-3 items-center mx-4 px-4`}
         onLayout={(event) => {
           var { x, y, width, height } = event.nativeEvent.layout;
-          console.log(x, y, width, height);
         }}
       >
         <Pressable onPress={onPressHomeFunction}>
@@ -170,7 +168,7 @@ const Layout = ({ children }) => {
           </Text>
           <Text style={tw`font-bold text-gray-400 text-xs`}>
             Welcome,{' '}
-            {currentUser ? currentUser.displayName : 'Guest'}!
+            {currentUser ? currentUser.displayName?currentUser.displayName:"Guest" : 'Guest'}!
           </Text>
         </View>
         {currentUser ? (

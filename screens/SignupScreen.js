@@ -11,7 +11,7 @@ import tw from 'twrnc';
 const SignupScreen = () => {
   const navigation = useNavigation();
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const { signup } = useAuth();
   const [values, setValues] = useState({
@@ -37,14 +37,14 @@ const SignupScreen = () => {
       else if (pwd == pwd2) {
         try {
           setError('');
-          setLoading(true);
+          // setLoading(true);
           await signup(email, pwd);
         } catch(err) {
           console.log(err)
           setError('Failed to create an account');
         }
     
-        setLoading(false);
+        // setLoading(false);
       } else {
         setError('Passwords are different!');
       }

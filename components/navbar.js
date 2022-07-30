@@ -6,7 +6,6 @@ import tw from 'twrnc';
 import ShowIcon from './svg/showIcon';
 const Navbar = ({ textSize, size1, color, names, logged }) => {
     const navigation = useNavigation();
-    console.log(names)
   return (
     <View
       style={tw.style(`flex-row justify-around w-full max-w-6xl`,{ margin: 'auto' })}

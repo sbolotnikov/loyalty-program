@@ -10,7 +10,6 @@ const Homescreen = () => {
   const navigation = useNavigation();
   const logo=require('../assets/dancerslogo.png');
   const {currentUser}=useAuth();
-  console.log(currentUser)
   return (
     <Layout > 
     {/* Header */}

@@ -6,16 +6,14 @@ import StackNavigator from './StackNavigator';
 
 //  need Node 16 and up!!!!!!!!!
 
-
 export default function App() {
-  
   return (
-      <NavigationContainer>
-        <Provider store={store}>
-          <AuthProvider>
-            <StackNavigator/>
-          </AuthProvider>
-        </Provider>
-      </NavigationContainer>
+    <NavigationContainer>
+      <Provider store={store}>
+        <AuthProvider>
+            <StackNavigator />
+        </AuthProvider>
+      </Provider>
+    </NavigationContainer>
   );
 }
