@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Homescreen from './screens/Homescreen';
 import Activityscreen from './screens/Activityscreen';
 import Calendarscreen from './screens/Calendarscreen';
-import Getstarsscreen from './screens/Getstarsscreen';
+import Getstarsscreen from './screens/Getstarscreen';
 import Usestarsscreen from './screens/Usestarsscreen';
 import LoginScreen from './screens/LoginScreen';
 import useAuth from './hooks/useAuth';
@@ -11,6 +11,7 @@ import SignupScreen from './screens/SignupScreen';
 import ResetScreen from './screens/ResetScreen';
 import ScanScreen from './screens/ScanScreen';
 import Profilescreen from './screens/Profilescreen';
+import ActivitysetScreen from './screens/ActivitysetScreen';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -30,7 +31,7 @@ const StackNavigator = () => {
     ):(
       <>
         <Stack.Screen name="Home" component={Homescreen} />
-        <Stack.Screen name="Activity" component={Activityscreen} />
+        <Stack.Screen name="ActivitySet" component={ActivitysetScreen} />
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
       </>

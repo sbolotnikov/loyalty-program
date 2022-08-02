@@ -22,7 +22,10 @@ import Burger from './svg/burger';
 import Navbar from './navbar';
 import tw from 'twrnc';
 import useAuth from '../hooks/useAuth';
+import { useSelector } from "react-redux"
+import { selectItems } from '../features/basketSlice';
 const Layout = ({ children }) => {
+  const items = useSelector(selectItems);
   const [visNav, setVisNav] = useState(false);
   const [size1, setSize] = useState(0);
   const [textSize, setTextSize] = useState(0);
@@ -129,7 +132,7 @@ const Layout = ({ children }) => {
     teacher: [
       {
         title: 'Activity',
-        link: 'Activity',
+        link: 'ActivitySet',
       },
       {
         title: 'Home',
@@ -143,10 +146,9 @@ const Layout = ({ children }) => {
       },
     ],
   };
-
   return (
     <SafeAreaView
-      style={tw` bg-white pt-5 h-full w-full relative`}
+      style={[tw` bg-white pt-5 mx-auto h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative`,{overflow:"hidden"}]}
     >
       {/* Header */}
       <View
@@ -171,6 +173,13 @@ const Layout = ({ children }) => {
             {currentUser ? currentUser.displayName?currentUser.displayName:"Guest" : 'Guest'}!
           </Text>
         </View>
+
+
+
+
+
+
+        <Text>{items}</Text>
         {currentUser ? (
           <Pressable onPress={() => navigation.navigate('Profile')}>
             <Image
@@ -192,14 +201,14 @@ const Layout = ({ children }) => {
           <View
             style={tw.style(
               'w-full flex justify-center items-center relative ',
-              { height: dimensions.screen.height }
+              { height: dimensions.screen.height-56 }
             )}
           >
             <Image source={logo} style={tw` h-96 w-96 opacity-40`} />
             <View
-              style={tw`w-full h-[${
+              style={[tw`w-full h-[${
                 Dimensions.get('window').height - 56
-              }px] flex justify-center items-center overflow-auto absolute top-0 left-0`}
+              }px] flex justify-center items-center absolute top-0 left-0`]}
             >
               {/* Body */}
               {children}

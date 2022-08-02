@@ -1,16 +1,12 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../components/layout';
 import tw from 'twrnc';
 import useAuth from '../hooks/useAuth';
 // import {GlobalContext} from '../globalContext';
 import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
-import { storage } from '../firebase';
-import * as ImagePicker from 'expo-image-picker';
-import { manipulateAsync } from 'expo-image-manipulator';
-import { v4 as uuidv4 } from 'uuid';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import {pickImage, deleteOldImage} from '../util/functions';
 const Profilescreen = () => {
   const { currentUser, logout, updatePass, updateUser } = useAuth();
   // const {loading, setLoading} = useContext(GlobalContext);
@@ -26,9 +22,6 @@ const Profilescreen = () => {
     image: currentUser.photoURL,
   });
 
-  const cutPath =
-    'https://firebasestorage.googleapis.com/v0/b/fads-loyalty-program.appspot.com/o/images%2F';
-
   function handleChange(text, eventName) {
     setValues((prev) => {
       return {
@@ -37,42 +30,13 @@ const Profilescreen = () => {
       };
     });
   }
-  const pickImage = async () => {
+  const pickAvatar = async (e) => {
     // No permissions request is necessary for launching the image library
-    setLoadingLocal(true);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      quality: 1,
-    });
-    const manipResult = await manipulateAsync(
-      result.uri,
-      [{ resize: { width: 300 } }],
-      { format: 'png' }
-    );
-    const storageRef = ref(storage, `images/${uuidv4() + '.png'}`);
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', manipResult.uri, true);
-      xhr.send(null);
-    });
-    const metadata = {
-      contentType: 'image/png',
-    };
-    uploadBytes(storageRef, blob).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        console.log(url.split('?')[0]);
-        handleChange(url, 'image');
-      });
-    });
-    setLoadingLocal(false);
+    e.preventDefault();
+    let picURL=await pickImage("images") 
+    console.log(picURL)
+    handleChange(picURL, 'image')
+
   };
   const submitReset = async (e) => {
     e.preventDefault();
@@ -103,10 +67,6 @@ const Profilescreen = () => {
       // finding name of the old profile image and if it is in db it will be replaced
       let userOldPicture = currentUser.photoURL;
       console.log(userOldPicture);
-      let path1 = userOldPicture.replaceAll(cutPath, '');
-      image !== userOldPicture && path1.length !== userOldPicture.length
-        ? (path1 = path1.split('?')[0])
-        : (path1 = '');
       try {
         setLoadingLocal(true);
         setUpdateLocal(true);
@@ -115,21 +75,9 @@ const Profilescreen = () => {
         console.log(err);
         setError(`Failed to update profile. ${err.message}`);
       }
-      if (path1 !== '') {
-        const desertRef = ref(storage, "images/"+path1);
-
-        // Delete the file
-        deleteObject(desertRef)
-          .then(() => {
-            // File deleted successfully
-            console.log('delete storage file');
-          })
-          .catch((error) => {
-            // Uh-oh, an error occurred!
-            console.log(error.message);
-          });
-      }
+ 
     }
+    deleteOldImage('images',currentUser.photoURL);
     setUpdateLocal(false);
   };
   useEffect(() => {
@@ -163,9 +111,9 @@ const Profilescreen = () => {
                 {values.name}
               </Text>
             )}
-            <Text style={tw`text-bold text-xl`}>{currentUser.email}</Text>
+            <Text style={tw`font-bold text-xl`}>{currentUser.email}</Text>
           </View>
-          <TouchableOpacity onPress={pickImage}>
+          <TouchableOpacity onPress={(e)=>pickAvatar(e)}>
             <Image
               source={values.image}
               style={tw`h-20 w-20 bg-gray-300 p-4 rounded-full`}

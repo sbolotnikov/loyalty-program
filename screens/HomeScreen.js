@@ -24,7 +24,7 @@ const Homescreen = () => {
     <View style={{ background: 'white', padding: '16px' }}>
     <QRCode value={currentUser.uid} size={300} />
 </View>
-          <Text style={tw`text-bold text-xl`}>
+          <Text style={tw`font-bold text-xl`}>
             Home
           </Text>
           <Button
