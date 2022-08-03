@@ -8,6 +8,7 @@ import {
   Pressable,
   Dimensions,
   Keyboard,
+  TouchableOpacity
 } from 'react-native';
 import React, { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +25,8 @@ import tw from 'twrnc';
 import useAuth from '../hooks/useAuth';
 import { useSelector } from "react-redux"
 import { selectItems } from '../features/basketSlice';
+import BasketModal from './BasketModal';
+import ShoppingCartIcon from './svg/shoppingCart';
 const Layout = ({ children }) => {
   const items = useSelector(selectItems);
   const [visNav, setVisNav] = useState(false);
@@ -31,6 +34,7 @@ const Layout = ({ children }) => {
   const [textSize, setTextSize] = useState(0);
   const screen = Dimensions.get('screen');
   const [dimensions, setDimensions] = useState({ screen });
+  const [modalVisible, setModalVisible] = useState(false);
   const logo = require('../assets/dancerslogo.png');
   const navigation = useNavigation();
   const { currentUser, loading } = useAuth();
@@ -173,13 +177,11 @@ const Layout = ({ children }) => {
             {currentUser ? currentUser.displayName?currentUser.displayName:"Guest" : 'Guest'}!
           </Text>
         </View>
-
-
-
-
-
-
-        <Text>{items}</Text>
+        <TouchableOpacity style={tw` p-1 mr-3 relative`} onPress={()=>setModalVisible(!modalVisible)}>
+        
+        <ShoppingCartIcon color={"#00CCBB"} width={28} height={28}/>
+        <Text style={tw`font-bold text-white rounded-full bg-red-600 p-1 absolute -top-4 -right-2`}>{items}</Text>
+        </TouchableOpacity>
         {currentUser ? (
           <Pressable onPress={() => navigation.navigate('Profile')}>
             <Image
@@ -211,6 +213,7 @@ const Layout = ({ children }) => {
               }px] flex justify-center items-center absolute top-0 left-0`]}
             >
               {/* Body */}
+              {modalVisible &&<BasketModal vis={modalVisible} onReturn={()=>setModalVisible(!modalVisible)}/>}
               {children}
             </View>
           </View>

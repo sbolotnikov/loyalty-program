@@ -103,7 +103,9 @@ const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
  
   return (
     <View style={tw`max-w-[800px] w-full justify-center items-center`}>
+    {/* <View style={tw` bg-black`}> */}
     <AlertModal title={'Are you sure you want to delete'} button1={'Confirm'} button2={"Cancel"} vis={modalVisible} onReturn={(ret)=>onConfirmFunction(ret)}/>
+    {/* </View> */}
           <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>
             {uid!==""?'Edit Existed':'Enter New'} Activity
           </Text>

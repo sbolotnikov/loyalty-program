@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { View, Text, Modal } from 'react-native';
 import tw from 'twrnc';
 import Btn from './Btn';
-
 const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
   const handleSubmit = (e, submitten) => {
     e.preventDefault();
@@ -10,6 +8,7 @@ const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
   };
   
   return (
+
     <View style={tw` flex-1 justify-center items-center`}>
       <Modal
         animationType="slide"
@@ -18,8 +17,9 @@ const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
         onRequestClose={() => {}}
       >
         <View
-          style={tw`flex-1 justify-center items-center `}
+          style={[tw`flex-1 justify-center items-center `,{shadowColor: "#000", shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5}]}
         >
+
           <View
             style={tw` justify-center items-center bg-white rounded-md border max-w-md`}
           >
@@ -38,7 +38,7 @@ const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
                 style={{ width: '48%', backgroundColor: '#344869' }}
               />
             </View>
-          </View>
+          </View>       
         </View>
       </Modal>
     </View>

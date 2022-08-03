@@ -82,7 +82,7 @@ const Getstarscreen = () => {
                   {doc.desc}
                 </Text>
                 <View style={tw`w-full absolute bottom-0 right-0 flex-row  justify-between items-end mb-1 mr-1`}>
-                <CountBox startValue={0} onChange={(num)=>{
+                <CountBox startValue={0} setWidth={12} onChange={(num)=>{
                   let copyArr=activities;
                   copyArr[i].amount=num
                   setActivities([...copyArr]);
