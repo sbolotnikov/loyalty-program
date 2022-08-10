@@ -8,7 +8,7 @@ import {
   Pressable,
   Dimensions,
   Keyboard,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import React, { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -23,7 +23,7 @@ import Burger from './svg/burger';
 import Navbar from './navbar';
 import tw from 'twrnc';
 import useAuth from '../hooks/useAuth';
-import { useSelector } from "react-redux"
+import { useSelector } from 'react-redux';
 import { selectItems } from '../features/basketSlice';
 import BasketModal from './BasketModal';
 import ShoppingCartIcon from './svg/shoppingCart';
@@ -109,7 +109,9 @@ const Layout = ({ children }) => {
     navigation.navigate('Home');
   };
   let profile;
-   currentUser!==null && currentUser.status!==undefined ? profile=currentUser.status: profile="default"
+  currentUser !== null && currentUser.status !== undefined
+    ? (profile = currentUser.status)
+    : (profile = 'default');
   const array = {
     student: [
       {
@@ -127,20 +129,46 @@ const Layout = ({ children }) => {
       {
         title: 'Get Stars',
         link: 'Getstars',
+        params: { collectionName: 'activities' },
       },
       {
         title: 'Use Stars',
-        link: 'Usestars',
+        link: 'Getstars',
+        params: { collectionName: 'goodies' },
       },
     ],
     teacher: [
       {
-        title: 'Activity',
-        link: 'ActivitySet',
+        title: 'Calendar',
+        link: 'CalendarSet',
       },
       {
         title: 'Home',
         link: 'Home',
+      },
+      {
+        title: 'Scan Code',
+        link: 'Scan',
+      },
+    ],
+    super: [
+      {
+        title: 'Calendar',
+        link: 'CalendarSet',
+      },
+      {
+        title: 'Scan Code',
+        link: 'Scan',
+      },
+      {
+        title: 'Get Stars',
+        link: 'ActivitySet',
+        params: { collectionName: 'activities' },
+      },
+      {
+        title: 'Use Stars',
+        link: 'ActivitySet',
+        params: { collectionName: 'goodies' },
       },
     ],
     default: [
@@ -152,7 +180,10 @@ const Layout = ({ children }) => {
   };
   return (
     <SafeAreaView
-      style={[tw` bg-white pt-5 mx-auto h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative`,{overflow:"hidden"}]}
+      style={[
+        tw` bg-white pt-5 mx-auto h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative`,
+        { overflow: 'hidden' },
+      ]}
     >
       {/* Header */}
       <View
@@ -174,14 +205,25 @@ const Layout = ({ children }) => {
           </Text>
           <Text style={tw`font-bold text-gray-400 text-xs`}>
             Welcome,{' '}
-            {currentUser ? currentUser.displayName?currentUser.displayName:"Guest" : 'Guest'}!
+            {currentUser
+              ? currentUser.displayName
+                ? currentUser.displayName
+                : 'Guest'
+              : 'Guest'}
+            !
           </Text>
         </View>
-        <TouchableOpacity style={tw` p-1 mr-3 relative`} onPress={()=>setModalVisible(!modalVisible)}>
-        
-        <ShoppingCartIcon color={"#00CCBB"} width={28} height={28}/>
-        <Text style={tw`font-bold text-white rounded-full bg-red-600 p-1 absolute -top-4 -right-2`}>{items}</Text>
-        </TouchableOpacity>
+        {currentUser.status=="student" &&<TouchableOpacity
+          style={tw` p-1 mr-3 relative`}
+          onPress={() => setModalVisible(!modalVisible)}
+        >
+          <ShoppingCartIcon color={'#00CCBB'} width={28} height={28} />
+          <Text
+            style={tw`font-bold text-white rounded-full bg-red-600 p-1 absolute -top-4 -right-2`}
+          >
+            {items}
+          </Text>
+        </TouchableOpacity>}
         {currentUser ? (
           <Pressable onPress={() => navigation.navigate('Profile')}>
             <Image
@@ -203,61 +245,70 @@ const Layout = ({ children }) => {
           <View
             style={tw.style(
               'w-full flex justify-center items-center relative ',
-              { height: dimensions.screen.height-56 }
+              { height: dimensions.screen.height - 56 }
             )}
           >
             <Image source={logo} style={tw` h-96 w-96 opacity-40`} />
             <View
-              style={[tw`w-full h-[${
-                Dimensions.get('window').height - 56
-              }px] flex justify-center items-center absolute top-0 left-0`]}
+              style={[
+                tw`w-full h-[${
+                  Dimensions.get('window').height
+                }px] flex justify-start items-center absolute top-0 left-0`,
+              ]}
             >
               {/* Body */}
-              {modalVisible &&<BasketModal vis={modalVisible} onReturn={()=>setModalVisible(!modalVisible)}/>}
+              {modalVisible && (
+                <BasketModal
+                  vis={modalVisible}
+                  onReturn={() => setModalVisible(!modalVisible)}
+                />
+              )}
               {children}
             </View>
           </View>
         </LinearGradient>
       </View>
-      {currentUser.email && <Animated.View
-        style={tw.style(
-          `absolute bottom-0 right-0 w-full bg-white`,
-          {
-            // Bind height to animated value
-            bottom: heightAnim,
-          },
-          { display: !keyboardStatus ? 'flex' : 'none' }
-        )}
-      >
-        <View style={tw`relative  w-full`}>
-          <View
-            style={[
-              tw`absolute  -top-9 left-1/2`,
-              ,
-              {
-                transform: [{ translateX: -25 }, { translateY: -10 }],
-              },
-            ]}
-          >
-            <Pressable
-              style={tw`flex justify-center items-center relative`}
-              onPress={onPressFunction}
+      {currentUser.email && (
+        <Animated.View
+          style={tw.style(
+            `absolute bottom-0 right-0 w-full bg-white`,
+            {
+              // Bind height to animated value
+              bottom: heightAnim,
+            },
+            { display: !keyboardStatus ? 'flex' : 'none' }
+          )}
+        >
+          <View style={tw`relative  w-full`}>
+            <View
+              style={[
+                tw`absolute  -top-9 left-1/2`,
+                ,
+                {
+                  transform: [{ translateX: -25 }, { translateY: -10 }],
+                },
+              ]}
             >
-              {/* <Text>X</Text> */}
-              <Burger status={!visNav} color={'#00CCBB'} />
-            </Pressable>
+              <Pressable
+                style={tw`flex justify-center items-center relative`}
+                onPress={onPressFunction}
+              >
+                {/* <Text>X</Text> */}
+                <Burger status={!visNav} color={'#00CCBB'} />
+              </Pressable>
+            </View>
+            <View style={tw`flex-row justify-around w-full max-w-6xl mx-auto`}>
+              <Navbar
+                textSize={textSize}
+                size1={size1}
+                color={'#00CCBB'}
+                names={array[profile]}
+                logged={currentUser ? true : false}
+              />
+            </View>
           </View>
-          <View style={tw`flex-row justify-around w-full max-w-6xl mx-auto`}>
-            <Navbar
-              textSize={textSize}
-              size1={size1}
-              color={'#00CCBB'}
-              names={array[profile]}
-              logged={currentUser ? true : false}
-            />
-          </View>
-        </View>
-      </Animated.View>}
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 };

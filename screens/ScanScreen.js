@@ -1,25 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Platform, Dimensions, Image } from 'react-native';
+import { useState, useEffect } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Platform,
+  Dimensions,
+  Image,
+} from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
-import { doc, getDoc } from 'firebase/firestore';
+import {
+  doc,
+  collection,
+  addDoc,
+  getDoc,
+  Timestamp,
+  getDocs,
+  query,
+  where,
+  documentId,
+} from 'firebase/firestore';
 import { db } from '../firebase';
-import moment from 'moment';
 import Layout from '../components/layout';
 import tw from 'twrnc';
 import CountBox from '../components/CountBox';
+import AlertModal from '../components/AlertModal';
+import Btn from '../components/Btn';
+import useAuth from '../hooks/useAuth';
+import TextBox from '../components/TextBox';
+import { getUserTotals } from '../util/functions';
 const ScanScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [summed, setSum] = useState(0);
+  const [noClaim, setNoClaim] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [userTotals, setUserTotals] =useState(0);
   const [activities, setActivities] = useState([]);
   const [decodeMode, setDecodeMode] = useState(false);
-  const [text, setText] = useState(
-    '{"a":["gGazOy0FUtZ2ekZ1rQ2JyGKEsNc2","1659506937"],"b":["16108765-e6f2-47f6-8eca-c790b0132337","22ba6ee6-383b-4321-a7e8-439ee7a4687d","58da4db0-fdaa-4207-86e8-cf5775391529","7eae2cda-1517-4fcd-b0ed-69079a868647","a5049afe-77e1-4642-81d2-a5f90161b01f","b7eac39d-aa6d-42ae-9f63-3e4ab9d9efeb"],"c":[1,1,1,1,1,1]}'
-  );
+  const [text, setText] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const screen = Dimensions.get('screen');
   const [dimensions, setDimensions] = useState({ screen });
-  
+  const { currentUser, loading } = useAuth();
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ screen }) => {
       setDimensions({ screen });
@@ -68,52 +93,123 @@ const ScanScreen = () => {
     }
   }
   // Return the View
+  const indicatorJSON = (text) => {
+    try {
+      JSON.parse(text);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
   useEffect(async () => {
     if (text !== '') {
-      let obj = JSON.parse(text);
-      console.log(obj.a[1]);
-      var date = new Date(null);
-      date.setSeconds(obj.a[1]);
-      console.log(moment(date).format('MMM DD YYYY, hh:mm'));
-      console.log(obj.a[0])
-      let recArr = [];
-      let sums=0
-      for (let i = 0; i < obj.b.length; i++) {
-        const docRef = doc(db, 'activities', obj.b[i]);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          console.log('Document data:', docSnap.data());
-          let rec = {
-            name: docSnap.data().name,
-            image: docSnap.data().image,
-            price: docSnap.data().price,
-            amount: obj.c[i],
-            uid:obj.b[i]
-          };
-          sums+=docSnap.data().price*obj.c[i]
-          recArr.push(rec);
+      if (!indicatorJSON(text)) {
+        setModalVisible2(true);
+        setText('');
+      } else {
+        let obj = JSON.parse(text);
+        var date2 = parseInt(Date.now()) / 1000;
+        if (date2 - obj.a[1] > 60) {
+          setModalVisible2(true);
+          setText('');
         } else {
-          // doc.data() will be undefined in this case
-          console.log('No such document!');
+          let recArr = [];
+          let sums = 0;
+
+          const querySnapshot = await getDocs(
+            query(
+              collection(db, 'activities'),
+              where(documentId(), 'in', obj.b)
+            )
+          );
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            let rec = {
+              name: doc.data().name,
+              image: doc.data().image,
+              price: doc.data().price,
+              amount: 0,
+              id: '',
+              note: '',
+            };
+            recArr.push(rec);
+          });
+          for (let i = 0; i < obj.b.length; i++) {
+            recArr[i].amount = obj.c[i];
+            recArr[i].id = obj.b[i];
+            sums += recArr[i].price * obj.c[i];
+            if (recArr[i].price < 0 && currentUser.status != 'super') {
+              setNoClaim(true);
+              console.log('not super enough ');
+            }
+          }
+          const docRef1 = doc(db, 'users', obj.a[0]);
+          const docSnap1 = await getDoc(docRef1);
+          if (docSnap1.exists()) {
+            let userData = {
+              name: docSnap1.data().displayName,
+              image: docSnap1.data().photoURL,
+              uid: obj.a[0],
+            };
+            setUserTotals(await getUserTotals(obj.a[0]))
+            setUserData(userData);
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such user');
+          }
+          setActivities([...recArr]);
+          setSum(sums);
         }
       }
-
-      setActivities([...recArr])
-      setSum(sums)
     }
   }, [text]);
   useEffect(() => {
-    let localSum=0;
+    let localSum = 0;
     for (let i = 0; i < activities.length; i++) {
-       localSum+=activities[i].amount*activities[i].price
+      localSum += activities[i].amount * activities[i].price;
     }
     setSum(localSum);
   }, [activities]);
+
+  const onConfirmFunction = async (ret) => {
+    setModalVisible(false);
+    if (!noClaim) {
+      if (ret == 'Confirm') {
+        console.log('confirmed function called');
+        let localRec = {};
+        for (let i = 0; i < activities.length; i++) {
+          localRec = {
+            points: activities[i].amount * activities[i].price,
+            amount: activities[i].amount,
+            name: activities[i].name,
+            cofimedby: currentUser.displayName,
+            confirmed: Timestamp.now(),
+          };
+          await addDoc(collection(doc(db, 'users', userData.uid), 'rewards'), {
+            points: activities[i].amount * activities[i].price,
+            amount: activities[i].amount,
+            name: activities[i].name,
+            note: activities[i].note,
+            cofimedby: currentUser.displayName,
+            confirmed: Timestamp.now(),
+          });
+          console.log(localRec);
+        }
+      }
+    }
+  };
+
   return (
     <Layout>
       {!decodeMode ? (
         <View style={styles.container}>
+          <AlertModal
+            title={`Your QR code is invalid. Try again!`}
+            button1={'Ok'}
+            button2={''}
+            vis={modalVisible2}
+            onReturn={(ret) => setModalVisible2(false)}
+          />
           <View style={styles.barcodebox}>
             {(Platform.OS === 'ios' || Platform.OS === 'android') && (
               <BarCodeScanner
@@ -135,45 +231,138 @@ const ScanScreen = () => {
               />
             )}
           </View>
-          {text && (
-            <Button
-              title={'Decode text'}
-              onPress={() => setDecodeMode(true)}
-              color="#344869"
-            />
-          )}
-          {scanned && (
-            <Button
-              title={'Scan again?'}
-              onPress={() => setScanned(false)}
-              color="tomato"
-            />
-          )}
+          <View
+            style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}
+          >
+            {!!text && (
+              <Btn
+                title={'Decode text'}
+                onClick={() => setDecodeMode(true)}
+                style={{ width: '48%', backgroundColor: '#0B3270' }}
+              />
+            )}
+            {!!scanned && (
+              <Btn
+                title={'Scan again?'}
+                onClick={() => {
+                  setScanned(false);
+                  setText('');
+                }}
+                style={{ width: '48%', backgroundColor: '#344869' }}
+              />
+            )}
+          </View>
         </View>
       ) : (
-        <View style={tw``}>
-        {activities.map((doc, i)=>(
-              <View key={doc.uid}
-              style={tw`flex-row justify-between w-[95%] items-center mx-auto my-2`}>
-              <View style={tw`w-[65%] flex-row`}>
-               <Image
-              source={doc.image}
+        <View
+          style={[
+            tw`w-full h-[80%] justify-center items-center max-w-[800px] `,
+          ]}
+        >
+          <AlertModal
+            title={
+              noClaim
+                ? 'Teachers can only add Activities. Please check with manager about Claiming Rewards'
+                : `Are you sure you want to confirm the record of activities of ${userData.name}?`
+            }
+            button1={'Confirm'}
+            button2={'Cancel'}
+            vis={modalVisible}
+            onReturn={(ret) => onConfirmFunction(ret)}
+          />
+
+          <View
+            style={tw` justify-around items-center flex-wrap w-full mt-4`}
+          >
+          <View
+            style={tw`flex-row justify-around items-center flex-wrap w-full`}
+          >
+            <Image
+              source={userData.image}
               style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
-             />
-               <Text style={tw`ml-2`}>{doc.name}</Text>
-              </View> 
-              <View style={tw`w-[35%] ${dimensions.screen.width>576?'flex-row':''} justify-between`}>
-               <CountBox startValue={doc.amount} setWidth={2} onChange={(num)=>{
-                  // let activity={name:doc.name, price:doc.price, image:doc.image, uid:doc.uid, amount:num}
-                  let arrCopy=activities;
-                  arrCopy[i].amount=num;
-                  setActivities([...arrCopy]);  
-                  }}/>
-                  <Text style={tw`text-center`}> x {doc.price} = {doc.price*doc.amount}</Text>
-              </View>    
-             </View>))
-             }
-             <Text>Total{summed}</Text>
+            />
+            <Text style={tw`font-extrabold text-xl text-red-400`}>
+              {userData.name}
+            </Text>
+            </View>
+            <View
+            style={tw`flex-row justify-around items-center flex-wrap w-full`}
+          >
+            <Text style={tw`text-red-400 font-extrabold text-right`}>
+              Available points:{userTotals}
+            </Text>          
+            <Text style={tw` text-red-400 font-extrabold text-right`}>
+              Total to claim: {summed}
+            </Text>
+            </View>
+          </View>
+          <View
+            style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}
+          >
+            <Btn
+              onClick={(e) => setModalVisible(true)}
+              title="Confirm"
+              style={{ width: '48%', backgroundColor: '#344869' }}
+            />
+
+            <Btn
+              onClick={(e) => setDecodeMode(false)}
+              title="Cancel"
+              style={{ width: '48%', backgroundColor: '#0B3270' }}
+            />
+          </View>
+          <View
+            style={[
+              tw`w-[98%] h-[80%] justify-center items-center m-auto bg-gray-500/30 m-1 rounded-lg border py-5 relative`,
+              { overflow: 'scroll' },
+            ]}
+          >
+            <View style={tw`h-auto absolute top-0 left-0`}>
+              {activities.map((doc, i) => (
+                <View
+                  key={doc.id}
+                  style={tw`flex-row justify-between w-[95%] items-center mx-auto my-5 h-auto flex-wrap`}
+                >
+                  <View style={tw`w-[65%] flex-row`}>
+                    <Image
+                      source={doc.image}
+                      style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
+                    />
+                    <Text style={tw`ml-2`}>{doc.name}</Text>
+                  </View>
+                  <View
+                    style={tw`w-[35%] ${
+                      dimensions.screen.width > 576 ? 'flex-row' : ''
+                    } justify-between`}
+                  >
+                    <CountBox
+                      startValue={doc.amount}
+                      setWidth={2}
+                      onChange={(num) => {
+                        // let activity={name:doc.name, price:doc.price, image:doc.image, uid:doc.uid, amount:num}
+                        let arrCopy = activities;
+                        if (num == 0) arrCopy.splice(i, 1);
+                        else arrCopy[i].amount = num;
+                        setActivities([...arrCopy]);
+                      }}
+                    />
+                    <Text style={tw`text-center`}>
+                      {' '}
+                      x {doc.price} = {doc.price * doc.amount}
+                    </Text>
+                  </View>
+                  <TextBox
+                    placeholder="Activity Note"
+                    onChangeText={(text) => {
+                      let arrCopy = activities;
+                      arrCopy[i].note = text;
+                      setActivities([...arrCopy]);
+                    }}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
         </View>
       )}
     </Layout>
@@ -185,6 +374,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   barcodebox: {
     alignItems: 'center',

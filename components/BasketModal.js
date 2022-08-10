@@ -56,7 +56,7 @@ const BasketModal = ({ vis, onReturn }) => {
           <TouchableOpacity style={tw`absolute top-0 right-0 mr-3 mt-3`} onPress={()=>onReturn()}>
             <Text>Close</Text>
           </TouchableOpacity>
-            <Text style={tw`text-red-600 text-xl m-2`}>Claiming Rewards</Text>
+            <Text style={tw`text-red-600 text-xl m-2`}>Claiming Rewards/Activities</Text>
             <View
               style={[tw` justify-around items-center w-full h-[40%]  mb-1`,{overflow:"scroll"}]}
             >

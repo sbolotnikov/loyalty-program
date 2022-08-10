@@ -9,7 +9,7 @@ const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
   
   return (
 
-    <View style={tw` flex-1 justify-center items-center`}>
+    <View style={tw` flex-1 justify-center items-center absolute top-0 left-0`}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -32,11 +32,13 @@ const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
                 title={button1}
                 style={{ width: '48%', backgroundColor: '#0B3270' }}
               />
+              {button2 &&
               <Btn
                 onClick={(e) => handleSubmit(e, button2)}
                 title={button2}
                 style={{ width: '48%', backgroundColor: '#344869' }}
               />
+              }
             </View>
           </View>       
         </View>

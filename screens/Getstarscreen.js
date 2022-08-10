@@ -4,16 +4,17 @@ import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 import { db } from '../firebase';
-import { collection, doc } from 'firebase/firestore';
+import { collection, where, query } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import CountBox from '../components/CountBox';
 import Btn from '../components/Btn';
 import { useDispatch } from 'react-redux';
 import { addToBasket } from '../features/basketSlice';
 const logo = require('../assets/dancerslogosm.png');
-const Getstarscreen = () => {
+const Getstarscreen = ({ route, navigation }) => {
+  const { collectionName } = route.params;
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [values, setValues] = useState({
     name: '',
     desc: '',
@@ -22,8 +23,8 @@ const Getstarscreen = () => {
     uid: '',
     amount:0
   });
-  const [value, loading, error] = useCollection(collection(db, 'activities'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
+  const [value, loading, error] = useCollection(query(collection(db, 'activities'), where("price", (collectionName=='activities')?">":"<", 0)), {
+    snapshotListenOptions: { includeMetadataChanges: true }
   });
   const [activities, setActivities]= useState([]);
   useEffect(()=>{

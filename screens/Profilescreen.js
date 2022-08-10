@@ -33,7 +33,7 @@ const Profilescreen = () => {
   const pickAvatar = async (e) => {
     // No permissions request is necessary for launching the image library
     e.preventDefault();
-    let picURL=await pickImage("images") 
+    let picURL=await pickImage("images","",300) 
     console.log(picURL)
     handleChange(picURL, 'image')
 
@@ -91,6 +91,7 @@ const Profilescreen = () => {
   }, [updateLocal]);
   return (
     <Layout>
+    <View style={tw`w-full h-full justify-center items-center`}>
       <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>
         Profile of {currentUser.status}
       </Text>
@@ -163,6 +164,7 @@ const Profilescreen = () => {
             style={{ width: '48%', backgroundColor: '#344869' }}
           />
         </View>
+      </View>
       </View>
     </Layout>
   );

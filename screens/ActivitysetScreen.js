@@ -4,13 +4,14 @@ import Layout from '../components/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import tw from 'twrnc';
 import { db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, where, query } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import EnterActivity from '../components/enterActivity';
 import moment from 'moment';
 const logo = require('../assets/dancerslogosm.png');
-const ActivitysetScreen = () => {
-
+const ActivitysetScreen = ({ route, navigation }) => {
+    const { collectionName } = route.params;
+    console.log(collectionName)
   const [switchEdit, setSwitchEdit] = useState(false);
   const [values, setValues] = useState({
     name: '',
@@ -19,7 +20,7 @@ const ActivitysetScreen = () => {
     image: '',
     uid: '',
   });
-  const [value, loading, error] = useCollection(collection(db, 'activities'), {
+  const [value, loading, error] = useCollection(query(collection(db, 'activities'), where("price", (collectionName=='activities')?">":"<", 0)), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
@@ -31,7 +32,7 @@ const ActivitysetScreen = () => {
   return (
     <KeyboardAwareScrollView>
       <Layout>
-       {switchEdit?<EnterActivity name={values.name} desc={values.desc} price={values.price } image={values.image} uid={values.uid} onReturn={()=>setSwitchEdit(false)}/>:
+       {switchEdit?<EnterActivity name={values.name} desc={values.desc} price={values.price*((collectionName=='activities')?1:-1) } image={values.image} uid={values.uid} collectionName={collectionName} onReturn={()=>setSwitchEdit(false)}/>:
        <View style={[tw`w-full h-full justify-center items-center m-auto`,{overflow:"scroll"}]}>
         <Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
           {error ? error : ''}

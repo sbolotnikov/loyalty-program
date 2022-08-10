@@ -12,7 +12,7 @@ const Navbar = ({ textSize, size1, color, names, logged }) => {
     >
        {names.map((item, key) => {
         return <Pressable key={key} style={tw`flex justify-center items-center relative flex-wrap mt-1`} onPress={() =>
-        navigation.navigate(logged?item.link:"Login",)
+        navigation.navigate(logged?item.link:"Login",logged?item.params:"")
       }>
           <ShowIcon icon={item.title} color={color} width={size1} height={size1}/>
           <Text

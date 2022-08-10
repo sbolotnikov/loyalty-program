@@ -55,7 +55,7 @@ const LoginScreen = () => {
   return (
     <KeyboardAwareScrollView>
     <Layout>
-      <View style={tw`max-w-[800px] w-full justify-center items-center`}>
+      <View style={tw`max-w-[800px] w-full h-full justify-center items-center`}>
         <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>Login</Text>
         <Text style={tw`text-red-600 text-xl ${error?'flex':'hidden'}`}>{error?error:""}</Text>
         <Text style={tw`text-yellow-400 text-xl ${message?'flex':'hidden'}`}>{message?message:""}</Text>
@@ -87,12 +87,7 @@ const LoginScreen = () => {
             title="Forgot Password"
             style={{ width: '48%', backgroundColor: '#344869' }}
           />
-          <Button
-      title="Go to scanner"
-      onPress={() =>
-        navigation.navigate('Scan',)
-      }
-    />
+         
         </View>
       </View>
      </Layout>

@@ -4,6 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync } from 'expo-image-manipulator';
 import { v4 as uuidv4 } from 'uuid';
 import { storage } from '../firebase';
+import { doc, collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 import {
   ref,
   uploadBytes,
@@ -18,7 +20,7 @@ import {
       }
         return (false)
     }
- export const pickImage = async (folder) => {
+ export const pickImage = async (folder, name, width) => {
       // No permissions request is necessary for launching the image library
       console.log("in function");
 
@@ -29,10 +31,10 @@ import {
       });
       const manipResult = await manipulateAsync(
         result.uri,
-        [{ resize: { width: 300 } }],
+        [{ resize: { width: width } }],
         { format: 'png' }
       );
-      const storageRef = ref(storage, `${folder}/${uuidv4() + '.png'}`);
+      const storageRef = ref(storage, `${folder}/${(name)?name + '.png':uuidv4() + '.png'}`);
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -51,8 +53,36 @@ import {
       const snapshot=await uploadBytes(storageRef, blob)
       return await getDownloadURL(snapshot.ref)
     };
+    // export const pickImageLocal = async () => {
+    //   // No permissions request is necessary for launching the image library
+    //   console.log("in function");
 
-
+    //   let result = await ImagePicker.launchImageLibraryAsync({
+    //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //     allowsEditing: true,
+    //     quality: 1,
+    //   });
+    //   return await manipulateAsync(
+    //     result.uri,
+    //     [{ resize: { width: 300 } }],
+    //     { format: 'png' }
+    //   );
+    //   }
+    export const getUserTotals = async (uid) => {
+      const querySnapshot = await getDocs(
+        collection(doc(db, 'users', uid), 'rewards')
+      );
+      let arr=[];
+      querySnapshot.forEach((doc) => {
+        arr.push(doc.data());
+      });
+      let localSum = 0;
+      for (let i = 0; i < arr.length; i++) {
+        localSum += arr[i].points;
+      }
+      console.log(localSum)
+      return localSum
+    }
     export const deleteOldImage = async (folder,image) => {
       const cutPath =
       `https://firebasestorage.googleapis.com/v0/b/fads-loyalty-program.appspot.com/o/${folder}%2F`;

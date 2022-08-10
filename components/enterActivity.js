@@ -9,7 +9,7 @@ import { db } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { doc, setDoc,deleteDoc, Timestamp } from 'firebase/firestore';
 import AlertModal from './AlertModal';
-const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
+const EnterActivity = ({name, desc, price,image, uid, collectionName, onReturn}) => {
   const [error, setError] = useState('');
   const { currentUser } = useAuth();
   // const [loadingLocal, setLoadingLocal] = useState(false);
@@ -32,7 +32,7 @@ const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
   }
   const onPressPicture=async (e)=>{
     e.preventDefault();
-    let picURL=await pickImage("active") 
+    let picURL=await pickImage("active","",300) 
     console.log(picURL)
     handleChange(picURL, 'image')
   }
@@ -47,14 +47,16 @@ const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
     if (name.length >= 5) {
       if (desc.length >= 5) {
         if (price > 0) {
+          let copyValues=values;
+          if (collectionName!=="activities") copyValues.price= -copyValues.price
           try {
             setError('');
             let timeStamp=(uid.length>0)?{"updated": Timestamp.now()}:{"created": Timestamp.now()}
-            const docRef = doc(db, 'activities', uid.length>0?uid:uuidv4());
+            const docRef = doc(db, "activities", uid.length>0?uid:uuidv4());
             setDoc(
               docRef,
               {
-                ...values,
+                ...copyValues,
                 ...timeStamp,
                 bywhom: currentUser.displayName,
               },
@@ -95,7 +97,7 @@ const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
  const onConfirmFunction=async (ret)=>{
   setModalVisible(false); 
   if (ret=='Confirm'){
-    await deleteDoc(doc(db, "activities", uid));
+    await deleteDoc(doc(db,"activities", uid));
     deleteOldImage('active',image);
     onReturn();
   }
@@ -107,16 +109,16 @@ const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
     <AlertModal title={'Are you sure you want to delete'} button1={'Confirm'} button2={"Cancel"} vis={modalVisible} onReturn={(ret)=>onConfirmFunction(ret)}/>
     {/* </View> */}
           <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>
-            {uid!==""?'Edit Existed':'Enter New'} Activity
+            {uid!==""?'Edit Existed':'Enter New'} {(collectionName!=="activities")?"Reward":"Activity"}
           </Text>
-          <Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
+          {!!error &&<Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
             {error ? error : ''}
-          </Text>
-          <Text
+          </Text>}
+          {!!message &&<Text
             style={tw`text-yellow-400 text-xl ${message ? 'flex' : 'hidden'}`}
           >
             {message ? message : ''}
-          </Text>
+          </Text>}
           <TouchableOpacity style={tw`w-[92%] h-52 `} onPress={(e)=>onPressPicture(e)}>
           {values.image>""?<View
               style={[
@@ -137,7 +139,7 @@ const EnterActivity = ({name, desc, price,image, uid, onReturn}) => {
           }
           </TouchableOpacity>
           <TextBox
-            placeholder="Activity Name"
+            placeholder={`${(collectionName!=="activities")?"Reward":"Activity"} Name`}
             defaultValue={name}
             onChangeText={(text) => handleChange(text, 'name')}
           />
