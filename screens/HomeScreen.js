@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -7,9 +7,10 @@ import { doc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import useAuth from '../hooks/useAuth';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { useFonts } from 'expo-font';
 
 // import Swiper from 'react-native-swiper/src';
-// const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const logo = require('../assets/dancerslogosm.png');
 const Homescreen = () => {
   const navigation = useNavigation();
@@ -19,14 +20,27 @@ const Homescreen = () => {
   const [snapshot, loading, err] = useCollection(collection(db, 'settings'), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
+  const [fontLoaded] = useFonts({
+    DancingScript: require('../assets/fonts/DancingScriptVariableFont.ttf'),
+  });
+  const screen = Dimensions.get('screen');
+  const [dimensions, setDimensions] = useState({ screen });
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
+      setDimensions({ screen });
+    });
+    return () => subscription?.remove();
+  });
   useEffect(() => {
     if (snapshot) {
       let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;
-      console.log(
-        snapshot.docs[0].id
-      );
+      console.log(snapshot.docs[0].id);
       setCarousel(
-        arr1.map((item, i) => ({ ...item, id: `image_carousel_${snapshot.docs[0].id+i}` }))
+        arr1.map((item, i) => ({
+          ...item,
+          id: `image_carousel_${snapshot.docs[0].id + i}`,
+        }))
       );
     }
   }, [snapshot]);
@@ -45,53 +59,75 @@ const Homescreen = () => {
     }
     setSums(localSum);
   }, []);
-
+  console.log(width);
   return (
     <Layout>
-      <View style={tw`w-full h-[85%] justify-center items-center`}>
+            <View style={tw`w-full bg-black`}>
+          <Text
+            style={[
+              tw`text-white text-center  my-2`,
+              {
+                fontFamily: 'DancingScript',
+                fontSize:
+                  dimensions.screen.width < 760
+                    ? 27
+                    : dimensions.screen.width < 900
+                    ? 35
+                    : 40,
+              },
+            ]}
+          >
+            Life's Better When You Dance! &trade;
+          </Text>
+        </View>
+      <View style={tw`w-full h-[85%] justify-center items-center max-w-[800px]`}>
+
+
         <View style={tw`h-[20%] w-[98%]`}>
-        {currentUser.status=="student" &&<Text style={tw`font-bold text-xl text-right`}>
-          Your rewards balance is: {summed}
-        </Text>}
-        <Text style={tw`font-bold text-2xl text-center mt-4 text-red-400`}>
-          OUR NEWS
-        </Text>
+          {currentUser.status == 'student' && (
+            <Text style={tw`font-bold text-xl text-right text-[#776548]`}>
+              Rewards Balance: {summed}
+            </Text>
+          )}
+          <Text style={tw`font-bold text-2xl text-center mt-4 text-[#0B3270]`}>
+            OUR NEWS
+          </Text>
+          <Text style={tw`font-bold  ${(dimensions.screen.width < 760)?'text-justify text-sm':"text-center text-lg"} m-2 text-[#776548]`}>Earn points for every activity you have participated in and spend them for dance accessories, lessons, and upcoming events in our studios.</Text>  
         </View>
         {/* <Swiper  width={width>900?800:Math.round(width*.8)} height={Math.round(height*.6)} loop={true} index={0} showsButtons> */}
         <View
-          style={[tw`w-full h-[75%]  justify-center items-center relative max-w-4xl`,{ overflow: 'auto' }]}
+          style={[
+            tw`w-full h-[75%]  justify-center items-center relative max-w-4xl`,
+            { overflow: 'auto' },
+          ]}
         >
-        <View style={tw` absolute top-0 left-0 flex-row`}>
-          {carousel.map((item, i) => (
-            <View
-              key={item.id}
-              style={tw` h-96 w-64 bg-white/70  justify-start items-start rounded-md m-1`}
-            >
+          <View style={tw` absolute top-0 left-0 flex-row`}>
+            {carousel.map((item, i) => (
               <View
-                style={[
-                  tw` h-64 w-full rounded-md relative justify-center items-center`,
+                key={item.id}
+                style={tw` h-96 w-64 bg-white/70  justify-start items-start rounded-md m-1`}
+              >
+                <View
+                  style={[
+                    tw` h-64 w-full rounded-md relative justify-center items-center`,
                     {
                       objectFit: 'contain',
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundImage: `url(${item.url?item.url:logo})`,
+                      backgroundImage: `url(${item.url ? item.url : logo})`,
                     },
-
-                ]}
-              >
-
-              </View>
-              <Text
-                  style={tw`text-lg font-extrabold mb-2 text-[#C9AB78] text-center`}
+                  ]}
+                ></View>
+                <Text
+                  style={tw`text-lg font-extrabold mb-2 text-[#776548] text-center`}
                 >
                   {item.text}
                 </Text>
-            </View>
-          ))}
+              </View>
+            ))}
           </View>
         </View>
         {/* </Swiper> */}
-
       </View>
     </Layout>
   );

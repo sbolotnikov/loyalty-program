@@ -1,4 +1,4 @@
-import { View, ImageBackground, Dimensions} from 'react-native';
+import { View, ImageBackground, Dimensions, Text} from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { doc, collection} from 'firebase/firestore';
@@ -50,9 +50,11 @@ const Calendarscreen = () => {
 
   return (
     <Layout>   
-     <View style={tw` h-[85%] w-full flex-col mt-2 justify-start items-center`}>       
+     <View style={tw` h-[85%] w-full flex-col  justify-start items-center max-w-[800px]`}>
+     <Text style={tw`font-bold text-xl text-left mt-4 text-[#0B3270] ml-2 w-full`}>Our Dance Calendar</Text>
+     <Text style={tw`font-bold text-base text-justify m-2 text-[#776548]`}>Check out this month’s schedule of Group Classes, Practice Parties and Special Events at our Studio. Come with a dance partner or by yourself. For more information and to join us, just give us a call!</Text>     
             <ImageBackground source={calendar} resizeMode="contain" style={[
-                tw` h-full w-full`,
+                tw` h-[65%] w-full`,
                 {
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'top',

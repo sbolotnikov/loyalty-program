@@ -13,6 +13,7 @@ import ScanScreen from './screens/ScanScreen';
 import Profilescreen from './screens/Profilescreen';
 import ActivitysetScreen from './screens/ActivitysetScreen';
 import AddingImagesScreen from './screens/AddingImagesscreen';
+import UsersScreen from './screens/UsersScreen';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -41,6 +42,8 @@ const StackNavigator = () => {
         <Stack.Screen name="Getstars" component={Getstarsscreen} />
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
+        <Stack.Screen name="Users" component={UsersScreen} />
+        
       </>
     return <>
             <Stack.Screen name="Login" component={LoginScreen} />

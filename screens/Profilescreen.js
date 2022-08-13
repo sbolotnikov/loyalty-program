@@ -106,7 +106,7 @@ const Profilescreen = () => {
               />
             ) : (
               <Text
-                style={tw`text-2xl font-extrabold mb-2 text-[#0B3270]`}
+                style={tw`text-2xl font-extrabold mb-2 text-black`}
                 onPress={() => setVisEdit(true)}
               >
                 {values.name}

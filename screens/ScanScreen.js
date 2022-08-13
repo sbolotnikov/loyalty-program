@@ -203,6 +203,10 @@ const ScanScreen = () => {
     <Layout>
       {!decodeMode ? (
         <View style={styles.container}>
+
+        <Text style={tw`font-extrabold text-2xl text-center mt-4 text-[#0B3270]`}>
+            Scan Now
+          </Text>
           <AlertModal
             title={`Your QR code is invalid. Try again!`}
             button1={'Ok'}
@@ -373,16 +377,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    justifyContent: 'start',
+    position: 'relative'
   },
   barcodebox: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop:100,
     height: 300,
     width: 300,
     overflow: 'hidden',
     borderRadius: 30,
-    backgroundColor: 'tomato',
+    backgroundColor: '#c9ab78',
   },
 });

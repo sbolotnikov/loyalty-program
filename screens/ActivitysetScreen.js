@@ -72,7 +72,7 @@ const ActivitysetScreen = ({ route, navigation }) => {
                 </View>
 
                 <Text
-                  style={tw`text-lg font-extrabold mb-2 text-[#C9AB78] text-center`}
+                  style={tw`text-lg font-extrabold mb-2 text-[#776548] text-center`}
                 >
                   {doc.data().desc}
                 </Text>

@@ -55,10 +55,11 @@ const LoginScreen = () => {
   return (
     <KeyboardAwareScrollView>
     <Layout>
-      <View style={tw`max-w-[800px] w-full h-full justify-center items-center`}>
+      <View style={tw`max-w-[800px] w-full h-[85%] justify-center items-center`}>
         <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>Login</Text>
-        <Text style={tw`text-red-600 text-xl ${error?'flex':'hidden'}`}>{error?error:""}</Text>
-        <Text style={tw`text-yellow-400 text-xl ${message?'flex':'hidden'}`}>{message?message:""}</Text>
+        <Text style={tw`font-bold text-base text-justify m-2 text-black`}>Joining Fred Astaire Rewards means unlocking access to exclusive benefits and gifts.</Text>   
+        {error &&<Text style={tw`text-red-600 text-xl ${error?'flex':'hidden'}`}>{error?error:""}</Text>}
+        {message &&<Text style={tw`text-yellow-400 text-xl ${message?'flex':'hidden'}`}>{message?message:""}</Text>}
 
         <TextBox
           placeholder="Email Address"

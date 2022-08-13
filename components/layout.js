@@ -161,6 +161,10 @@ const Layout = ({ children }) => {
         link: 'Scan',
       },
       {
+        title: 'Manage Users',
+        link: 'Users',
+      },
+      {
         title: 'Get Stars',
         link: 'ActivitySet',
         params: { collectionName: 'activities' },
@@ -181,29 +185,31 @@ const Layout = ({ children }) => {
   return (
     <SafeAreaView
       style={[
-        tw` bg-white pt-5 mx-auto h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative`,
+        tw` bg-[#c9ab78] pt-5  h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative`,
         { overflow: 'hidden' },
       ]}
     >
       {/* Header */}
       <View
-        style={tw`flex-row pb-3 items-center mx-4 px-4`}
+        style={tw`flex-row pb-3 items-center m-0`}
         onLayout={(event) => {
           var { x, y, width, height } = event.nativeEvent.layout;
         }}
       >
         <Pressable onPress={onPressHomeFunction}>
+        <View style={tw`h-9 w-9 bg-gray-300 p-5 rounded-full border-[#776548] border-2 m-2 relative`}>
           <Image
             source={logo}
-            style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
+            style={tw`h-8 w-8 absolute top-0 left-0 mt-1 ml-1`}
           />
+          </View>
         </Pressable>
         <View style={tw`flex-1`}>
-          <Text style={tw`font-bold text-xl`}>
+          <Text style={tw`font-bold text-xl text-black`}>
             Loyalty Program
             {/* <ChevronDownIcon size={20} color="#00CCBB" /> */}
           </Text>
-          <Text style={tw`font-bold text-gray-400 text-xs`}>
+          <Text style={tw`font-bold text-white text-xs`}>
             Welcome,{' '}
             {currentUser
               ? currentUser.displayName
@@ -214,12 +220,12 @@ const Layout = ({ children }) => {
           </Text>
         </View>
         {currentUser.status=="student" &&<TouchableOpacity
-          style={tw` p-1 mr-3 relative`}
+          style={tw` p-1 mr-1 mt-4 relative`}
           onPress={() => setModalVisible(!modalVisible)}
         >
-          <ShoppingCartIcon color={'#00CCBB'} width={28} height={28} />
+          <ShoppingCartIcon color={'#776548'} width={28} height={28} />
           <Text
-            style={tw`font-bold text-white rounded-full bg-red-600 p-1 absolute -top-4 -right-2`}
+            style={tw`font-bold text-white rounded-full bg-[#776548] p-1 absolute -top-4 -right-2`}
           >
             {items}
           </Text>
@@ -228,27 +234,27 @@ const Layout = ({ children }) => {
           <Pressable onPress={() => navigation.navigate('Profile')}>
             <Image
               source={currentUser.photoURL}
-              style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
+              style={tw`h-9 w-9  p-5 m-2 rounded-full border-[#776548] border-2`}
             />
           </Pressable>
         ) : (
           <UserIcon size={35} color="#00CCBB" />
         )}
       </View>
-      <View style={tw`bg-[#00CCBB]`}>
-        <LinearGradient
-          colors={['#00CCBB', '#06b6d4', '#00CCBB']}
+      <View style={tw`bg-white`}>
+        {/* <LinearGradient
+          colors={['#0000', '#0000', '#0000']}
           locations={[0.1, 0.5, 0.9]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-        >
+        > */}
           <View
             style={tw.style(
               'w-full flex justify-center items-center relative ',
               { height: dimensions.screen.height - 56 }
             )}
           >
-            <Image source={logo} style={tw` h-96 w-96 opacity-40`} />
+            {/* <Image source={logo} style={tw` h-96 w-96 opacity-40`} /> */}
             <View
               style={[
                 tw`w-full h-[${
@@ -266,12 +272,12 @@ const Layout = ({ children }) => {
               {children}
             </View>
           </View>
-        </LinearGradient>
+        {/* </LinearGradient> */}
       </View>
       {currentUser.email && (
         <Animated.View
           style={tw.style(
-            `absolute bottom-0 right-0 w-full bg-white`,
+            `absolute bottom-0 right-0 w-full bg-[#c9ab78]`,
             {
               // Bind height to animated value
               bottom: heightAnim,
@@ -280,7 +286,7 @@ const Layout = ({ children }) => {
           )}
         >
           <View style={tw`relative  w-full`}>
-            <View
+            {/* <View
               style={[
                 tw`absolute  -top-9 left-1/2`,
                 ,
@@ -293,15 +299,14 @@ const Layout = ({ children }) => {
                 style={tw`flex justify-center items-center relative`}
                 onPress={onPressFunction}
               >
-                {/* <Text>X</Text> */}
                 <Burger status={!visNav} color={'#00CCBB'} />
               </Pressable>
-            </View>
+            </View> */}
             <View style={tw`flex-row justify-around w-full max-w-6xl mx-auto`}>
               <Navbar
                 textSize={textSize}
                 size1={size1}
-                color={'#00CCBB'}
+                color={'black'}
                 names={array[profile]}
                 logged={currentUser ? true : false}
               />

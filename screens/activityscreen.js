@@ -33,17 +33,20 @@ const Activityscreen = () => {
   }, [activities]);
   return (
     <Layout>
-      <View style={tw`w-full h-full justify-center items-center max-w-[800px] m-auto`}>
-        <View style={tw`flex-row justify-around items-center flex-wrap w-full`}>
-          <Text style={tw`font-extrabold text-xl text-red-400`}>
-            Activities of {currentUser.displayName}
+      <View style={tw`w-full h-full justify-start items-center max-w-[800px] m-auto`}>
+        <View style={tw` justify-around items-center flex-wrap w-full relative`}>
+        <Text style={tw`font-extrabold text-2xl text-center mt-4 text-[#0B3270]`}>
+            Activities
           </Text>
-          <Text style={tw` text-red-400 font-extrabold text-right`}>Total points available: {summed}</Text>
+          <Text style={tw`font-extrabold text-xl text-[#0B3270]`}>
+           of {currentUser.displayName}
+          </Text>
+          <Text style={tw` text-[#776548] w-full font-extrabold text-right absolute top-0 right-0`}>Balance: {summed}</Text>
         </View>
         <View
           style={[
-            tw`w-[98%] h-[60%] justify-center items-center m-auto bg-gray-500/30 m-1 rounded-lg border py-5 relative`,
-            { overflow: 'scroll' },
+            tw`w-[98%] h-[65%] justify-center items-center m-auto bg-[#c9ab78]/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
+            { overflow: 'auto' },
           ]}
         >
           <View style={tw`h-auto absolute top-0 left-0`}>
