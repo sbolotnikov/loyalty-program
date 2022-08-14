@@ -185,7 +185,7 @@ const Layout = ({ children }) => {
   return (
     <SafeAreaView
       style={[
-        tw` bg-[#c9ab78] pt-5  h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative`,
+        tw` bg-[#c9ab78] pt-5  h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative m-auto`,
         { overflow: 'hidden' },
       ]}
     >
@@ -276,14 +276,15 @@ const Layout = ({ children }) => {
       </View>
       {currentUser.email && (
         <Animated.View
-          style={tw.style(
-            `absolute bottom-0 right-0 w-full bg-[#c9ab78]`,
-            {
-              // Bind height to animated value
-              bottom: heightAnim,
-            },
-            { display: !keyboardStatus ? 'flex' : 'none' }
-          )}
+          style={[tw.style(
+            ` bottom-0 right-0 w-full bg-[#c9ab78]`,
+            // {
+            //   Bind height to animated value
+            //   bottom: heightAnim,
+            // },
+            { display: !keyboardStatus ? 'flex' : 'none' },
+            {position:'sticky'}
+          )]}
         >
           <View style={tw`relative  w-full`}>
             {/* <View
@@ -306,7 +307,7 @@ const Layout = ({ children }) => {
               <Navbar
                 textSize={textSize}
                 size1={size1}
-                color={'black'}
+                color={'#000'}
                 names={array[profile]}
                 logged={currentUser ? true : false}
               />
