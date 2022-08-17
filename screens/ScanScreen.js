@@ -30,6 +30,7 @@ import Btn from '../components/Btn';
 import useAuth from '../hooks/useAuth';
 import TextBox from '../components/TextBox';
 import { getUserTotals } from '../util/functions';
+const logo = require('../assets/dancerslogosm.png');
 const ScanScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -42,6 +43,7 @@ const ScanScreen = () => {
   const [text, setText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible3, setModalVisible3] = useState(false);
   const screen = Dimensions.get('screen');
   const [dimensions, setDimensions] = useState({ screen });
   const { currentUser, loading } = useAuth();
@@ -177,6 +179,13 @@ const ScanScreen = () => {
       if (ret == 'Confirm') {
         console.log('confirmed function called');
         let localRec = {};
+        let localSum=0;
+        for (let i = 0; i < activities.length; i++)  localSum+=activities[i].amount * activities[i].price;
+        if (localSum+userTotals<0) {
+          setModalVisible3(true)
+          // console.log("insufficient funds")
+        }else{
+
         for (let i = 0; i < activities.length; i++) {
           localRec = {
             points: activities[i].amount * activities[i].price,
@@ -195,6 +204,9 @@ const ScanScreen = () => {
           });
           console.log(localRec);
         }
+        setDecodeMode(false);
+        setText('');
+      }
       }
     }
   };
@@ -274,7 +286,13 @@ const ScanScreen = () => {
             vis={modalVisible}
             onReturn={(ret) => onConfirmFunction(ret)}
           />
-
+         <AlertModal
+            title={'Insufficient funds' }
+            button1={'Confirm'}
+            button2={''}
+            vis={modalVisible3}
+            onReturn={(ret) => setModalVisible3(false)}
+          />
           <View
             style={tw` justify-around items-center flex-wrap w-full mt-4`}
           >
@@ -310,14 +328,14 @@ const ScanScreen = () => {
             />
 
             <Btn
-              onClick={(e) => setDecodeMode(false)}
+              onClick={(e) => {setDecodeMode(false); setText('');}}
               title="Cancel"
               style={{ width: '48%', backgroundColor: '#0B3270' }}
             />
           </View>
           <View
             style={[
-              tw`w-[98%] h-[80%] justify-center items-center m-auto bg-gray-500/30 m-1 rounded-lg border py-5 relative`,
+              tw`w-[98%] h-[65%] justify-center items-center m-auto bg-gray-500/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
               { overflow: 'scroll' },
             ]}
           >
@@ -329,7 +347,7 @@ const ScanScreen = () => {
                 >
                   <View style={tw`w-[65%] flex-row`}>
                     <Image
-                      source={doc.image}
+                      source={doc.image? doc.image: logo}
                       style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
                     />
                     <Text style={tw`ml-2`}>{doc.name}</Text>

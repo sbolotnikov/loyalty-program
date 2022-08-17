@@ -263,12 +263,10 @@ const Layout = ({ children }) => {
               ]}
             >
               {/* Body */}
-              {modalVisible && (
-                <BasketModal
+                {(currentUser.status=="student") && <BasketModal
                   vis={modalVisible}
                   onReturn={() => setModalVisible(!modalVisible)}
-                />
-              )}
+                />}
               {children}
             </View>
           </View>

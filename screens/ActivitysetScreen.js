@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { useState, useEffect } from 'react';
 import Layout from '../components/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -48,17 +48,13 @@ const ActivitysetScreen = ({ route, navigation }) => {
           >
             {value.docs.map((doc) => (
               <TouchableOpacity onPress={(e)=>pickCardToEdit(e,{...doc.data(), uid:doc.id})} key={doc.id} style={tw` h-96 w-64 bg-white/70 rounded-md m-1`} >
-                <View
-                  style={[
+              <ImageBackground source={doc.data().image?doc.data().image:logo} resizeMode="contain" style={[
                     tw` h-64 w-full rounded-md relative justify-center items-center`,
                     {
-                      objectFit: 'contain',
-                      backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundImage: `url(${doc.data().image?doc.data().image:logo})`,
                     },
-                  ]}
-                >
+                  ]}>
+                
                   <Text
                     style={tw`text-red-600 text-xl text-right font-extrabold absolute top-0 right-0 bg-white/60 rounded-md m-1`}
                   >
@@ -69,7 +65,7 @@ const ActivitysetScreen = ({ route, navigation }) => {
                   >
                     {doc.data().name}
                   </Text>
-                </View>
+                </ImageBackground>
 
                 <Text
                   style={tw`text-lg font-extrabold mb-2 text-[#776548] text-center`}
@@ -90,6 +86,7 @@ const ActivitysetScreen = ({ route, navigation }) => {
                     Add new
                   </Text>
             </TouchableOpacity>
+            <View style={tw` h-32 w-full`}></View>
           </View>
         )}
         </View>}

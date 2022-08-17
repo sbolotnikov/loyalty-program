@@ -8,6 +8,7 @@ import CountBox from './CountBox';
 import useAuth from '../hooks/useAuth';
 import {  Timestamp } from 'firebase/firestore';
 import QRCode from "react-qr-code";
+const logo = require('../assets/dancerslogosm.png');
 
 const BasketModal = ({ vis, onReturn }) => {
   const { currentUser } = useAuth();
@@ -25,7 +26,7 @@ const BasketModal = ({ vis, onReturn }) => {
     return () => subscription?.remove();
   });
   useEffect(()=>{
-    setActivities([...items])
+    if (currentUser.status=="student") setActivities([...items])
   },[items])
    const getInfo=(activities)=>{
     let arr1=[]; 
@@ -34,7 +35,8 @@ const BasketModal = ({ vis, onReturn }) => {
       arr1.push(activities[i].uid);
       arr2.push(activities[i].amount);
     }
-    let obj=JSON.stringify({a:[currentUser.uid, Timestamp.now().seconds.toString()], b:arr1, c:arr2})
+    let obj="";
+    if (currentUser.status=="student") obj=JSON.stringify({a:[currentUser.uid, Timestamp.now().seconds.toString()], b:arr1, c:arr2})
     console.log(obj)
     return obj;
    }
@@ -58,14 +60,15 @@ const BasketModal = ({ vis, onReturn }) => {
           </TouchableOpacity>
             <Text style={tw`text-red-600 text-xl m-2`}>Claiming Rewards/Activities</Text>
             <View
-              style={[tw` justify-around items-center w-full h-[40%]  mb-1`,{overflow:"scroll"}]}
+              style={[tw` justify-around items-center w-full h-[40%] relative m-4`,{overflow:"scroll"}]}
             >
+            <View style={tw`absolute top-0 left-0`}>
              {activities.map((doc, i)=>(
               <View key={doc.uid}
               style={tw`flex-row justify-between w-[95%] items-center mx-auto my-2`}>
               <View style={tw`w-[65%] flex-row`}>
                <Image
-              source={doc.image}
+              source={doc.image? doc.image : logo}
               style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
              />
                <Text style={tw`ml-2`}>{doc.name}</Text>
@@ -80,6 +83,7 @@ const BasketModal = ({ vis, onReturn }) => {
              </View>))
              }
              <Text>Total amount: {totals}</Text>
+             </View>
             </View>
             <QRCode value={getInfo(activities)} size={300} />
           </View>       

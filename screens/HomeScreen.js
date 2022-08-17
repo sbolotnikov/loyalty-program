@@ -46,6 +46,7 @@ const Homescreen = () => {
   }, [snapshot]);
   useEffect(async () => {
     let arr = [];
+    if (currentUser.status == 'student'){
     const querySnapshot = await getDocs(
       collection(doc(db, 'users', currentUser.uid), 'rewards')
     );
@@ -58,6 +59,7 @@ const Homescreen = () => {
       localSum += arr[i].points;
     }
     setSums(localSum);
+  }
   }, []);
   console.log(width);
   return (

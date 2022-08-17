@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity} from 'react-native';
-import  { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
@@ -21,47 +21,77 @@ const Getstarscreen = ({ route, navigation }) => {
     price: 0,
     image: '',
     uid: '',
-    amount:0
+    amount: 0,
   });
-  const [value, loading, error] = useCollection(query(collection(db, 'activities'), where("price", (collectionName=='activities')?">":"<", 0)), {
-    snapshotListenOptions: { includeMetadataChanges: true }
-  });
-  const [activities, setActivities]= useState([]);
-  useEffect(()=>{
-    // if (value.docs!==undefined) 
+  const [value, loading, error] = useCollection(
+    query(
+      collection(db, 'activities'),
+      where('price', collectionName == 'activities' ? '>' : '<', 0)
+    ),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+  const [activities, setActivities] = useState([]);
+  useEffect(() => {
+    // if (value.docs!==undefined)
     // setAmounts(...Array(value.docs?.length).values(0))
-   if  (value) setActivities(value.docs.map((doc)=>({...doc.data(),amount:1, uid:doc.id})))
-  },[value])
-//   const pickActivityToBasket=(e,{name, price, image, uid, amount})=>{
-//     e.preventDefault();
-//     console.log({name, price, image, uid, amount})
-   
-//  }
+    if (value)
+      setActivities(
+        value.docs.map((doc) => ({ ...doc.data(), amount: 1, uid: doc.id }))
+      );
+  }, [value]);
+  //   const pickActivityToBasket=(e,{name, price, image, uid, amount})=>{
+  //     e.preventDefault();
+  //     console.log({name, price, image, uid, amount})
+
+  //  }
   return (
     <Layout>
-<View style={[tw`w-full h-full justify-center items-center m-auto`,{overflow:"scroll"}]}>
-        <Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
-          {error ? error : ''}
-        </Text>
+      <View style={tw` justify-around items-center flex-wrap w-full relative`}>
         <Text
-          style={tw`text-yellow-400 text-xl text-center ${loading ? 'flex' : 'hidden'}`}
+          style={tw`font-extrabold text-2xl text-center mt-3 text-[#0B3270]`}
         >
-          {loading ? 'Collection: Loading...' : ''}
+          Choose your Activities
         </Text>
+      </View>
+      <View
+        style={[
+          tw`w-full h-[85%] justify-center items-center`,
+          { overflow: 'scroll' },
+        ]}
+      >
+        {error && (
+          <Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
+            {error ? error : ''}
+          </Text>
+        )}
+        {loading && (
+          <Text
+            style={tw`text-yellow-400 text-xl text-center ${
+              loading ? 'flex' : 'hidden'
+            }`}
+          >
+            {loading ? 'Collection: Loading...' : ''}
+          </Text>
+        )}
+
         {activities && (
           <View
             style={tw`w-full h-full flex-row flex-wrap justify-center items-center relative max-w-4xl`}
           >
-            {activities.map((doc,i) => (
-              <View key={doc.uid} style={tw` h-96 w-64 bg-white/70 justify-start items-start rounded-md m-1`} >
-                <View
+            {activities.map((doc, i) => (
+              <View
+                key={doc.uid}
+                style={tw` h-96 w-64 bg-white/70 justify-start items-start rounded-md m-1`}
+              >
+                <ImageBackground
+                  source={doc.image ? doc.image : logo}
+                  resizeMode="contain"
                   style={[
                     tw` h-64 w-full rounded-md relative justify-center items-center`,
                     {
-                      objectFit: 'contain',
-                      backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundImage: `url(${doc.image?doc.image:logo})`,
                     },
                   ]}
                 >
@@ -75,22 +105,33 @@ const Getstarscreen = ({ route, navigation }) => {
                   >
                     {doc.name}
                   </Text>
-                </View>
-
+                </ImageBackground>
                 <Text
                   style={tw`text-lg font-extrabold mb-2 text-[#776548] text-center`}
                 >
                   {doc.desc}
                 </Text>
-                <View style={tw`w-full absolute bottom-0 right-0 flex-row  justify-between items-end mb-1 mr-1`}>
-                <CountBox startValue={0} setWidth={12} onChange={(num)=>{
-                  let copyArr=activities;
-                  copyArr[i].amount=num
-                  setActivities([...copyArr]);
-                  let activity={name:copyArr[i].name, price:copyArr[i].price, image:copyArr[i].image, uid:copyArr[i].uid, amount:num}
-                  dispatch(addToBasket(activity))
-                  }}/>
-                {/* <Btn
+                <View
+                  style={tw`w-full absolute bottom-0 right-0 flex-row  justify-between items-end mb-1 mr-1`}
+                >
+                  <CountBox
+                    startValue={0}
+                    setWidth={12}
+                    onChange={(num) => {
+                      let copyArr = activities;
+                      copyArr[i].amount = num;
+                      setActivities([...copyArr]);
+                      let activity = {
+                        name: copyArr[i].name,
+                        price: copyArr[i].price,
+                        image: copyArr[i].image,
+                        uid: copyArr[i].uid,
+                        amount: num,
+                      };
+                      dispatch(addToBasket(activity));
+                    }}
+                  />
+                  {/* <Btn
               onClick={(e)=>pickActivityToBasket(e,doc)}
               title="Add"
               style={{ width: '28%',height:"32px", backgroundColor: '#0B3270'}}
@@ -98,10 +139,10 @@ const Getstarscreen = ({ route, navigation }) => {
                 </View>
               </View>
             ))}
-
+            <View style={tw` h-32 w-full`}></View>
           </View>
         )}
-        </View>
+      </View>
     </Layout>
   );
 };
