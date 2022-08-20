@@ -69,7 +69,7 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
               <Text>Close</Text>
             </TouchableOpacity>
             <Text
-                style={tw`font-extrabold text-2xl text-center mt-3 text-[#0B3270]`}
+                style={tw`font-extrabold text-2xl text-center mt-3 text-[#3D1152]`}
               >
                 Activities
               </Text>
@@ -123,7 +123,7 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
                             activities[i - 1].confirmed.toDate().getTime()
                           ).format('MMM DD YYYY') && (
                           <Text
-                            style={tw`ml-2 font-extrabold text-xl text-[#0B3270]`}
+                            style={tw`ml-2 font-extrabold text-xl text-[#3D1152]`}
                           >
                             {' '}
                             Date:{' '}
@@ -134,7 +134,7 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
                         )
                       ) : (
                         <Text
-                          style={tw`ml-2 font-extrabold text-xl text-[#0B3270]`}
+                          style={tw`ml-2 font-extrabold text-xl text-[#3D1152]`}
                         >
                           {' '}
                           Date:{' '}
@@ -143,7 +143,7 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
                           )}{' '}
                         </Text>
                       )}
-                      <Text style={tw`ml-2 text-xl text-[#0B3270] `}>
+                      <Text style={tw`ml-2 text-xl text-[#3D1152] `}>
                     {moment(doc.confirmed.toDate().getTime()).format('hh:mm a')}
                   </Text>
                   <Text style={tw`ml-2 text-xl text-[#776548] `}>

@@ -52,7 +52,13 @@ const EnterActivity = ({name, desc, price,image, uid, collectionName, onReturn})
           try {
             setError('');
             let timeStamp=(uid.length>0)?{"updated": Timestamp.now()}:{"created": Timestamp.now()}
-            const docRef = doc(db, "activities", uid.length>0?uid:uuidv4());
+            const docRef = doc(doc(db, 'studios', currentUser.studio), 'activities', uid.length>0?uid:uuidv4());
+
+
+
+
+
+
             setDoc(
               docRef,
               {
@@ -97,7 +103,7 @@ const EnterActivity = ({name, desc, price,image, uid, collectionName, onReturn})
  const onConfirmFunction=async (ret)=>{
   setModalVisible(false); 
   if (ret=='Confirm'){
-    await deleteDoc(doc(db,"activities", uid));
+    await deleteDoc(doc(db, 'studios', currentUser.studio, 'activities', uid));
     deleteOldImage('active',image);
     onReturn();
   }
@@ -108,7 +114,7 @@ const EnterActivity = ({name, desc, price,image, uid, collectionName, onReturn})
     {/* <View style={tw` bg-black`}> */}
     <AlertModal title={'Are you sure you want to delete'} button1={'Confirm'} button2={"Cancel"} vis={modalVisible} onReturn={(ret)=>onConfirmFunction(ret)}/>
     {/* </View> */}
-          <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>
+          <Text style={tw`text-4xl font-extrabold mb-2 text-[#3D1152]`}>
             {uid!==""?'Edit Existed':'Enter New'} {(collectionName!=="activities")?"Reward":"Activity"}
           </Text>
           {!!error &&<Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
@@ -160,7 +166,7 @@ const EnterActivity = ({name, desc, price,image, uid, collectionName, onReturn})
            {!((name==values.name)&&(desc==values.desc)&&(price==values.price)&&(image==values.image)) && <Btn
               onClick={(e) => submitActivity(e)}
               title="Submit"
-              style={{ width: '48%', backgroundColor: '#0B3270' }}
+              style={{ width: '48%', backgroundColor: '#3D1152' }}
             />}
             <Btn
               onClick={() => onReturn()}

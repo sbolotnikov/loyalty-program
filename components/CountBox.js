@@ -11,12 +11,12 @@ export default function CountBox({startValue, setWidth,onChange}){
         onChange(parseFloat(number)+increment)
     }
     return <View style={tw`flex-row justify-center items-center ml-2`}>
-<TouchableOpacity style={tw`rounded-full bg-[#0B3270] mr-2`} onPress={(e)=>changeNumber(e,false)}>
+<TouchableOpacity style={tw`rounded-full bg-[#3D1152] mr-2`} onPress={(e)=>changeNumber(e,false)}>
     <Text style={tw` font-extrabold text-white text-xl px-3 mb-1`}>-</Text>
 </TouchableOpacity>
         <TextInput style={tw` h-8 w-${setWidth} justify-center items-center`} onChangeText={onChangeNumber}
         value={number}/>
-        <TouchableOpacity style={tw`rounded-full bg-[#0B3270] ml-2`} onPress={(e)=>changeNumber(e,true)}>
+        <TouchableOpacity style={tw`rounded-full bg-[#3D1152] ml-2`} onPress={(e)=>changeNumber(e,true)}>
     <Text style={tw`font-extrabold text-white text-xl px-2 mb-1`}>+</Text>
 </TouchableOpacity>
     </View>

@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync } from 'expo-image-manipulator';
 import { v4 as uuidv4 } from 'uuid';
 import { storage } from '../firebase';
-import { doc, collection, getDocs } from 'firebase/firestore';
+import { doc, collection, getDocs, addDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import {
   ref,
@@ -103,3 +103,20 @@ import {
           });
       }
     }
+    // export const transferCollection = async (collectionName) => {
+      
+    //     const querySnapshot = await getDocs(
+    //       collection(db, collectionName)
+    //     );
+    //     let arr = [];
+    //     console.log("inside function")
+    //     querySnapshot.forEach((doc) => {
+    //       arr.push({
+    //         rec:doc.data(),
+    //         id: doc.id,});
+    //     });
+    //     console.log(arr)
+    //     for (let i = 0; i < arr.length; i++) {
+    //     await addDoc(collection(doc(db, 'studios', 'z1bNKKJ3tE3VKB2cbU2l'), collectionName), arr[i].rec);
+    //   }
+    // }

@@ -145,7 +145,7 @@ export const AuthProvider = ({ children }) => {
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          let userChange={...user, status:docSnap.data().status}
+          let userChange={...user, status:docSnap.data().status, studio:docSnap.data().studio}
           setCurrentUser(userChange);
           setDoc(docRef,            
           {

@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth';
 // import {GlobalContext} from '../globalContext';
 import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
-import {pickImage, deleteOldImage} from '../util/functions';
+import { pickImage, deleteOldImage } from '../util/functions';
 const Profilescreen = () => {
   const { currentUser, logout, updatePass, updateUser } = useAuth();
   // const {loading, setLoading} = useContext(GlobalContext);
@@ -33,10 +33,9 @@ const Profilescreen = () => {
   const pickAvatar = async (e) => {
     // No permissions request is necessary for launching the image library
     e.preventDefault();
-    let picURL=await pickImage("images","",300) 
-    console.log(picURL)
-    handleChange(picURL, 'image')
-
+    let picURL = await pickImage('images', '', 300);
+    console.log(picURL);
+    handleChange(picURL, 'image');
   };
   const submitReset = async (e) => {
     e.preventDefault();
@@ -75,9 +74,8 @@ const Profilescreen = () => {
         console.log(err);
         setError(`Failed to update profile. ${err.message}`);
       }
- 
     }
-    deleteOldImage('images',currentUser.photoURL);
+    deleteOldImage('images', currentUser.photoURL);
     setUpdateLocal(false);
   };
   useEffect(() => {
@@ -91,80 +89,80 @@ const Profilescreen = () => {
   }, [updateLocal]);
   return (
     <Layout>
-    <View style={tw`w-full h-full justify-center items-center`}>
-      <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>
-        Profile of {currentUser.status}
-      </Text>
-      <View style={tw`w-full max-w-4xl justify-center items-center`}>
-        <View style={tw`flex-row w-[92%] justify-between`}>
-          <View style={tw`w-[70%]`}>
-            {visEdit ? (
-              <TextBox
-                defaultValue={values.name}
-                onSubmitEditing={() => setVisEdit(false)}
-                onChangeText={(text) => handleChange(text, 'name')}
+      <View style={tw`w-full h-full justify-center items-center`}>
+        <Text style={tw`text-4xl font-extrabold mb-2 text-[#3D1152]`}>
+          Profile of {currentUser.status}
+        </Text>
+        <View style={tw`w-full max-w-4xl justify-center items-center`}>
+          <View style={tw`flex-row w-[92%] justify-between`}>
+            <View style={tw`w-[70%]`}>
+              {visEdit ? (
+                <TextBox
+                  defaultValue={values.name}
+                  onSubmitEditing={() => setVisEdit(false)}
+                  onChangeText={(text) => handleChange(text, 'name')}
+                />
+              ) : (
+                <Text
+                  style={tw`text-2xl font-extrabold mb-2 text-black`}
+                  onPress={() => setVisEdit(true)}
+                >
+                  {values.name}
+                </Text>
+              )}
+              <Text style={tw`font-bold text-xl`}>{currentUser.email}</Text>
+            </View>
+            <TouchableOpacity onPress={(e) => pickAvatar(e)}>
+              <Image
+                source={values.image}
+                style={tw`h-20 w-20 bg-gray-300 p-4 rounded-full`}
               />
-            ) : (
-              <Text
-                style={tw`text-2xl font-extrabold mb-2 text-black`}
-                onPress={() => setVisEdit(true)}
-              >
-                {values.name}
-              </Text>
-            )}
-            <Text style={tw`font-bold text-xl`}>{currentUser.email}</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={(e)=>pickAvatar(e)}>
-            <Image
-              source={values.image}
-              style={tw`h-20 w-20 bg-gray-300 p-4 rounded-full`}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text
-          style={tw`text-red-600 text-xl text-center ${
-            error ? 'flex' : 'hidden'
-          }`}
-        >
-          {error ? error : ''}
-        </Text>
-        <Text
-          style={tw`text-yellow-400 text-xl text-center ${
-            message ? 'flex' : 'hidden'
-          }`}
-        >
-          {message ? message : ''}
-        </Text>
+          <Text
+            style={tw`text-red-600 text-xl text-center ${
+              error ? 'flex' : 'hidden'
+            }`}
+          >
+            {error ? error : ''}
+          </Text>
+          <Text
+            style={tw`text-yellow-400 text-xl text-center ${
+              message ? 'flex' : 'hidden'
+            }`}
+          >
+            {message ? message : ''}
+          </Text>
 
-        <TextBox
-          placeholder="Password"
-          secureTextEntry={true}
-          onChangeText={(text) => handleChange(text, 'pwd')}
-        />
-        <TextBox
-          placeholder="Confirme Password"
-          secureTextEntry={true}
-          onChangeText={(text) => handleChange(text, 'pwd2')}
-        />
-        <View
-          style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}
-        >
-          <Btn
-            onClick={(e) => submitReset(e)}
-            title="Save changes"
-            style={{
-              width: '48%',
-              backgroundColor: '#0B3270',
-              display: !loadingLocal ? 'flex' : 'none',
-            }}
+          <TextBox
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={(text) => handleChange(text, 'pwd')}
           />
-          <Btn
-            onClick={() => logout()}
-            title="Log out"
-            style={{ width: '48%', backgroundColor: '#344869' }}
+          <TextBox
+            placeholder="Confirme Password"
+            secureTextEntry={true}
+            onChangeText={(text) => handleChange(text, 'pwd2')}
           />
+          <View
+            style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}
+          >
+            <Btn
+              onClick={(e) => submitReset(e)}
+              title="Save changes"
+              style={{
+                width: '48%',
+                backgroundColor: '#3D1152',
+                display: !loadingLocal ? 'flex' : 'none',
+              }}
+            />
+            <Btn
+              onClick={() => logout()}
+              title="Log out"
+              style={{ width: '48%', backgroundColor: '#344869' }}
+            />
+          </View>
         </View>
-      </View>
       </View>
     </Layout>
   );

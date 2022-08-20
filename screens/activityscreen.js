@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Dimensions } from 'react-native';
 import React from 'react';
 import Layout from '../components/layout';
 import tw from 'twrnc';
@@ -13,6 +13,15 @@ const Activityscreen = () => {
   const [activities, setActivities] = useState([]);
   const [summed, setSums] = useState(0);
   const { currentUser } = useAuth();
+  const screen = Dimensions.get('screen');
+    const [dimensions, setDimensions] = useState({ screen });
+  
+    useEffect(() => {
+      const subscription = Dimensions.addEventListener('change', ({ screen }) => {
+        setDimensions({ screen });
+      });
+      return () => subscription?.remove();
+    });
   useEffect(async () => {
     let arr = [];
     const querySnapshot = await getDocs(
@@ -48,11 +57,11 @@ const Activityscreen = () => {
           style={tw` justify-around items-center flex-wrap w-full relative`}
         >
           <Text
-            style={tw`font-extrabold text-2xl text-center mt-3 text-[#0B3270]`}
+            style={tw`font-extrabold text-2xl text-center mt-3 text-[#3D1152]`}
           >
             Activities
           </Text>
-          <Text style={tw`font-extrabold text-xl text-[#0B3270]`}>
+          <Text style={tw`font-extrabold text-xl text-[#3D1152]`}>
             of {currentUser.displayName}
           </Text>
           <Text
@@ -63,8 +72,8 @@ const Activityscreen = () => {
         </View>
         <View
           style={[
-            tw`w-[98%] h-[65%] justify-center items-center m-auto bg-[#c9ab78]/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
-            { overflow: 'auto' },
+            tw`w-[98%]  justify-center items-center m-auto bg-[#c9ab78]/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
+            { overflow: 'auto' },{ height: dimensions.screen.height*.65  }
           ]}
         >
           <View style={tw`h-auto w-full absolute top-0 left-0`}>
@@ -94,7 +103,7 @@ const Activityscreen = () => {
                         activities[i - 1].confirmed.toDate().getTime()
                       ).format('MMM DD YYYY') && (
                       <Text
-                        style={tw`ml-2 font-extrabold text-xl text-[#0B3270]`}
+                        style={tw`ml-2 font-extrabold text-xl text-[#3D1152]`}
                       >
                         {' '}
                         Date:{' '}
@@ -105,7 +114,7 @@ const Activityscreen = () => {
                     )
                   ) : (
                     <Text
-                      style={tw`ml-2 font-extrabold text-xl text-[#0B3270]`}
+                      style={tw`ml-2 font-extrabold text-xl text-[#3D1152]`}
                     >
                       {' '}
                       Date:{' '}
@@ -114,7 +123,7 @@ const Activityscreen = () => {
                       )}{' '}
                     </Text>
                   )}
-                  <Text style={tw`ml-2 text-xl text-[#0B3270] `}>
+                  <Text style={tw`ml-2 text-xl text-[#3D1152] `}>
                     {moment(doc.confirmed.toDate().getTime()).format('hh:mm a')}
                   </Text>
                   <Text style={tw`ml-2 text-xl text-[#776548] `}>

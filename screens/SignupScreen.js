@@ -1,5 +1,5 @@
-import { View, Text, } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { View, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import React, { useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -39,11 +39,11 @@ const SignupScreen = () => {
           setError('');
           // setLoading(true);
           await signup(email, pwd);
-        } catch(err) {
-          console.log(err)
+        } catch (err) {
+          console.log(err);
           setError('Failed to create an account');
         }
-    
+
         // setLoading(false);
       } else {
         setError('Passwords are different!');
@@ -54,41 +54,51 @@ const SignupScreen = () => {
   }
   return (
     <KeyboardAwareScrollView>
-     <Layout> 
-      <View style={tw`max-w-[800px] w-full justify-center items-center`}>
-        <Text style={tw`text-4xl font-extrabold mb-2 text-[#0B3270]`}>Sign Up</Text>
-        <Text style={tw`text-red-600 text-xl ${error?'flex':'hidden'}`}>{error?error:""}</Text>
-        <Text style={tw`text-yellow-400 text-xl ${message?'flex':'hidden'}`}>{message?message:""}</Text>
-        <TextBox
-          placeholder="Email Address"
-          onChangeText={(text) => handleChange(text, 'email')}
-        />
-        <TextBox
-          placeholder="Password"
-          secureTextEntry={true}
-          onChangeText={(text) => handleChange(text, 'pwd')}
-        />
-        <TextBox
-          placeholder="Confirme Password"
-          secureTextEntry={true}
-          onChangeText={(text) => handleChange(text, 'pwd2')}
-        />
-        <View style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}>
-          <Btn
-            onClick={(e) => submitSignup(e)}
-            title="Sign Up"
-            style={{ width: '48%', backgroundColor: '#0B3270' }}
+      <Layout>
+        <View style={tw`max-w-[800px] w-full justify-center items-center`}>
+          <Text style={tw`text-4xl font-extrabold mb-2 text-[#3D1152]`}>
+            Sign Up
+          </Text>
+          <Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
+            {error ? error : ''}
+          </Text>
+          <Text
+            style={tw`text-yellow-400 text-xl ${message ? 'flex' : 'hidden'}`}
+          >
+            {message ? message : ''}
+          </Text>
+          <TextBox
+            placeholder="Email Address"
+            onChangeText={(text) => handleChange(text, 'email')}
           />
-          <Btn
-            onClick={() => navigation.replace('Login')}
-            title="Login"
-            style={{ width: '48%', backgroundColor: '#344869' }}
+          <TextBox
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={(text) => handleChange(text, 'pwd')}
           />
+          <TextBox
+            placeholder="Confirme Password"
+            secureTextEntry={true}
+            onChangeText={(text) => handleChange(text, 'pwd2')}
+          />
+          <View
+            style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}
+          >
+            <Btn
+              onClick={(e) => submitSignup(e)}
+              title="Sign Up"
+              style={{ width: '48%', backgroundColor: '#3D1152' }}
+            />
+            <Btn
+              onClick={() => navigation.replace('Login')}
+              title="Login"
+              style={{ width: '48%', backgroundColor: '#344869' }}
+            />
+          </View>
         </View>
-      </View>
-     </Layout></KeyboardAwareScrollView>
+      </Layout>
+    </KeyboardAwareScrollView>
   );
 };
 
 export default SignupScreen;
-

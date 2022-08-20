@@ -41,7 +41,7 @@ const BasketModal = ({ vis, onReturn }) => {
     return obj;
    }
     return (
-        <View style={tw` flex-1 justify-center items-center`}>
+       <View style={tw` flex-1 justify-center items-center ${!vis?"h-0":""}`}>
       <Modal
         animationType="slide"
         transparent={true}

@@ -15,9 +15,10 @@ const logo = require('../assets/dancerslogosm.png');
 const Homescreen = () => {
   const navigation = useNavigation();
   const { currentUser } = useAuth();
+  console.log(currentUser)
   const [summed, setSums] = useState(0);
   const [carousel, setCarousel] = useState([{ url: '', text: '' }]);
-  const [snapshot, loading, err] = useCollection(collection(db, 'settings'), {
+  const [snapshot, loading, err] = useCollection(collection(doc(db, 'studios', currentUser.studio), 'settings'), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
   const [fontLoaded] = useFonts({
@@ -91,7 +92,7 @@ const Homescreen = () => {
               Rewards Balance: {summed}
             </Text>
           )}
-          <Text style={tw`font-bold text-2xl text-center mt-4 text-[#0B3270]`}>
+          <Text style={tw`font-bold text-2xl text-center mt-4 text-[#3D1152]`}>
             OUR NEWS
           </Text>
           <Text style={tw`font-bold  ${(dimensions.screen.width < 760)?'text-justify text-sm':"text-center text-lg"} m-2 text-[#776548]`}>Earn points for every activity you have participated in and spend them for dance accessories, lessons, and upcoming events in our studios.</Text>  
@@ -99,8 +100,8 @@ const Homescreen = () => {
         {/* <Swiper  width={width>900?800:Math.round(width*.8)} height={Math.round(height*.6)} loop={true} index={0} showsButtons> */}
         <View
           style={[
-            tw`w-full h-[75%]  justify-center items-center relative max-w-4xl`,
-            { overflow: 'auto' },
+            tw`w-full justify-center items-center relative max-w-4xl`,
+            { overflow: 'auto' }, { height: dimensions.screen.height*.55  }
           ]}
         >
           <View style={tw` absolute top-0 left-0 flex-row`}>

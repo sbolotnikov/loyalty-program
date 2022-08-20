@@ -1,17 +1,18 @@
-import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 import { db } from '../firebase';
-import { collection, where, query } from 'firebase/firestore';
+import { collection, where, query, doc } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import CountBox from '../components/CountBox';
-import Btn from '../components/Btn';
+import useAuth from '../hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import { addToBasket } from '../features/basketSlice';
 const logo = require('../assets/dancerslogosm.png');
 const Getstarscreen = ({ route, navigation }) => {
+  const { currentUser } = useAuth();
   const { collectionName } = route.params;
   const dispatch = useDispatch();
   // const navigation = useNavigation();
@@ -23,16 +24,26 @@ const Getstarscreen = ({ route, navigation }) => {
     uid: '',
     amount: 0,
   });
+  const conditions = [];
+  conditions.push(
+    where('price', collectionName == 'activities' ? '>' : '<', 0)
+  );
   const [value, loading, error] = useCollection(
-    query(
-      collection(db, 'activities'),
-      where('price', collectionName == 'activities' ? '>' : '<', 0)
-    ),
+    query(collection(doc(db, 'studios', currentUser.studio), 'activities'), ...conditions),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
   const [activities, setActivities] = useState([]);
+  const screen = Dimensions.get('screen');
+  const [dimensions, setDimensions] = useState({ screen });
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
+      setDimensions({ screen });
+    });
+    return () => subscription?.remove();
+  });
   useEffect(() => {
     // if (value.docs!==undefined)
     // setAmounts(...Array(value.docs?.length).values(0))
@@ -48,17 +59,17 @@ const Getstarscreen = ({ route, navigation }) => {
   //  }
   return (
     <Layout>
-      <View style={tw` justify-around items-center flex-wrap w-full relative`}>
+      <View style={tw` justify-start items-center flex-wrap w-full relative`}>
         <Text
-          style={tw`font-extrabold text-2xl text-center mt-3 text-[#0B3270]`}
+          style={tw`font-extrabold text-2xl text-center mt-3 text-[#3D1152]`}
         >
           Choose your Activities
         </Text>
       </View>
       <View
         style={[
-          tw`w-full h-[85%] justify-center items-center`,
-          { overflow: 'scroll' },
+          tw`w-full justify-start items-center`,
+          { overflow: 'scroll' }, ,{ height: dimensions.screen.height*.85  }
         ]}
       >
         {error && (
@@ -101,7 +112,7 @@ const Getstarscreen = ({ route, navigation }) => {
                     {doc.price}
                   </Text>
                   <Text
-                    style={tw`text-2xl font-extrabold mb-2 text-[#0B3270] text-center w-full bg-white/60`}
+                    style={tw`text-2xl font-extrabold mb-2 text-[#3D1152] text-center w-full bg-white/60`}
                   >
                     {doc.name}
                   </Text>
@@ -134,7 +145,7 @@ const Getstarscreen = ({ route, navigation }) => {
                   {/* <Btn
               onClick={(e)=>pickActivityToBasket(e,doc)}
               title="Add"
-              style={{ width: '28%',height:"32px", backgroundColor: '#0B3270'}}
+              style={{ width: '28%',height:"32px", backgroundColor: '#3D1152'}}
             /> */}
                 </View>
               </View>

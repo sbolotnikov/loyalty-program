@@ -37,7 +37,7 @@ const ScanScreen = () => {
   const [summed, setSum] = useState(0);
   const [noClaim, setNoClaim] = useState(false);
   const [userData, setUserData] = useState({});
-  const [userTotals, setUserTotals] =useState(0);
+  const [userTotals, setUserTotals] = useState(0);
   const [activities, setActivities] = useState([]);
   const [decodeMode, setDecodeMode] = useState(false);
   const [text, setText] = useState('');
@@ -153,7 +153,7 @@ const ScanScreen = () => {
               image: docSnap1.data().photoURL,
               uid: obj.a[0],
             };
-            setUserTotals(await getUserTotals(obj.a[0]))
+            setUserTotals(await getUserTotals(obj.a[0]));
             setUserData(userData);
           } else {
             // doc.data() will be undefined in this case
@@ -179,34 +179,37 @@ const ScanScreen = () => {
       if (ret == 'Confirm') {
         console.log('confirmed function called');
         let localRec = {};
-        let localSum=0;
-        for (let i = 0; i < activities.length; i++)  localSum+=activities[i].amount * activities[i].price;
-        if (localSum+userTotals<0) {
-          setModalVisible3(true)
+        let localSum = 0;
+        for (let i = 0; i < activities.length; i++)
+          localSum += activities[i].amount * activities[i].price;
+        if (localSum + userTotals < 0) {
+          setModalVisible3(true);
           // console.log("insufficient funds")
-        }else{
-
-        for (let i = 0; i < activities.length; i++) {
-          localRec = {
-            points: activities[i].amount * activities[i].price,
-            amount: activities[i].amount,
-            name: activities[i].name,
-            cofimedby: currentUser.displayName,
-            confirmed: Timestamp.now(),
-          };
-          await addDoc(collection(doc(db, 'users', userData.uid), 'rewards'), {
-            points: activities[i].amount * activities[i].price,
-            amount: activities[i].amount,
-            name: activities[i].name,
-            note: activities[i].note,
-            cofimedby: currentUser.displayName,
-            confirmed: Timestamp.now(),
-          });
-          console.log(localRec);
+        } else {
+          for (let i = 0; i < activities.length; i++) {
+            localRec = {
+              points: activities[i].amount * activities[i].price,
+              amount: activities[i].amount,
+              name: activities[i].name,
+              cofimedby: currentUser.displayName,
+              confirmed: Timestamp.now(),
+            };
+            await addDoc(
+              collection(doc(db, 'users', userData.uid), 'rewards'),
+              {
+                points: activities[i].amount * activities[i].price,
+                amount: activities[i].amount,
+                name: activities[i].name,
+                note: activities[i].note,
+                cofimedby: currentUser.displayName,
+                confirmed: Timestamp.now(),
+              }
+            );
+            console.log(localRec);
+          }
+          setDecodeMode(false);
+          setText('');
         }
-        setDecodeMode(false);
-        setText('');
-      }
       }
     }
   };
@@ -215,8 +218,9 @@ const ScanScreen = () => {
     <Layout>
       {!decodeMode ? (
         <View style={styles.container}>
-
-        <Text style={tw`font-extrabold text-2xl text-center mt-4 text-[#0B3270]`}>
+          <Text
+            style={tw`font-extrabold text-2xl text-center mt-4 text-[#3D1152]`}
+          >
             Scan Now
           </Text>
           <AlertModal
@@ -254,7 +258,7 @@ const ScanScreen = () => {
               <Btn
                 title={'Decode text'}
                 onClick={() => setDecodeMode(true)}
-                style={{ width: '48%', backgroundColor: '#0B3270' }}
+                style={{ width: '48%', backgroundColor: '#3D1152' }}
               />
             )}
             {!!scanned && (
@@ -286,36 +290,34 @@ const ScanScreen = () => {
             vis={modalVisible}
             onReturn={(ret) => onConfirmFunction(ret)}
           />
-         <AlertModal
-            title={'Insufficient funds' }
+          <AlertModal
+            title={'Insufficient funds'}
             button1={'Confirm'}
             button2={''}
             vis={modalVisible3}
             onReturn={(ret) => setModalVisible3(false)}
           />
-          <View
-            style={tw` justify-around items-center flex-wrap w-full mt-4`}
-          >
-          <View
-            style={tw`flex-row justify-around items-center flex-wrap w-full`}
-          >
-            <Image
-              source={userData.image}
-              style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
-            />
-            <Text style={tw`font-extrabold text-xl text-red-400`}>
-              {userData.name}
-            </Text>
+          <View style={tw` justify-around items-center flex-wrap w-full mt-4`}>
+            <View
+              style={tw`flex-row justify-around items-center flex-wrap w-full`}
+            >
+              <Image
+                source={userData.image}
+                style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
+              />
+              <Text style={tw`font-extrabold text-xl text-red-400`}>
+                {userData.name}
+              </Text>
             </View>
             <View
-            style={tw`flex-row justify-around items-center flex-wrap w-full`}
-          >
-            <Text style={tw`text-red-400 font-extrabold text-right`}>
-              Available points:{userTotals}
-            </Text>          
-            <Text style={tw` text-red-400 font-extrabold text-right`}>
-              Total to claim: {summed}
-            </Text>
+              style={tw`flex-row justify-around items-center flex-wrap w-full`}
+            >
+              <Text style={tw`text-red-400 font-extrabold text-right`}>
+                Available points:{userTotals}
+              </Text>
+              <Text style={tw` text-red-400 font-extrabold text-right`}>
+                Total to claim: {summed}
+              </Text>
             </View>
           </View>
           <View
@@ -328,9 +330,12 @@ const ScanScreen = () => {
             />
 
             <Btn
-              onClick={(e) => {setDecodeMode(false); setText('');}}
+              onClick={(e) => {
+                setDecodeMode(false);
+                setText('');
+              }}
               title="Cancel"
-              style={{ width: '48%', backgroundColor: '#0B3270' }}
+              style={{ width: '48%', backgroundColor: '#3D1152' }}
             />
           </View>
           <View
@@ -347,7 +352,7 @@ const ScanScreen = () => {
                 >
                   <View style={tw`w-[65%] flex-row`}>
                     <Image
-                      source={doc.image? doc.image: logo}
+                      source={doc.image ? doc.image : logo}
                       style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full`}
                     />
                     <Text style={tw`ml-2`}>{doc.name}</Text>
@@ -396,10 +401,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'start',
-    position: 'relative'
+    position: 'relative',
   },
   barcodebox: {
-    marginTop:100,
+    marginTop: 100,
     height: 300,
     width: 300,
     overflow: 'hidden',

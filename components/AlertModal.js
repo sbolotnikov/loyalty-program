@@ -30,7 +30,7 @@ const AlertModal = ({ title, button1, button2, vis, onReturn }) => {
               <Btn
                 onClick={(e) => handleSubmit(e, button1)}
                 title={button1}
-                style={{ width: '48%', backgroundColor: '#0B3270' }}
+                style={{ width: '48%', backgroundColor: '#3D1152' }}
               />
               {button2 &&
               <Btn

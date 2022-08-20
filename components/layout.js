@@ -225,7 +225,7 @@ const Layout = ({ children }) => {
         >
           <ShoppingCartIcon color={'#776548'} width={28} height={28} />
           <Text
-            style={tw`font-bold text-white rounded-full bg-[#776548] p-1 absolute -top-4 -right-2`}
+            style={tw`font-bold text-white rounded-full bg-[#3D1152] p-1 absolute -top-4 -right-2`}
           >
             {items}
           </Text>
@@ -251,15 +251,13 @@ const Layout = ({ children }) => {
           <View
             style={tw.style(
               'w-full flex justify-center items-center relative ',
-              { height: dimensions.screen.height - 56 }
+              { height: dimensions.screen.height  }
             )}
           >
             {/* <Image source={logo} style={tw` h-96 w-96 opacity-40`} /> */}
             <View
               style={[
-                tw`w-full h-[${
-                  Dimensions.get('window').height
-                }px] flex justify-start items-center absolute top-0 left-0`,
+                tw`w-full  flex justify-start items-center absolute top-0 left-0`,
               ]}
             >
               {/* Body */}

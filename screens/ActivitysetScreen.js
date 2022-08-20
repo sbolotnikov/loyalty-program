@@ -1,17 +1,28 @@
-import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import { useState, useEffect } from 'react';
 import Layout from '../components/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import tw from 'twrnc';
 import { db } from '../firebase';
-import { collection, where, query } from 'firebase/firestore';
+import { collection, where, query, doc } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import EnterActivity from '../components/enterActivity';
 import moment from 'moment';
+import useAuth from '../hooks/useAuth';
 const logo = require('../assets/dancerslogosm.png');
 const ActivitysetScreen = ({ route, navigation }) => {
     const { collectionName } = route.params;
-    console.log(collectionName)
+    const { currentUser } = useAuth();
+    console.log(collectionName, currentUser.studio)
+    const screen = Dimensions.get('screen');
+    const [dimensions, setDimensions] = useState({ screen });
+  
+    useEffect(() => {
+      const subscription = Dimensions.addEventListener('change', ({ screen }) => {
+        setDimensions({ screen });
+      });
+      return () => subscription?.remove();
+    });
   const [switchEdit, setSwitchEdit] = useState(false);
   const [values, setValues] = useState({
     name: '',
@@ -20,7 +31,9 @@ const ActivitysetScreen = ({ route, navigation }) => {
     image: '',
     uid: '',
   });
-  const [value, loading, error] = useCollection(query(collection(db, 'activities'), where("price", (collectionName=='activities')?">":"<", 0)), {
+  const conditions=[];
+   conditions.push(where("price", (collectionName=='activities')?">":"<", 0));
+  const [value, loading, error] = useCollection(query(collection(doc(db, 'studios', currentUser.studio), 'activities'), ...conditions), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
@@ -33,10 +46,11 @@ const ActivitysetScreen = ({ route, navigation }) => {
     <KeyboardAwareScrollView>
       <Layout>
        {switchEdit?<EnterActivity name={values.name} desc={values.desc} price={values.price*((collectionName=='activities')?1:-1) } image={values.image} uid={values.uid} collectionName={collectionName} onReturn={()=>setSwitchEdit(false)}/>:
-       <View style={[tw`w-full h-full justify-center items-center m-auto`,{overflow:"scroll"}]}>
-        <Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
+       <View style={[tw`w-full h-full justify-center items-center m-auto`
+            ]}>
+        {error &&<Text style={tw`text-red-600 text-xl ${error ? 'flex' : 'hidden'}`}>
           {error ? error : ''}
-        </Text>
+        </Text>}
         <Text
           style={tw`text-yellow-400 text-xl ${loading ? 'flex' : 'hidden'}`}
         >
@@ -44,7 +58,7 @@ const ActivitysetScreen = ({ route, navigation }) => {
         </Text>
         {value && (
           <View
-            style={tw`w-full h-full flex-row flex-wrap justify-center items-center relative max-w-4xl`}
+            style={[tw`w-full h-[85%] flex-row flex-wrap justify-center items-center relative max-w-4xl`,{ overflow: 'auto' }, { height: dimensions.screen.height*.85  }]}
           >
             {value.docs.map((doc) => (
               <TouchableOpacity onPress={(e)=>pickCardToEdit(e,{...doc.data(), uid:doc.id})} key={doc.id} style={tw` h-96 w-64 bg-white/70 rounded-md m-1`} >
@@ -61,7 +75,7 @@ const ActivitysetScreen = ({ route, navigation }) => {
                     {doc.data().price}
                   </Text>
                   <Text
-                    style={tw`text-2xl font-extrabold mb-2 text-[#0B3270] text-center w-full bg-white/60`}
+                    style={tw`text-2xl font-extrabold mb-2 text-[#3D1152] text-center w-full bg-white/60`}
                   >
                     {doc.data().name}
                   </Text>
@@ -81,7 +95,7 @@ const ActivitysetScreen = ({ route, navigation }) => {
             ))}
             <TouchableOpacity onPress={(e)=>pickCardToEdit(e,{ name: '', desc: '', price: 0, image: '', uid: ''})} style={tw` h-96 w-64 bg-white/70 rounded-md justify-center items-center m-1`} >
             <Text
-                    style={tw`text-2xl font-extrabold mb-2 text-[#0B3270] text-center w-full bg-white/60`}
+                    style={tw`text-2xl font-extrabold mb-2 text-[#3D1152] text-center w-full bg-white/60`}
                   >
                     Add new
                   </Text>

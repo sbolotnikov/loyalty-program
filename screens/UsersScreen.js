@@ -11,7 +11,10 @@ import {
   orderBy,
   doc,
   setDoc,
+  where,
+  query,
 } from 'firebase/firestore';
+import useAuth from '../hooks/useAuth';
 import moment from 'moment';
 import { db } from '../firebase';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -20,13 +23,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AlertModal from '../components/AlertModal';
 import ActivityModal from '../components/ActivityModal';
 const UsersScreen = () => {
+  const { currentUser } = useAuth();
   const [usersArray, setUsersArray] = useState([]);
   const [changeStatus, setChangeStatus] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
-  const [currentUserIndex, setCurrentUserIndex] =useState(null);
+  const [currentUserIndex, setCurrentUserIndex] = useState(null);
   const [snapshot, loading, err] = useCollection(
-    collection(db, 'users'),
+    query(collection(db, 'users'),
+    where('studio', '==', currentUser.studio)),
     orderBy('lastSeen', 'desc'),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
@@ -84,15 +89,27 @@ const UsersScreen = () => {
 
         <ActivityModal
           vis={modalVisible2}
-          uid={!!usersArray[currentUserIndex]?usersArray[currentUserIndex].id:""}
-          name={!!usersArray[currentUserIndex]?usersArray[currentUserIndex].displayName:""}
-          url={!!usersArray[currentUserIndex]?usersArray[currentUserIndex].photoURL:""}
+          uid={
+            !!usersArray[currentUserIndex]
+              ? usersArray[currentUserIndex].id
+              : ''
+          }
+          name={
+            !!usersArray[currentUserIndex]
+              ? usersArray[currentUserIndex].displayName
+              : ''
+          }
+          url={
+            !!usersArray[currentUserIndex]
+              ? usersArray[currentUserIndex].photoURL
+              : ''
+          }
           onReturn={() => setModalVisible2(!modalVisible2)}
         />
         <View
           style={tw`max-w-[800px] w-full h-full justify-start items-center`}
         >
-          <Text style={tw`text-3xl font-extrabold mb-2 text-[#0B3270]`}>
+          <Text style={tw`text-3xl font-extrabold mb-2 text-[#3D1152]`}>
             Users Manage screen
           </Text>
           <DataTable
@@ -109,7 +126,12 @@ const UsersScreen = () => {
             {usersArray.map((user, userIndex) => (
               <DataTable.Row
                 key={user.id}
-                onPress={(e) =>{ if (usersArray[userIndex].status=="student") {setModalVisible2(true); setCurrentUserIndex(userIndex)}}}
+                onPress={(e) => {
+                  if (usersArray[userIndex].status == 'student') {
+                    setModalVisible2(true);
+                    setCurrentUserIndex(userIndex);
+                  }
+                }}
               >
                 <DataTable.Cell style={{ flex: 2 }}>
                   <View style={tw`flex-col w-full`}>
