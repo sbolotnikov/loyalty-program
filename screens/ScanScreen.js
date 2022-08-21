@@ -1,26 +1,8 @@
 import { useState, useEffect } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Platform,
-  Dimensions,
-  Image,
-} from 'react-native';
+import { Text, View, StyleSheet, Button, Platform,  Image,} from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
-import {
-  doc,
-  collection,
-  addDoc,
-  getDoc,
-  Timestamp,
-  getDocs,
-  query,
-  where,
-  documentId,
-} from 'firebase/firestore';
+import { doc, collection, addDoc, getDoc, Timestamp, getDocs, query, where, documentId,} from 'firebase/firestore';
 import { db } from '../firebase';
 import Layout from '../components/layout';
 import tw from 'twrnc';
@@ -30,6 +12,7 @@ import Btn from '../components/Btn';
 import useAuth from '../hooks/useAuth';
 import TextBox from '../components/TextBox';
 import { getUserTotals } from '../util/functions';
+import useDimensions from '../hooks/useDimensions';
 const logo = require('../assets/dancerslogosm.png');
 const ScanScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -44,15 +27,7 @@ const ScanScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
-  const screen = Dimensions.get('screen');
-  const [dimensions, setDimensions] = useState({ screen });
-  const { currentUser, loading } = useAuth();
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-      setDimensions({ screen });
-    });
-    return () => subscription?.remove();
-  });
+  const { dimensions } =useDimensions();
   const askForCameraPermission = () => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();

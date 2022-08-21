@@ -1,4 +1,4 @@
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text } from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -8,9 +8,10 @@ import { db } from '../firebase';
 import useAuth from '../hooks/useAuth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { useFonts } from 'expo-font';
+import useDimensions from '../hooks/useDimensions';
 
 // import Swiper from 'react-native-swiper/src';
-const { width, height } = Dimensions.get('window');
+
 const logo = require('../assets/dancerslogosm.png');
 const Homescreen = () => {
   const navigation = useNavigation();
@@ -24,15 +25,7 @@ const Homescreen = () => {
   const [fontLoaded] = useFonts({
     DancingScript: require('../assets/fonts/DancingScriptVariableFont.ttf'),
   });
-  const screen = Dimensions.get('screen');
-  const [dimensions, setDimensions] = useState({ screen });
-
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-      setDimensions({ screen });
-    });
-    return () => subscription?.remove();
-  });
+  const { dimensions } =useDimensions();
   useEffect(() => {
     if (snapshot) {
       let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;
@@ -62,7 +55,6 @@ const Homescreen = () => {
     setSums(localSum);
   }
   }, []);
-  console.log(width);
   return (
     <Layout>
             <View style={tw`w-full bg-black`}>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { useState, useEffect } from 'react';
 import Layout from '../components/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,20 +9,13 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import EnterActivity from '../components/enterActivity';
 import moment from 'moment';
 import useAuth from '../hooks/useAuth';
+import useDimensions from '../hooks/useDimensions';
 const logo = require('../assets/dancerslogosm.png');
 const ActivitysetScreen = ({ route, navigation }) => {
     const { collectionName } = route.params;
     const { currentUser } = useAuth();
     console.log(collectionName, currentUser.studio)
-    const screen = Dimensions.get('screen');
-    const [dimensions, setDimensions] = useState({ screen });
-  
-    useEffect(() => {
-      const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-        setDimensions({ screen });
-      });
-      return () => subscription?.remove();
-    });
+    const { dimensions } =useDimensions();
   const [switchEdit, setSwitchEdit] = useState(false);
   const [values, setValues] = useState({
     name: '',

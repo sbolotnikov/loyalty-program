@@ -27,23 +27,18 @@ import { useSelector } from 'react-redux';
 import { selectItems } from '../features/basketSlice';
 import BasketModal from './BasketModal';
 import ShoppingCartIcon from './svg/shoppingCart';
+import useDimensions from '../hooks/useDimensions';
 const Layout = ({ children }) => {
   const items = useSelector(selectItems);
   const [visNav, setVisNav] = useState(false);
   const [size1, setSize] = useState(0);
   const [textSize, setTextSize] = useState(0);
-  const screen = Dimensions.get('screen');
-  const [dimensions, setDimensions] = useState({ screen });
+  const { dimensions } =useDimensions();
   const [modalVisible, setModalVisible] = useState(false);
   const logo = require('../assets/dancerslogo.png');
   const navigation = useNavigation();
   const { currentUser, loading } = useAuth();
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-      setDimensions({ screen });
-    });
-    return () => subscription?.remove();
-  });
+
   const [keyboardStatus, setKeyboardStatus] = useState(false);
 
   useEffect(() => {

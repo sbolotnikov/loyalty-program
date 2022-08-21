@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import CountBox from '../components/CountBox';
 import useAuth from '../hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import { addToBasket } from '../features/basketSlice';
+import useDimensions from '../hooks/useDimensions';
 const logo = require('../assets/dancerslogosm.png');
 const Getstarscreen = ({ route, navigation }) => {
   const { currentUser } = useAuth();
@@ -35,15 +36,8 @@ const Getstarscreen = ({ route, navigation }) => {
     }
   );
   const [activities, setActivities] = useState([]);
-  const screen = Dimensions.get('screen');
-  const [dimensions, setDimensions] = useState({ screen });
+  const { dimensions } =useDimensions();
 
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-      setDimensions({ screen });
-    });
-    return () => subscription?.remove();
-  });
   useEffect(() => {
     // if (value.docs!==undefined)
     // setAmounts(...Array(value.docs?.length).values(0))

@@ -1,4 +1,4 @@
-import { View, Text, Image, Dimensions } from 'react-native';
+import { View, Text,} from 'react-native';
 import React from 'react';
 import Layout from '../components/layout';
 import tw from 'twrnc';
@@ -8,20 +8,14 @@ import { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import moment from 'moment';
 import { Divider } from 'react-native-elements';
+import useDimensions from '../hooks/useDimensions';
 
 const Activityscreen = () => {
   const [activities, setActivities] = useState([]);
   const [summed, setSums] = useState(0);
   const { currentUser } = useAuth();
-  const screen = Dimensions.get('screen');
-    const [dimensions, setDimensions] = useState({ screen });
-  
-    useEffect(() => {
-      const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-        setDimensions({ screen });
-      });
-      return () => subscription?.remove();
-    });
+  const { dimensions } =useDimensions();
+
   useEffect(async () => {
     let arr = [];
     const querySnapshot = await getDocs(

@@ -8,6 +8,7 @@ import CountBox from './CountBox';
 import useAuth from '../hooks/useAuth';
 import {  Timestamp } from 'firebase/firestore';
 import QRCode from "react-qr-code";
+import useDimensions from '../hooks/useDimensions';
 const logo = require('../assets/dancerslogosm.png');
 
 const BasketModal = ({ vis, onReturn }) => {
@@ -16,15 +17,8 @@ const BasketModal = ({ vis, onReturn }) => {
   const totals = useSelector(selectTotal);
   const dispatch = useDispatch();
   const [activities, setActivities]= useState(items);
-  const screen = Dimensions.get('screen');
-  const [dimensions, setDimensions] = useState({ screen });
-  
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ screen }) => {
-      setDimensions({ screen });
-    });
-    return () => subscription?.remove();
-  });
+  const { dimensions } =useDimensions();
+
   useEffect(()=>{
     if (currentUser.status=="student") setActivities([...items])
   },[items])
