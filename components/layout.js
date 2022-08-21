@@ -28,6 +28,7 @@ import { selectItems } from '../features/basketSlice';
 import BasketModal from './BasketModal';
 import ShoppingCartIcon from './svg/shoppingCart';
 import useDimensions from '../hooks/useDimensions';
+import StudioSetModal from './StudioSetModal';
 const Layout = ({ children }) => {
   const items = useSelector(selectItems);
   const [visNav, setVisNav] = useState(false);
@@ -38,7 +39,7 @@ const Layout = ({ children }) => {
   const logo = require('../assets/dancerslogo.png');
   const navigation = useNavigation();
   const { currentUser, loading } = useAuth();
-
+  const [modalStudioVisible, setModalStudioVisible] = useState(!currentUser.studio?true:false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
 
   useEffect(() => {
@@ -259,6 +260,10 @@ const Layout = ({ children }) => {
                 {(currentUser.status=="student") && <BasketModal
                   vis={modalVisible}
                   onReturn={() => setModalVisible(!modalVisible)}
+                />}
+                {!currentUser.studio && <StudioSetModal
+                  vis={modalStudioVisible}
+                  onReturn={() => setModalStudioVisible(!modalStudioVisible)}
                 />}
               {children}
             </View>

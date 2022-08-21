@@ -14,18 +14,17 @@ import useDimensions from '../hooks/useDimensions';
 
 const logo = require('../assets/dancerslogosm.png');
 const Homescreen = () => {
-  const navigation = useNavigation();
   const { currentUser } = useAuth();
-  console.log(currentUser)
-  const [summed, setSums] = useState(0);
-  const [carousel, setCarousel] = useState([{ url: '', text: '' }]);
-  const [snapshot, loading, err] = useCollection(collection(doc(db, 'studios', currentUser.studio), 'settings'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  const [fontLoaded] = useFonts({
+  const studioReady = () => {
+    const navigation = useNavigation();
+    console.log(currentUser)
+    const [summed, setSums] = useState(0);
+    const [carousel, setCarousel] = useState([{ url: '', text: '' }]);
+    const [snapshot, loading, err] = useCollection(collection(doc(db, 'studios', currentUser.studio), 'settings'), { snapshotListenOptions: { includeMetadataChanges: true },});
+    const [fontLoaded] = useFonts({
     DancingScript: require('../assets/fonts/DancingScriptVariableFont.ttf'),
-  });
-  const { dimensions } =useDimensions();
+    });
+    const { dimensions } =useDimensions();
   useEffect(() => {
     if (snapshot) {
       let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;
@@ -56,7 +55,7 @@ const Homescreen = () => {
   }
   }, []);
   return (
-    <Layout>
+    <View>
             <View style={tw`w-full bg-black`}>
           <Text
             style={[
@@ -124,8 +123,14 @@ const Homescreen = () => {
         </View>
         {/* </Swiper> */}
       </View>
+    </View>
+  )
+}
+  return (
+    <Layout>
+     {currentUser.studio? studioReady(): <></>}
     </Layout>
-  );
+  )
 };
 
 export default Homescreen;
