@@ -261,9 +261,9 @@ const Layout = ({ children }) => {
       {currentUser.email && (
         <View
           style={[tw.style(
-            ` bottom-0 right-0 w-full bg-[#c9ab78]`,
+            ` right-0 w-full bg-[#c9ab78]`,
             { display: !keyboardStatus ? 'flex' : 'none' },
-            {position:'sticky'}
+            {position:'sticky', bottom:0}
           )]}
         >
           <View style={tw`relative  w-full`}>
