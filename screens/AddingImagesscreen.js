@@ -143,17 +143,17 @@ const AddingImagesScreen = () => {
           </Text>
           <View style={tw`w-[37%] mr-1 flex-row justify-end`}>
             <CountBox
-              startValue={imageNumber}
+              startValue={imageNumber+1}
               setWidth={4}
               onChange={(num) => {
-                if (num >= values.carousel.length) {
+                if (num-1 >= values.carousel.length) {
                   setEditable(false);
                   let arrCopy = values.carousel;
                   arrCopy.push({ text: '', url: '' });
                   setValues({ calendar: values.calendar, carousel: arrCopy });
                   setEditable(true);
                   setImageNumber(arrCopy.length - 1);
-                } else setImageNumber(num);
+                } else setImageNumber(num-1);
               }}
             />
             <TouchableOpacity
@@ -181,7 +181,7 @@ const AddingImagesScreen = () => {
         </View>
         {!!editable ? (
           <TextBox
-            defaultValue={values.carousel[imageNumber].text}
+            defaultValue={values.carousel[imageNumber].text?values.carousel[imageNumber].text:"Enter text here"}
             onSubmitEditing={(e) => {
               console.log(e.target.value, 'inside endEditing');
               let arrCopy = values.carousel;

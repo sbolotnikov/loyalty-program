@@ -49,7 +49,6 @@ const StackNavigator = () => {
             <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Resetpass" component={ResetScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
-      <Stack.Screen name="Scan" component={ScanScreen} />
     </>
    
     }

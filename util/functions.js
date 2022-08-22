@@ -34,7 +34,7 @@ import {
         [{ resize: { width: width } }],
         { format: 'png' }
       );
-      const storageRef = ref(storage, `${folder}/${(name)?name + '.png':uuidv4() + '.png'}`);
+      const storageRef = ref(storage, `${folder}/${(name)?name+uuidv4() + '.png':uuidv4() + '.png'}`);
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {

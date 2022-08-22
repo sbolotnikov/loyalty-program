@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, ImageBackground } from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import { useFonts } from 'expo-font';
 import useDimensions from '../hooks/useDimensions';
 
 // import Swiper from 'react-native-swiper/src';
-
+//   <Swiper  width={width>900?800:Math.round(width*.8)} height={Math.round(height*.6)} loop={true} index={0} showsButtons> 
 const logo = require('../assets/dancerslogosm.png');
 const Homescreen = () => {
   const { currentUser } = useAuth();
@@ -56,11 +56,12 @@ const Homescreen = () => {
   }, []);
   return (
     <View>
-            <View style={tw`w-full bg-black`}>
+            <View style={tw` bg-black`}>
           <Text
             style={[
               tw`text-white text-center  my-2`,
               {
+                width:dimensions.screen.width,
                 fontFamily: 'DancingScript',
                 fontSize:
                   dimensions.screen.width < 760
@@ -75,8 +76,6 @@ const Homescreen = () => {
           </Text>
         </View>
       <View style={tw`w-full h-[85%] justify-center items-center max-w-[800px]`}>
-
-
         <View style={tw`h-[20%] w-[98%]`}>
           {currentUser.status == 'student' && (
             <Text style={tw`font-bold text-xl text-right text-[#776548]`}>
@@ -88,7 +87,6 @@ const Homescreen = () => {
           </Text>
           <Text style={tw`font-bold  ${(dimensions.screen.width < 760)?'text-justify text-sm':"text-center text-lg"} m-2 text-[#776548]`}>Earn points for every activity you have participated in and spend them for dance accessories, lessons, and upcoming events in our studios.</Text>  
         </View>
-        {/* <Swiper  width={width>900?800:Math.round(width*.8)} height={Math.round(height*.6)} loop={true} index={0} showsButtons> */}
         <View
           style={[
             tw`w-full justify-center items-center relative max-w-4xl`,
@@ -101,17 +99,12 @@ const Homescreen = () => {
                 key={item.id}
                 style={tw` h-96 w-64 bg-white/70  justify-start items-start rounded-md m-1`}
               >
-                <View
-                  style={[
-                    tw` h-64 w-full rounded-md relative justify-center items-center`,
+               <ImageBackground source={item.url ? item.url : logo} resizeMode="contain" style={[
+                    tw` h-64 w-64 rounded-md relative justify-center items-center`,
                     {
-                      objectFit: 'contain',
-                      backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundImage: `url(${item.url ? item.url : logo})`,
                     },
-                  ]}
-                ></View>
+                  ]}/>
                 <Text
                   style={tw`text-lg font-extrabold mb-2 text-[#776548] text-center`}
                 >
@@ -121,7 +114,6 @@ const Homescreen = () => {
             ))}
           </View>
         </View>
-        {/* </Swiper> */}
       </View>
     </View>
   )

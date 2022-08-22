@@ -183,15 +183,12 @@ const Layout = ({ children }) => {
       style={[
         tw` bg-[#c9ab78] pt-5  h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative m-auto`,
         { overflow: 'hidden' },
-      ]}
-    >
-      {/* Header */}
+      ]}>
       <View
         style={tw`flex-row pb-3 items-center m-0`}
         onLayout={(event) => {
           var { x, y, width, height } = event.nativeEvent.layout;
-        }}
-      >
+        }}>
         <Pressable onPress={onPressHomeFunction}>
         <View style={tw`h-9 w-9 bg-gray-300 p-5 rounded-full border-[#776548] border-2 m-2 relative`}>
           <Image
@@ -203,7 +200,6 @@ const Layout = ({ children }) => {
         <View style={tw`flex-1`}>
           <Text style={tw`font-bold text-xl text-black`}>
             Loyalty Program
-            {/* <ChevronDownIcon size={20} color="#00CCBB" /> */}
           </Text>
           <Text style={tw`font-bold text-white text-xs`}>
             Welcome,{' '}
@@ -238,67 +234,39 @@ const Layout = ({ children }) => {
         )}
       </View>
       <View style={tw`bg-white`}>
-        {/* <LinearGradient
-          colors={['#0000', '#0000', '#0000']}
-          locations={[0.1, 0.5, 0.9]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        > */}
+
           <View
             style={tw.style(
               'w-full flex justify-center items-center relative ',
               { height: dimensions.screen.height  }
             )}
           >
-            {/* <Image source={logo} style={tw` h-96 w-96 opacity-40`} /> */}
             <View
               style={[
                 tw`w-full  flex justify-start items-center absolute top-0 left-0`,
               ]}
             >
-              {/* Body */}
                 {(currentUser.status=="student") && <BasketModal
                   vis={modalVisible}
                   onReturn={() => setModalVisible(!modalVisible)}
                 />}
-                {!currentUser.studio && <StudioSetModal
+                {currentUser.email && !currentUser.studio && <StudioSetModal
                   vis={modalStudioVisible}
                   onReturn={() => setModalStudioVisible(!modalStudioVisible)}
                 />}
               {children}
             </View>
           </View>
-        {/* </LinearGradient> */}
       </View>
       {currentUser.email && (
-        <Animated.View
+        <View
           style={[tw.style(
             ` bottom-0 right-0 w-full bg-[#c9ab78]`,
-            // {
-            //   Bind height to animated value
-            //   bottom: heightAnim,
-            // },
             { display: !keyboardStatus ? 'flex' : 'none' },
             {position:'sticky'}
           )]}
         >
           <View style={tw`relative  w-full`}>
-            {/* <View
-              style={[
-                tw`absolute  -top-9 left-1/2`,
-                ,
-                {
-                  transform: [{ translateX: -25 }, { translateY: -10 }],
-                },
-              ]}
-            >
-              <Pressable
-                style={tw`flex justify-center items-center relative`}
-                onPress={onPressFunction}
-              >
-                <Burger status={!visNav} color={'#00CCBB'} />
-              </Pressable>
-            </View> */}
             <View style={tw`flex-row justify-around w-full max-w-6xl mx-auto`}>
               <Navbar
                 textSize={textSize}
@@ -309,7 +277,7 @@ const Layout = ({ children }) => {
               />
             </View>
           </View>
-        </Animated.View>
+        </View>
       )}
     </SafeAreaView>
   );

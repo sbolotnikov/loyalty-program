@@ -7,9 +7,11 @@ import { collection } from 'firebase/firestore';
 import { db } from '../firebase';
 import useDimensions from '../hooks/useDimensions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import useAuth from '../hooks/useAuth';
 import Btn from './Btn';
 function StudioSetModal({ vis, onReturn }) {
     const { dimensions } =useDimensions();
+    const { setCurrentStudio } = useAuth();
     const [studio, setStudio] = useState('');
     const [value, loading, error] = useCollection(collection(db, 'studios'), {
         snapshotListenOptions: { includeMetadataChanges: true },
@@ -42,7 +44,7 @@ function StudioSetModal({ vis, onReturn }) {
             >
               Choose your studio:
             </Text>
-            {value &&<SelectDropdown
+            {!!value &&<SelectDropdown
                     dropdownBackgroundColor={'white'}
                     data={value.docs.map((doc) => (doc.data().name))}
                     defaultValue={""}
@@ -106,8 +108,8 @@ function StudioSetModal({ vis, onReturn }) {
                       textSize: 18,
                     }}
                   />}
-                 {studio && <Btn
-            // onClick={}
+                 {!!studio && <Btn
+            onClick={()=>setCurrentStudio(studio)}
             title="Set this Studio"
             style={{ width: '92%', backgroundColor: '#3D1152' }}
           />}

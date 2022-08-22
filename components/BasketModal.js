@@ -47,7 +47,7 @@ const BasketModal = ({ vis, onReturn }) => {
         >
 
           <View
-            style={[tw` justify-center items-center bg-white w-[92%] h-[92%] max-w-[800px] rounded-md relative`,{shadowColor: "#000", shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5}]}
+            style={[tw` justify-center items-center bg-white w-[92%] h-[95%] max-w-[800px] rounded-md relative`,{shadowColor: "#000", shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5}]}
           >
           <TouchableOpacity style={tw`absolute top-0 right-0 mr-3 mt-3`} onPress={()=>onReturn()}>
             <Text>Close</Text>

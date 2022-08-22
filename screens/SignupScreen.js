@@ -7,11 +7,6 @@ import useAuth from '../hooks/useAuth';
 import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
 import validateEmail from '../util/functions';
-import SelectDropdown from 'react-native-select-dropdown';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { collection, where, query, doc } from 'firebase/firestore';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { db } from '../firebase';
 import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
 const SignupScreen = () => {
@@ -25,12 +20,8 @@ const SignupScreen = () => {
     email: '',
     pwd: '',
     pwd2: '',
-    studio:''
   });
-  const [value, loading, error2] = useCollection(collection(db, 'studios'), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-  console.log(value)
+
   const { dimensions } =useDimensions();
   function handleChange(text, eventName) {
     setValues((prev) => {
@@ -79,70 +70,7 @@ const SignupScreen = () => {
           >
             {message ? message : ''}
           </Text>
-          {value &&<SelectDropdown
-                    dropdownBackgroundColor={'white'}
-                    data={value.docs.map((doc) => (doc.data().name))}
-                    defaultValue={""}
-                    onSelect={(selectedItem, index) => {
-                      handleChange(value.docs[index].id, 'studio')
-                      console.log(
-                        selectedItem, index, value.docs[index].id
-                      );
-                     
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                      //   console.log(selectedItem, index);
-                      // text represented after item is selected
-                      // if data array is an array of objects then return selectedItem.property to render after item is selected
-                      return selectedItem;
-                    }}
-                    rowTextForSelection={(item, index) => {
-                      // text represented for each item in dropdown
-                      // if data array is an array of objects then return item.property to represent item in dropdown
-                      return item;
-                    }}
-                    buttonStyle={{
-                      width: (dimensions.screen.width<800)?dimensions.screen.width*.92: 800*.92,
-                      height: 40,
-                      backgroundColor: '#FFF',
-                      borderRadius: 999,
-                      borderWidth: 2,
-                      borderColor: '#C9AB78',
-                      justifyContent: 'center',
-                      alignItems:'center',
-                      position: 'relative',
-                    }}
-                    buttonTextStyle={{ color: '#444', textAlign: 'center' }}
-                    renderDropdownIcon={(isOpened) => {
-                      return (
-                        <FontAwesome
-                          name={isOpened ? 'chevron-up' : 'chevron-down'}
-                          color={'#C9AB78'}
-                          size={18}
-                          style={tw`absolute right-2 top-2`}
-                        />
-                      );
-                    }}
-                    dropdownStyle={{
-                      backgroundColor: '#EFEFEF',
-                      borderRadius: 8,
-                      borderWidth: 1,
-                      width: (dimensions.screen.width<800)?dimensions.screen.width*.92: 800*.92,
-                      height:300,
-                      borderColor: '#C9AB78',
-                    }}
-                    rowStyle={{
-                      backgroundColor: '#EFEFEF',
-                      height: 35,
-                      borderBottomColor: '#C5C5C5',
-                    }}
-                    rowTextStyle={{
-                      color: '#444',
-                      textAlign: 'center',
-                      margin: 'auto',
-                      textSize: 18,
-                    }}
-                  />}
+          
           <TextBox
             placeholder="Email Address"
             onChangeText={(text) => handleChange(text, 'email')}

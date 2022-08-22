@@ -137,6 +137,20 @@ export const AuthProvider = ({ children }) => {
         console.log('error on Profile update'); // An error happened.
       });
   }
+ function setCurrentStudio (studio){
+  const docRef = doc(db, 'users', currentUser.uid);
+    try {
+      setDoc(docRef,            
+        {
+          studio: studio
+        },
+        { merge: true })
+      }
+      catch (error) {
+        console.log('error on Profile update'); // An error happened.
+      };
+      setCurrentUser({...currentUser, studio})
+ }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -207,7 +221,8 @@ export const AuthProvider = ({ children }) => {
     updatePass,
     updateUser,
     signInWithGoogle,
-    loading
+    loading,
+    setCurrentStudio
   };
 
   return (
