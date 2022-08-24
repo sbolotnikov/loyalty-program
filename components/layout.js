@@ -60,28 +60,26 @@ const Layout = ({ children }) => {
       headerShown: false,
     });
   }, []);
-  const windowWidth = !!Dimensions.get('window').width;
-  const heightAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     setSize(
-      windowWidth > 1000
+      dimensions.width > 1000
         ? 140
-        : windowWidth >= 700
+        : dimensions.width >= 700
         ? 100
-        : windowWidth > 500
+        : dimensions.width > 500
         ? 80
         : 40
     );
     setTextSize(
-      windowWidth > 1000
+      dimensions.width > 1000
         ? 'xl'
-        : windowWidth >= 700
+        : dimensions.width >= 700
         ? 'lg'
-        : windowWidth > 500
+        : dimensions.width > 500
         ? 'base'
         : 'sm'
     );
-  }, [!!Dimensions.get('window').width]);
+  }, [dimensions.width]);
 
   const onPressFunction = () => {
     setVisNav(!visNav);
@@ -176,6 +174,10 @@ const Layout = ({ children }) => {
         title: 'Home',
         link: 'Home',
       },
+      {
+        title: 'About',
+        link: 'About',
+      }
     ],
   };
   return (

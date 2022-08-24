@@ -23,6 +23,7 @@ const ScanScreen = () => {
   const [userTotals, setUserTotals] = useState(0);
   const [activities, setActivities] = useState([]);
   const [decodeMode, setDecodeMode] = useState(false);
+  const { currentUser } = useAuth();
   const [text, setText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -94,8 +95,7 @@ const ScanScreen = () => {
           let sums = 0;
 
           const querySnapshot = await getDocs(
-            query(
-              collection(db, 'activities'),
+            query(collection(doc(db, 'studios', currentUser.studio), 'activities'),
               where(documentId(), 'in', obj.b)
             )
           );
@@ -111,6 +111,7 @@ const ScanScreen = () => {
             };
             recArr.push(rec);
           });
+          console.log(recArr, obj.b)
           for (let i = 0; i < obj.b.length; i++) {
             recArr[i].amount = obj.c[i];
             recArr[i].id = obj.b[i];
@@ -315,8 +316,8 @@ const ScanScreen = () => {
           </View>
           <View
             style={[
-              tw`w-[98%] h-[65%] justify-center items-center m-auto bg-gray-500/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
-              { overflow: 'scroll' },
+              tw`w-[98%]  justify-center items-center m-auto bg-gray-500/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
+              { overflow: 'scroll' ,  height: dimensions.screen.height*.65  },
             ]}
           >
             <View style={tw`h-auto absolute top-0 left-0`}>

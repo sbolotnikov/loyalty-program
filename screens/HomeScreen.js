@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground } from 'react-native';
+import { View, Text, ImageBackground, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import useAuth from '../hooks/useAuth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { useFonts } from 'expo-font';
 import useDimensions from '../hooks/useDimensions';
+import ShowIcon from '../components/svg/showIcon';
 
 // import Swiper from 'react-native-swiper/src';
 //   <Swiper  width={width>900?800:Math.round(width*.8)} height={Math.round(height*.6)} loop={true} index={0} showsButtons> 
@@ -19,12 +20,22 @@ const Homescreen = () => {
     const navigation = useNavigation();
     console.log(currentUser)
     const [summed, setSums] = useState(0);
+    const [size1, setSize] = useState(0);
+    const [textSize, setTextSize] = useState(0);
     const [carousel, setCarousel] = useState([{ url: '', text: '' }]);
     const [snapshot, loading, err] = useCollection(collection(doc(db, 'studios', currentUser.studio), 'settings'), { snapshotListenOptions: { includeMetadataChanges: true },});
     const [fontLoaded] = useFonts({
     DancingScript: require('../assets/fonts/DancingScriptVariableFont.ttf'),
     });
     const { dimensions } =useDimensions();
+    const [icons, setIcons]= useState([{
+      title: 'Music Player',
+      link: 'Music',
+    },
+    {
+      title: 'About',
+      link: 'About',
+    },])
   useEffect(() => {
     if (snapshot) {
       let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;
@@ -54,8 +65,28 @@ const Homescreen = () => {
     setSums(localSum);
   }
   }, []);
+  useEffect(() => {
+    setSize(
+      dimensions.width > 1000
+        ? 140
+        : dimensions.width >= 700
+        ? 100
+        : dimensions.width > 500
+        ? 80
+        : 40
+    );
+    setTextSize(
+      dimensions.width > 1000
+        ? 'xl'
+        : dimensions.width >= 700
+        ? 'lg'
+        : dimensions.width > 500
+        ? 'base'
+        : 'sm'
+    );
+  }, [!!dimensions.width]);
   return (
-    <View>
+    <View >
             <View style={tw` bg-black`}>
           <Text
             style={[
@@ -75,7 +106,23 @@ const Homescreen = () => {
             Life's Better When You Dance! &trade;
           </Text>
         </View>
-      <View style={tw`w-full h-[85%] justify-center items-center max-w-[800px]`}>
+      <View style={tw`w-full h-[85%] justify-center items-center m-auto max-w-[800px]`}>
+      <View
+      style={tw.style(`flex-row justify-center items-center w-full max-w-6xl`,{ margin: 'auto' })}
+    >
+       {icons.map((item, key) => {
+        return <Pressable key={key} style={tw`flex justify-center items-center relative flex-wrap mt-1`} onPress={() =>
+        navigation.navigate(item.link,item.params)
+      }>
+          <ShowIcon icon={item.title} color={'#000'} width={size1} height={size1}/>
+          <Text
+            style={tw`font-extrabold text-${textSize} text-[${'#000'}] text-center`}
+          >
+            {item.title}
+          </Text>
+        </Pressable>;
+      })}
+    </View>
         <View style={tw`h-[20%] w-[98%]`}>
           {currentUser.status == 'student' && (
             <Text style={tw`font-bold text-xl text-right text-[#776548]`}>

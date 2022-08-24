@@ -14,6 +14,8 @@ import Profilescreen from './screens/Profilescreen';
 import ActivitysetScreen from './screens/ActivitysetScreen';
 import AddingImagesScreen from './screens/AddingImagesscreen';
 import UsersScreen from './screens/UsersScreen';
+import MusicPlayerScreen from './screens/MusicPlayerScreen';
+import AboutScreen from './screens/AboutScreen';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -28,12 +30,16 @@ const StackNavigator = () => {
         <Stack.Screen name="Getstars" component={Getstarsscreen} />
         <Stack.Screen name="Usestars" component={Usestarsscreen} />
         <Stack.Screen name="Profile" component={Profilescreen} />
+        <Stack.Screen name="Music" component={MusicPlayerScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
       </>
        if (currentUser.status=="teacher") return <>
         <Stack.Screen name="Home" component={Homescreen} />
         <Stack.Screen name="CalendarSet" component={AddingImagesScreen} />
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
+        <Stack.Screen name="Music" component={MusicPlayerScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
       </>
        if (currentUser.status=="super") return <>
         <Stack.Screen name="Home" component={Homescreen} />
@@ -43,7 +49,8 @@ const StackNavigator = () => {
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
         <Stack.Screen name="Users" component={UsersScreen} />
-        
+        <Stack.Screen name="Music" component={MusicPlayerScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
       </>
     return <>
             <Stack.Screen name="Login" component={LoginScreen} />
