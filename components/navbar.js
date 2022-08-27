@@ -27,4 +27,3 @@ const Navbar = ({ textSize, size1, color, names, logged }) => {
 };
 
 export default Navbar;
- {/* {item.svgG!==""? <G transform={item.svgG}>:""}  */}

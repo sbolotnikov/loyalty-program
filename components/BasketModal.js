@@ -31,7 +31,6 @@ const BasketModal = ({ vis, onReturn }) => {
     }
     let obj="";
     if (currentUser.status=="student") obj=JSON.stringify({a:[currentUser.uid, Timestamp.now().seconds.toString()], b:arr1, c:arr2})
-    console.log(obj)
     return obj;
    }
     return (

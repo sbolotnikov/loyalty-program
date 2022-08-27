@@ -34,6 +34,7 @@ const Layout = ({ children }) => {
   const [visNav, setVisNav] = useState(false);
   const [size1, setSize] = useState(0);
   const [textSize, setTextSize] = useState(0);
+  const [navArray, setNavArray] = useState([]);
   const { dimensions } =useDimensions();
   const [modalVisible, setModalVisible] = useState(false);
   const logo = require('../assets/dancerslogo.png');
@@ -41,71 +42,6 @@ const Layout = ({ children }) => {
   const { currentUser, loading } = useAuth();
   const [modalStudioVisible, setModalStudioVisible] = useState(!currentUser.studio?true:false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-
-  useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardStatus(true);
-    });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardStatus(false);
-    });
-
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, []);
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
-  useEffect(() => {
-    setSize(
-      dimensions.width > 1000
-        ? 140
-        : dimensions.width >= 700
-        ? 100
-        : dimensions.width > 500
-        ? 80
-        : 40
-    );
-    setTextSize(
-      dimensions.width > 1000
-        ? 'xl'
-        : dimensions.width >= 700
-        ? 'lg'
-        : dimensions.width > 500
-        ? 'base'
-        : 'sm'
-    );
-  }, [dimensions.width]);
-
-  const onPressFunction = () => {
-    setVisNav(!visNav);
-
-    Animated.timing(heightAnim, {
-      toValue: visNav
-        ? 0
-        : windowWidth > 1000
-        ? -152
-        : windowWidth >= 700
-        ? -120
-        : windowWidth > 500
-        ? -88
-        : -56,
-      duration: 600,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start();
-  };
-  const onPressHomeFunction = () => {
-    navigation.navigate('Home');
-  };
-  let profile;
-  currentUser !== null && currentUser.status !== undefined
-    ? (profile = currentUser.status)
-    : (profile = 'default');
   const array = {
     student: [
       {
@@ -180,6 +116,57 @@ const Layout = ({ children }) => {
       }
     ],
   };
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardStatus(false);
+    });
+
+
+    let profile;
+    currentUser !== null && currentUser.status !== undefined
+      ? (profile = currentUser.status)
+      : (profile = 'default');
+   setNavArray(array[profile]);  
+   console.log(profile, array[profile]);
+   return () => {
+    showSubscription.remove();
+    hideSubscription.remove();
+  };
+  }, []);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, []);
+  useEffect(() => {
+    setSize(
+      dimensions.width > 1000
+        ? 140
+        : dimensions.width >= 700
+        ? 100
+        : dimensions.width > 500
+        ? 80
+        : 40
+    );
+    setTextSize(
+      dimensions.width > 1000
+        ? 'xl'
+        : dimensions.width >= 700
+        ? 'lg'
+        : dimensions.width > 500
+        ? 'base'
+        : 'sm'
+    );
+  }, [dimensions.width]);
+
+  const onPressHomeFunction = () => {
+    navigation.navigate('Home');
+  };
+
+
   return (
     <SafeAreaView
       style={[
@@ -274,7 +261,7 @@ const Layout = ({ children }) => {
                 textSize={textSize}
                 size1={size1}
                 color={'#000'}
-                names={array[profile]}
+                names={navArray}
                 logged={currentUser ? true : false}
               />
             </View>
