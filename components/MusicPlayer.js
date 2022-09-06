@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import { MaterialIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import PlayerButtons from './svg/PlayerButtons';
+import SettingsModal from './SettingsModal';
 const music1 = require('../assets/music/kermit-happy-birthday.mp3');
         
 const MusicPlayer = ({rateSet, songDuration, startPos, music, onSongEnd}) => {
@@ -17,43 +18,44 @@ const MusicPlayer = ({rateSet, songDuration, startPos, music, onSongEnd}) => {
   const [Playing, SetPlaying] = useState(false);
   const [size, setSize] = useState(0);
   const [Duration, SetDuration] = useState(0);
+  const [songDurationLocal, SetSongDurationLocal] = useState(songDuration);
   const [Value, SetValue] = useState(0);
   const [Rate, SetRate] = useState(rateSet);
+  const [modalVisible, setModalVisible] = useState(false);
   const sound = useRef(new Audio.Sound());
 
-  //  function timeToPlay(hours, minutes, seconds) {
+   const timeToPlay= async (hours, minutes, seconds)=> {
 
-  //   let secondsLeft = hours * 3600 + minutes * 60 + seconds;
-  //   if (seconds !== 0 || minutes !== 0 || hours !== 0) {
-  //     let timerInterval = setInterval(async function () {
-  //       secondsLeft--;
-  //       if (seconds ===9 0) {
-  //         seconds = 59;
-  //       } else seconds--;
-  //       if (seconds === 59) {
-  //         if (minutes === 0) {
-  //           minutes = 59;
-  //           hours--;
-  //         } else minutes--;
-  //       }
-  //       console.log(hours+':'+minutes+':'+seconds);
-  //       if (secondsLeft === 0) {
-  //         clearInterval(timerInterval);
-  //         const status = await sound.pauseAsync();
-  //         setEndOfTrack(true)
-  //       }
-  //     }, 1000);
-  //   }
-  // }
+    let secondsLeft = hours * 3600 + minutes * 60 + seconds;
+    if (seconds !== 0 || minutes !== 0 || hours !== 0) {
+      let timerInterval = setInterval(async function () {
+        secondsLeft--;
+        if (seconds === 0) {
+          seconds = 59;
+        } else seconds--;
+        if (seconds === 59) {
+          if (minutes === 0) {
+            minutes = 59;
+            hours--;
+          } else minutes--;
+        }
+        console.log(hours+':'+minutes+':'+seconds);
+        if (secondsLeft === 0) {
+          clearInterval(timerInterval);
+          onSongEnd()
+        }
+      }, 1000);
+    }
+  }
 
 
 useEffect(async () => {
 
-        const status = await sound.current.unloadAsync(); 
-        SetValue(0);
-        SetLoaded(false);
-        SetPlaying(false);
-        SetDuration(0);
+    const status = await sound.current.unloadAsync(); 
+    SetValue(0);
+    SetLoaded(false);
+    SetPlaying(false);
+    SetDuration(0);
         if (music!=="") {
         await LoadAudio();
         await PlayAudio();
@@ -72,7 +74,7 @@ useEffect(() => {
 },[]);
 
 const UpdateStatus = async (data) => {
-    
+  console.log(songDurationLocal)  
   try {
     if (data.didJustFinish) {
       ResetPlayer();
@@ -82,7 +84,7 @@ const UpdateStatus = async (data) => {
       if (data.durationMillis) {
          SetDuration(data.durationMillis)
         SetValue((data.positionMillis / data.durationMillis) * 100);
-        if (data.positionMillis>songDuration){
+        if (data.positionMillis>songDurationLocal+startPos){
           await sound.current.stopAsync();
           onSongEnd()
         }
@@ -161,6 +163,7 @@ const SeekUpdateRate = async (data) => {
     console.log('Error');
   }
 };
+
 const LoadAudio = async () => {
   SetLoading(true);
   const checkLoading = await sound.current.getStatusAsync();
@@ -209,21 +212,30 @@ const GetDurationFormat = (duration) => {
 
   return (
     <View style={styles.container}>
+    <SettingsModal
+            title={`Your QR code is invalid. Try again!`}
+            button1={'Ok'}
+            button2={''}
+            vis={modalVisible}
+            onReturn={(ret) => setModalVisible(false)}
+            onChangeRate={(rate) =>  SeekUpdateRate(rate)}
+            onChangeDuration={(songLength) => {SetSongDurationLocal(songLength); sound.current.setOnPlaybackStatusUpdate(UpdateStatus); console.log(songLength);}}
+          />
     <View style={[tw`w-full items-center`,{height:200}]}>
     <View style={tw`w-full flex-row justify-center items-center`}>
-    <PlayerButtons icon={'Previous'} color={'#776548'} color2={'#C9AB78'} size={size} />
+    <PlayerButtons icon={'Previous'} color={'#776548'} color2={'#C9AB78'} size={size} onButtonPress={()=>timeToPlay(0,0,10)}/>
     <PlayerButtons icon={'Backward'} color={'#776548'} color2={'#C9AB78'} size={size} onButtonPress={()=>(Value>7.7)?SeekUpdate(Value-7.7):SeekUpdate(0)}/>
-    <PlayerButtons icon={'Stop'} color={'#776548'} color2={'#C9AB78'} size={size}/>
+    <PlayerButtons icon={'Stop'} color={'#776548'} color2={'#C9AB78'} size={size} onButtonPress={() =>ResetPlayer()}/>
     {Loading ? (
         <ActivityIndicator size={'small'} color={'red'} />
       ) : Loaded === false ? (
-        <></>
+        <PlayerButtons icon={'Play'} color={'#776548'} color2={'#C9AB78'} size={size} />
       ) : (
         <PlayerButtons icon={Playing ? 'Pause' : 'Play'} color={'#776548'} color2={'#C9AB78'} size={size} onButtonPress={Playing ? () => PauseAudio() : () => PlayAudio()}/>
       )}
     <PlayerButtons icon={'Forward'} color={'#776548'} color2={'#C9AB78'} size={size} onButtonPress={()=>(Duration-Value>7.7)?SeekUpdate(Value+7.7):SeekUpdate(Duration)}/>
     <PlayerButtons icon={'Skip'} color={'#776548'} color2={'#C9AB78'} size={size}/>
-
+    <PlayerButtons icon={'Settings'} color={'#776548'} color2={'#C9AB78'} size={size} onButtonPress={()=>setModalVisible(true)}/>
 
       </View>
       <Slider
@@ -239,19 +251,7 @@ const GetDurationFormat = (duration) => {
       <Text>
         {`${GetDurationFormat((Value * Duration) / 100)}/${GetDurationFormat(Duration)}` }
       </Text>
-      <Slider
-        style={{ width: '100%' }}
-        minimumValue={0.5}
-        maximumValue={2}
-        value={Rate}
-        onSlidingComplete={(data) => SeekUpdateRate(data)}
-        minimumTrackTintColor={'#c9ab78'}
-        maximumTrackTintColor="#000000"
-        thumbTintColor={'#776548'}
-      />
-       <Text>
-         {`Speed: ${(Rate*100).toFixed(1)}%`}
-      </Text>
+
     </View>
   </View>
   )
