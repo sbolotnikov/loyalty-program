@@ -135,7 +135,7 @@ const UsersScreen = () => {
               >
                 <DataTable.Cell style={{ flex: 2 }}>
                   <View style={tw`flex-col w-full`}>
-                    <Text style={tw`flex-wrap text-base font-bold`}>
+                    <Text style={tw`flex-wrap text-sm font-bold`}>
                       {user.displayName}
                     </Text>
                     <Text style={tw`flex-wrap text-xs italic`}>
@@ -143,10 +143,10 @@ const UsersScreen = () => {
                     </Text>
                   </View>
                 </DataTable.Cell>
-                <DataTable.Cell style={tw`justify-end items-center`} numeric>
+                <DataTable.Cell style={[tw`justify-end items-center`,{flex: 2}]} numeric>
                   <SelectDropdown
                     dropdownBackgroundColor={'white'}
-                    data={['student', 'super', 'teacher']}
+                    data={['student', 'super','MC', 'teacher']}
                     defaultValue={user.status}
                     onSelect={(selectedItem, index) => {
                       console.log(
@@ -177,7 +177,7 @@ const UsersScreen = () => {
                       return item;
                     }}
                     buttonStyle={{
-                      width: 70,
+                      width: 110,
                       height: 25,
                       backgroundColor: '#FFF',
                       borderRadius: 8,
@@ -190,7 +190,7 @@ const UsersScreen = () => {
                         <FontAwesome
                           name={isOpened ? 'chevron-up' : 'chevron-down'}
                           color={'#776548'}
-                          size={18}
+                          size={14}
                         />
                       );
                     }}
@@ -216,7 +216,7 @@ const UsersScreen = () => {
                 </DataTable.Cell>
                 <DataTable.Cell numeric>
                   {moment(user.lastSeen.toDate().getTime()).format(
-                    'MM/DD/YYYY'
+                    'MM/DD/YY'
                   )}
                 </DataTable.Cell>
               </DataTable.Row>

@@ -1,4 +1,4 @@
-import { View, Text,} from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import Layout from '../components/layout';
 import tw from 'twrnc';
@@ -14,26 +14,29 @@ const Activityscreen = () => {
   const [activities, setActivities] = useState([]);
   const [summed, setSums] = useState(0);
   const { currentUser } = useAuth();
-  const { dimensions } =useDimensions();
+  const { dimensions } = useDimensions();
 
-  useEffect(async () => {
-    let arr = [];
-    const querySnapshot = await getDocs(
-      collection(doc(db, 'users', currentUser.uid), 'rewards')
-    );
-    querySnapshot.forEach((doc) => {
-      arr.push({
-        ...doc.data(),
-        id: doc.id,
-        date: moment(doc.data().confirmed.toDate().getTime()).format(),
+  useEffect(() => {
+    async function fetchData() {
+      let arr = [];
+      const querySnapshot = await getDocs(
+        collection(doc(db, 'users', currentUser.uid), 'rewards')
+      );
+      querySnapshot.forEach((doc) => {
+        arr.push({
+          ...doc.data(),
+          id: doc.id,
+          date: moment(doc.data().confirmed.toDate().getTime()).format(),
+        });
       });
-    });
 
-    arr.sort(function (a, b) {
-      return b.date == a.date ? 0 : b.date > a.date ? 1 : -1;
-    });
-    console.log(arr);
-    setActivities([...arr]);
+      arr.sort(function (a, b) {
+        return b.date == a.date ? 0 : b.date > a.date ? 1 : -1;
+      });
+      console.log(arr);
+      setActivities([...arr]);
+    }
+    fetchData()
   }, []);
   useEffect(() => {
     let localSum = 0;
@@ -67,7 +70,8 @@ const Activityscreen = () => {
         <View
           style={[
             tw`w-[98%]  justify-center items-center m-auto bg-[#c9ab78]/30 m-1 rounded-lg border border-[#776548] py-5 relative`,
-            { overflow: 'auto' },{ height: dimensions.screen.height*.65  }
+            { overflow: 'auto' },
+            { height: dimensions.screen.height * 0.65 },
           ]}
         >
           <View style={tw`h-auto w-full absolute top-0 left-0`}>

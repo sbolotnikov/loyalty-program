@@ -32,9 +32,9 @@ import {
       const manipResult = await manipulateAsync(
         result.uri,
         [{ resize: { width: width } }],
-        { format: 'png' }
+        { format: 'jpeg' }
       );
-      const storageRef = ref(storage, `${folder}/${(name)?name+uuidv4() + '.png':uuidv4() + '.png'}`);
+      const storageRef = ref(storage, `${folder}/${(name)?name+uuidv4() + '.jpg':uuidv4() + '.jpg'}`);
       const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -48,7 +48,7 @@ import {
         xhr.send(null);
       });
       const metadata = {
-        contentType: 'image/png',
+        contentType: 'image/jpeg',
       };
       const snapshot=await uploadBytes(storageRef, blob)
       return await getDownloadURL(snapshot.ref)

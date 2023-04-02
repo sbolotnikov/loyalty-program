@@ -11,26 +11,29 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
   const [activities, setActivities] = useState([]);
   const [summed, setSums] = useState(0);
   console.log(uid);
-  useEffect(async () => {
-    let arr = [];
-    if (uid !== '') {
-      const querySnapshot = await getDocs(
-        collection(doc(db, 'users', uid), 'rewards')
-      );
-      querySnapshot.forEach((doc) => {
-        arr.push({
-          ...doc.data(),
-          id: doc.id,
-          date: moment(doc.data().confirmed.toDate().getTime()).format(),
+  useEffect(() => {
+    async function fetchData() {
+      let arr = [];
+      if (uid !== '') {
+        const querySnapshot = await getDocs(
+          collection(doc(db, 'users', uid), 'rewards')
+        );
+        querySnapshot.forEach((doc) => {
+          arr.push({
+            ...doc.data(),
+            id: doc.id,
+            date: moment(doc.data().confirmed.toDate().getTime()).format(),
+          });
         });
-      });
 
-      arr.sort(function (a, b) {
-        return b.date == a.date ? 0 : b.date > a.date ? 1 : -1;
-      });
-      console.log(arr);
-      setActivities([...arr]);
+        arr.sort(function (a, b) {
+          return b.date == a.date ? 0 : b.date > a.date ? 1 : -1;
+        });
+        console.log(arr);
+        setActivities([...arr]);
+      }
     }
+    fetchData();
   }, [uid]);
   useEffect(() => {
     let localSum = 0;
@@ -69,14 +72,13 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
               <Text>Close</Text>
             </TouchableOpacity>
             <Text
-                style={tw`font-extrabold text-2xl text-center mt-3 text-[#3D1152]`}
-              >
-                Activities
-              </Text>
+              style={tw`font-extrabold text-2xl text-center mt-3 text-[#3D1152]`}
+            >
+              Activities
+            </Text>
             <View
               style={tw`flex-row justify-between items-center  flex-wrap w-full`}
             >
-
               <Image
                 source={url ? url : logo}
                 style={tw`h-7 w-7 bg-gray-300 p-4 rounded-full ml-2`}
@@ -144,11 +146,13 @@ const ActivityModal = ({ vis, uid, name, url, onReturn }) => {
                         </Text>
                       )}
                       <Text style={tw`ml-2 text-xl text-[#3D1152] `}>
-                    {moment(doc.confirmed.toDate().getTime()).format('hh:mm a')}
-                  </Text>
-                  <Text style={tw`ml-2 text-xl text-[#776548] `}>
-                    Activity:{doc.name}
-                  </Text>
+                        {moment(doc.confirmed.toDate().getTime()).format(
+                          'hh:mm a'
+                        )}
+                      </Text>
+                      <Text style={tw`ml-2 text-xl text-[#776548] `}>
+                        Activity:{doc.name}
+                      </Text>
                       <View style={tw`ml-2 flex-row justify-between`}>
                         <Text style={tw`ml-2`}> Amount: {doc.amount}</Text>
                         {doc.points < 0 ? (

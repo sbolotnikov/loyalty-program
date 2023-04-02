@@ -79,13 +79,15 @@ const ScanScreen = () => {
     }
     return true;
   };
-  useEffect(async () => {
+  useEffect(() => {
+    async function fetchData() {
     if (text !== '') {
       if (!indicatorJSON(text)) {
         setModalVisible2(true);
         setText('');
       } else {
         let obj = JSON.parse(text);
+        console.log(obj)
         var date2 = parseInt(Date.now()) / 1000;
         if (date2 - obj.a[1] > 60) {
           setModalVisible2(true);
@@ -140,6 +142,8 @@ const ScanScreen = () => {
         }
       }
     }
+  }
+  fetchData()
   }, [text]);
   useEffect(() => {
     let localSum = 0;

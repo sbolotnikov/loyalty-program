@@ -16,6 +16,8 @@ import AddingImagesScreen from './screens/AddingImagesscreen';
 import UsersScreen from './screens/UsersScreen';
 import MusicPlayerScreen from './screens/MusicPlayerScreen';
 import AboutScreen from './screens/AboutScreen';
+import CompetitionScreen from './screens/CompetitionScreen';
+import CompetitionInfoScreen from './screens/CompetitionInfoScreen';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -32,6 +34,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="Competition" component={CompetitionInfoScreen} />
       </>
        if (currentUser.status=="teacher") return <>
         <Stack.Screen name="Home" component={Homescreen} />
@@ -39,6 +42,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
+        <Stack.Screen name="Competition" component={CompetitionInfoScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
       </>
        if (currentUser.status=="super") return <>
@@ -51,7 +55,14 @@ const StackNavigator = () => {
         <Stack.Screen name="Users" component={UsersScreen} />
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="Competition" component={CompetitionScreen} />
+        {/* <Stack.Screen name="CompetitionSmall" component={CompetitionInfoScreen} /> */}
       </>
+           if (currentUser.status=="MC") return <>
+           <Stack.Screen name="Home" component={Homescreen} />
+           <Stack.Screen name="Profile" component={Profilescreen} />
+           <Stack.Screen name="Competition" component={CompetitionScreen} />
+         </>
     return <>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Resetpass" component={ResetScreen} />

@@ -10,11 +10,13 @@ const SettingsModal = ({ title, button1, button2, vis, onReturn, onChangeRate, o
         e.preventDefault();
         onReturn(submitten);
       };
-      useEffect(async () => {
-        onChangeRate(Rate)
+      useEffect(() => {
+        async function fetchData() {onChangeRate(Rate)}
+        fetchData()
 }, [Rate]);
-      useEffect(async () => {
-    onChangeDuration(songLength)
+      useEffect( () => {
+        async function fetchData1() {onChangeDuration(songLength)}
+        fetchData1;
 }, [songLength]);
 
       return (
@@ -33,6 +35,7 @@ const SettingsModal = ({ title, button1, button2, vis, onReturn, onChangeRate, o
               <View
                 style={tw` justify-center items-center bg-white rounded-md border w-[85%] max-w-md`}
               >
+              <Text style={tw`font-bold text-xl text-black`}>{title}</Text>
                         <Slider
           style={{
             width: '92%',

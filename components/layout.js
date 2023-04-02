@@ -66,6 +66,10 @@ const Layout = ({ children }) => {
         link: 'Getstars',
         params: { collectionName: 'goodies' },
       },
+      {
+        title: 'Competition',
+        link: 'Competition',
+      },
     ],
     teacher: [
       {
@@ -79,6 +83,10 @@ const Layout = ({ children }) => {
       {
         title: 'Scan Code',
         link: 'Scan',
+      },
+      {
+        title: 'Competition',
+        link: 'Competition',
       },
     ],
     super: [
@@ -95,6 +103,10 @@ const Layout = ({ children }) => {
         link: 'Users',
       },
       {
+        title: 'Competition',
+        link: 'Competition',
+      },
+      {
         title: 'Get Stars',
         link: 'ActivitySet',
         params: { collectionName: 'activities' },
@@ -103,6 +115,13 @@ const Layout = ({ children }) => {
         title: 'Use Stars',
         link: 'ActivitySet',
         params: { collectionName: 'goodies' },
+      },
+    ],
+    MC: [
+
+      {
+        title: 'Competition',
+        link: 'Competition',
       },
     ],
     default: [
