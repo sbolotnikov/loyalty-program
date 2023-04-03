@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Image,
   Pressable,
-  Dimensions,
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
@@ -95,11 +94,11 @@ const Layout = ({ children }) => {
         link: 'CalendarSet',
       },
       {
-        title: 'Scan Code',
+        title: 'Scan ',
         link: 'Scan',
       },
       {
-        title: 'Manage Users',
+        title: 'Users',
         link: 'Users',
       },
       {
@@ -162,24 +161,24 @@ const Layout = ({ children }) => {
   }, []);
   useEffect(() => {
     setSize(
-      dimensions.width > 1000
-        ? 140
-        : dimensions.width >= 700
-        ? 100
-        : dimensions.width > 500
-        ? 80
-        : 40
+      dimensions.screen.width > 1000
+        ? 50
+        : dimensions.screen.width >= 700
+        ? 45
+        : dimensions.screen.width > 500
+        ? 40
+        : 20
     );
     setTextSize(
-      dimensions.width > 1000
+      dimensions.screen.width > 1000
         ? 'xl'
-        : dimensions.width >= 700
+        : dimensions.screen.width >= 700
         ? 'lg'
-        : dimensions.width > 500
-        ? 'base'
-        : 'sm'
+        : dimensions.screen.width > 500
+        ? 'sm'
+        : 'xs'
     );
-  }, [dimensions.width]);
+  }, [dimensions.screen.width]);
 
   const onPressHomeFunction = () => {
     navigation.navigate('Home');
@@ -187,13 +186,13 @@ const Layout = ({ children }) => {
 
 
   return (
-    <SafeAreaView
+    <View
       style={[
-        tw` bg-[#c9ab78] pt-5  h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative m-auto`,
-        { overflow: 'hidden' },
+        tw` h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative m-auto`,
+      ,
       ]}>
       <View
-        style={tw`flex-row pb-3 items-center m-0`}
+        style={[tw`flex-row items-center m-0 bg-[#c9ab78] `,{position:'sticky', top:0, left:0,zIndex:1500}]}
         onLayout={(event) => {
           var { x, y, width, height } = event.nativeEvent.layout;
         }}>
@@ -274,6 +273,7 @@ const Layout = ({ children }) => {
             {position:'sticky', bottom:0}
           )]}
         >
+        {/* `${size1}px` */}
           <View style={tw`relative  w-full`}>
             <View style={tw`flex-row justify-around w-full max-w-6xl mx-auto`}>
               <Navbar
@@ -287,7 +287,7 @@ const Layout = ({ children }) => {
           </View>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

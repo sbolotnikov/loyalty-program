@@ -97,6 +97,10 @@ const LoginScreen = () => {
               onClick={() => navigation.navigate('Resetpass')}
               title="Forgot Password"
               style={{ width: '48%', backgroundColor: '#344869' }}/>
+                          <Btn
+              onClick={() => navigation.navigate('CompetitionSmall')}
+              title="Competition"
+              style={{ width: '48%', backgroundColor: '#344869' }}/>
           </View>
         </View>
       </Layout>

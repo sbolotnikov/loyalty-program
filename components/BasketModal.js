@@ -1,4 +1,4 @@
-import { View, Text, Modal, Image, Dimensions, TouchableOpacity, } from 'react-native';
+import { View, Text, Modal, Image, TouchableOpacity, } from 'react-native';
 import { useEffect, useState } from "react";
 import tw from 'twrnc';
 import Btn from './Btn';

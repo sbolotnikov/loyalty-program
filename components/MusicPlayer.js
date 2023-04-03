@@ -4,8 +4,6 @@ import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
 import { Audio } from 'expo-av';
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
-import Constants from 'expo-constants';
-import { MaterialIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import PlayerButtons from './svg/PlayerButtons';
 import SettingsModal from './SettingsModal';

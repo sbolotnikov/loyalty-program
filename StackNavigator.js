@@ -18,6 +18,7 @@ import MusicPlayerScreen from './screens/MusicPlayerScreen';
 import AboutScreen from './screens/AboutScreen';
 import CompetitionScreen from './screens/CompetitionScreen';
 import CompetitionInfoScreen from './screens/CompetitionInfoScreen';
+import CompetitionSmallScreen from './screens/CompetitionSmallScreen';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -56,7 +57,6 @@ const StackNavigator = () => {
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="Competition" component={CompetitionScreen} />
-        {/* <Stack.Screen name="CompetitionSmall" component={CompetitionInfoScreen} /> */}
       </>
            if (currentUser.status=="MC") return <>
            <Stack.Screen name="Home" component={Homescreen} />
@@ -67,6 +67,7 @@ const StackNavigator = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Resetpass" component={ResetScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="CompetitionSmall" component={CompetitionSmallScreen} />
     </>
    
     }
@@ -82,6 +83,7 @@ const StackNavigator = () => {
       <Stack.Screen name="Resetpass" component={ResetScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="Scan" component={ScanScreen} />
+      <Stack.Screen name="CompetitionSmall" component={CompetitionSmallScreen} />
       </>
     )}
   </Stack.Navigator>

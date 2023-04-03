@@ -6,25 +6,10 @@ import { collection, query } from 'firebase/firestore';
 import { db } from '../firebase';
 import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native';
-import useDimensions from '../hooks/useDimensions';
 
 const CompetitionSmallScreen = () => {
     const [compArray, setCompArray] = useState([{image: '', dates: '', currentHeat: '', name: '', message: ''}]);
-    const { dimensions } =useDimensions();
-    const [messageStatus, setMessageStatus] = useState(false)
-    // const [rotateValue, setRotateValue] = useState(new Animated.Value(0));
-    const startValue = useRef(new Animated.Value(0)).current;
-    const endValue = 1;
-    useEffect(() => {
-      Animated.loop(
-        Animated.spring(startValue, {
-          toValue: endValue,
-          friction: 1,
-          useNativeDriver: false,
-        }),
-        {iterations: 1000},
-      ).start();
-    }, [startValue]);
+
  
   const [snapshot, loading, err] = useCollection(
     query(collection(db, 'competitions')),
@@ -48,14 +33,13 @@ const CompetitionSmallScreen = () => {
         });
       });
 
-      console.log(arr);
-      setMessageStatus(arr[0].message>''?true:false)
       setCompArray([...arr]);
     }
   }, [snapshot]);
   return (
     <View>
-      <Text>CompetitionSmallScreen</Text>
+     <Text style={tw`font-semibold text-4xl text-[#ff0000] text-center`}> {compArray[0].message}</Text>
+     <Text style={tw`font-semibold text-4xl text-[#3D1152] text-center`}> Heat # {compArray[0].currentHeat}</Text>
     </View>
   )
 }
