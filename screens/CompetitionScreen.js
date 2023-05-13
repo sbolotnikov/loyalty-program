@@ -1,19 +1,23 @@
-import { View, Text } from 'react-native';
-import React from 'react';
+import { View, Text, Button } from 'react-native';
 import Layout from '../components/layout';
 import Btn from '../components/Btn';
 import TextBox from '../components/TextBox';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, doc, query, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import tw from 'twrnc';
 import { TouchableOpacity } from 'react-native-web';
 import { deleteOldImage, pickImage } from '../util/functions';
 import useAuth from '../hooks/useAuth';
+import ChooseFiles from '../components/ChooseFiles'; 
+import VideoPlayingModal from '../components/VideoPlayingModal';
+import PlayerButtons from '../components/svg/PlayerButtons';
 
 const CompetitionScreen = () => {
   const { currentUser } = useAuth();
+  const [videoFile, setVideoFile] = useState({ uri: '', name: '' });
+  const [modalVisible, setModalVisible] = useState(false);
   const [compArray, setCompArray] = useState({
     image: '',
     dates: '',
@@ -65,6 +69,30 @@ const CompetitionScreen = () => {
 
   return (
     <Layout>
+            <VideoPlayingModal
+            videoUri={ videoFile.uri}
+            button1={'Ok'}
+            button2={''}
+            heatNum={compArray.currentHeat}
+            vis={modalVisible}
+            onReturn={(ret) => setModalVisible(false)}
+            
+          />
+      {/* <View
+        style={{
+          width: '100vw',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ color: 'red' }}>hello world </Text>
+      </View> */}
       <View
         style={{
           width: '100%',
@@ -102,28 +130,42 @@ const CompetitionScreen = () => {
         )}
 
         {currentUser.status == 'super' ? (
-          <TouchableOpacity
-            style={tw`w-[92%] h-48 m-1 `}
-            onPress={(e) => onPressPicture(e)}
-          >
-            {compArray.image > '' ? (
-              <View
-                style={[
-                  tw` h-full w-full rounded-md`,
-                  {
-                    objectFit: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    backgroundImage: `url(${compArray.image})`,
-                  },
-                ]}
-              />
-            ) : (
-              <View style={tw` h-full w-full justify-center items-center`}>
-                <Text>Please click to choose image</Text>
-              </View>
-            )}
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity
+              style={tw`w-[92%] h-48 m-1 `}
+              onPress={(e) => onPressPicture(e)}
+            >
+              {compArray.image > '' ? (
+                <View
+                  style={[
+                    tw` h-full w-full rounded-md`,
+                    {
+                      objectFit: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center',
+                      backgroundImage: `url(${compArray.image})`,
+                    },
+                  ]}
+                />
+              ) : (
+                <View style={tw` h-full w-full justify-center items-center`}>
+                  <Text>Please click to choose image</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <View>
+              <Text>{videoFile.name}</Text>
+            </View>
+            <ChooseFiles
+              fileType={'video/*'}
+              multiple={false}
+              onFileChoice={(file) => {
+                setVideoFile({ uri: file.uri, name: file.name });
+              }}
+            />
+            <PlayerButtons icon={'List'} color={'#776548'} color2={'#C9AB78'} size={40} onButtonPress={()=>setModalVisible(true)}/>
+
+          </View>
         ) : (
           <></>
         )}
@@ -159,7 +201,7 @@ const CompetitionScreen = () => {
                   'currentHeat'
                 );
             }}
-            title="Substruct"
+            title="Previous"
             style={{ width: '48%', backgroundColor: '#3D1152', marginTop: 0 }}
           />
           <Btn
@@ -169,7 +211,7 @@ const CompetitionScreen = () => {
                 'currentHeat'
               );
             }}
-            title="Add"
+            title="Next"
             style={{ width: '48%', backgroundColor: '#344869', marginTop: 0 }}
           />
         </View>

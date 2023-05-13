@@ -16,7 +16,7 @@ const SettingsModal = ({ title, button1, button2, vis, onReturn, onChangeRate, o
 }, [Rate]);
       useEffect( () => {
         async function fetchData1() {onChangeDuration(songLength)}
-        fetchData1;
+        fetchData1()
 }, [songLength]);
 
       return (

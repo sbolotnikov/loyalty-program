@@ -1,7 +1,6 @@
 import useState from 'react';
 // Import required components
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -12,14 +11,14 @@ import {
  
 // Import Document Picker
 import * as DocumentPicker from 'expo-document-picker'
+import PlayerButtons from './svg/PlayerButtons';
 
-const ChooseFiles = ({onFileChoice}) => {
+const ChooseFiles = ({fileType,multiple, onFileChoice}) => {
   
- 
   const selectOneFile = async () => {
     try {
         let res = await DocumentPicker.getDocumentAsync({
-            type: 'audio/*', multiple: false});  
+            type: fileType, multiple: multiple});  
  
       console.log('res : ' + JSON.stringify(res));
     //   console.log('URI : ' + res.uri);
@@ -74,20 +73,10 @@ const ChooseFiles = ({onFileChoice}) => {
   return (
     <View>
       <View style={styles.container}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.buttonStyle}
-          onPress={selectOneFile}>
-          <Text style={{marginRight: 10, fontSize: 19}}>
-            Click here to pick one file
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={styles.imageIconStyle}
-          />
-        </TouchableOpacity>
+        <Text style={{  fontSize: 19}}>
+             Pick a file
+        </Text>
+        <PlayerButtons icon={'File'} color={'#776548'} color2={'#C9AB78'} size={40} onButtonPress={()=>selectOneFile()}/>
       </View>
     </View>
   )
@@ -97,19 +86,8 @@ export default ChooseFiles
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
       padding: 16,
-    },
-
-    buttonStyle: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      backgroundColor: '#DDDDDD',
-      padding: 5,
-    },
-    imageIconStyle: {
-      height: 20,
-      width: 20,
-      resizeMode: 'stretch',
-    },
+      justifyContent:'center',
+      alignItems:'center'
+    }
   });

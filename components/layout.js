@@ -80,7 +80,7 @@ const Layout = ({ children }) => {
         link: 'Home',
       },
       {
-        title: 'Scan Code',
+        title: 'Scan',
         link: 'Scan',
       },
       {
@@ -94,7 +94,7 @@ const Layout = ({ children }) => {
         link: 'CalendarSet',
       },
       {
-        title: 'Scan ',
+        title: 'Scan',
         link: 'Scan',
       },
       {
@@ -167,7 +167,7 @@ const Layout = ({ children }) => {
         ? 45
         : dimensions.screen.width > 500
         ? 40
-        : 20
+        : 35
     );
     setTextSize(
       dimensions.screen.width > 1000

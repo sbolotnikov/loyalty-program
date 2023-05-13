@@ -43,7 +43,7 @@ const MusicPlayerScreen = () => {
             setMusicFile({ uri: music3, name: 'Shekspire' });
           }}
         />
-        <ChooseFiles onFileChoice={(file) => setMusicFile(file)} />
+        <ChooseFiles fileType={'audio/*'} multiple={true} onFileChoice={(file) => setMusicFile(file)} />
         <SongPlayList onSongChoice={(song)=>{console.log(song)}} />
         <PlayerButtons icon={'List'} color={'#776548'} color2={'#C9AB78'} size={40} onButtonPress={()=>setModalVisible(true)}/>
       </View>

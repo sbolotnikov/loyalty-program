@@ -217,8 +217,9 @@ const MusicPlayer = ({ rateSet, songDuration, startPos, music, onSongEnd }) => {
         onChangeRate={(rate) => SeekUpdateRate(rate)}
         onChangeDuration={(songLength) => {
           SetSongDurationLocal(songLength);
-          sound.current.setOnPlaybackStatusUpdate(UpdateStatus);
           console.log(songLength);
+          sound.current.setOnPlaybackStatusUpdate(UpdateStatus);
+          
         }}
       />
       <View style={[tw`w-full items-center`, { height: 200 }]}>

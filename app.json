@@ -23,7 +23,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/dancerslogo.png",
+        "foregroundImage": "./assets/dancerslogo1.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "host.exp.exponent"
