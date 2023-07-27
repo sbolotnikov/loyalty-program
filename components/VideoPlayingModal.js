@@ -23,9 +23,8 @@ const VideoPlayingModal = ({
   const video = useRef(null);
   const [status, setStatus] = useState({});
   const { dimensions } = useDimensions();
-  console.log(dimensions);
   return (
-    <View style={tw` flex-1 justify-center items-center absolute top-0 left-0`}>
+    <View style={tw` flex-1 justify-center items-center w-[100%] h-[100%] absolute top-0 left-0`}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -33,7 +32,7 @@ const VideoPlayingModal = ({
         onRequestClose={() => {}}
       >
         <View
-          style={tw` justify-center items-center bg-white rounded-md border w-[100%] h-[100%]`}
+          style={tw` justify-start items-center bg-black  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
         >
           {/* <Video
             source={{
@@ -57,18 +56,19 @@ const VideoPlayingModal = ({
           <Video
             ref={video}
             style={{
-            //   height: dimensions.screen.height,
-              position: 'absolute',
-              inset:0,
-              alignItems: 'stretch',
-              width: dimensions.screen.width,
+             width:"100%",
+             height:"90%",
+              overflow: 'auto',
+             
             }}
             source={{
               uri: videoUri,
             }}
+
+            isMuted
+            resizeMode={ResizeMode.CONTAIN}
             useNativeControls
             shouldPlay
-            resizeMode={ResizeMode.COVER}
             isLooping
             onPlaybackStatusUpdate={(status) => setStatus(() => status)}
           />
