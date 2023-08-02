@@ -1,5 +1,4 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync } from 'expo-image-manipulator';
 import { v4 as uuidv4 } from 'uuid';
@@ -103,6 +102,17 @@ import {
           });
       }
     }
+    // export const convertRTF = async (file) => {
+    //   const { UnRTF } = require("node-unrtf"); 
+    //   const unRtf = new UnRTF();
+    //   const options = {
+    //     outputHtml: true,
+    //   };
+      
+    //   const res = await unRtf.convert(file, options);
+    //   console.log(res);
+      
+    // }
     // export const transferCollection = async (collectionName) => {
       
     //     const querySnapshot = await getDocs(

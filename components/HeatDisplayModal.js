@@ -5,23 +5,18 @@ import Btn from './Btn';
 import { Video, ResizeMode } from 'expo-av';
 import { useEffect, useState, useRef } from 'react';
 import useDimensions from '../hooks/useDimensions';
-const VideoPlayingModal = ({
-  videoUri,
+const HeatDisplayModal = ({
+  heatText,
   button1,
-  button2,
   heatNum,
   vis,
   onReturn,
-  onChangeRate,
-  onChangeDuration,
 }) => {
   const handleSubmit = (e, submitten) => {
     e.preventDefault();
     onReturn(submitten);
   };
 
-  const video = useRef(null);
-  const [status, setStatus] = useState({});
   const { dimensions } = useDimensions();
   return (
     <View style={tw` flex-1 justify-center items-center w-[100%] h-[100%] absolute top-0 left-0`}>
@@ -32,36 +27,16 @@ const VideoPlayingModal = ({
         onRequestClose={() => {}}
       >
         <View
-          style={tw` justify-start items-center bg-black  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
+          style={tw`flex-col justify-center items-center bg-black  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
         >
-
-          <Video
-            ref={video}
-            style={{
-             width:"100%",
-             height:"90%",
-              overflow: 'auto',
-             
-            }}
-            source={{
-              uri: videoUri,
-            }}
-
-            isMuted
-            resizeMode={ResizeMode.CONTAIN}
-            useNativeControls
-            shouldPlay
-            isLooping
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-          />
+         <Text style={tw`text-white text-4xl`}>
+          {heatText}
+         </Text>
 
           <Btn
             onClick={(e) => handleSubmit(e, button1)}
-            title={heatNum}
+            title={'Return'}
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
               width: '48%',
               backgroundColor: '#C9AB78',
               zIndex: 100,
@@ -73,4 +48,4 @@ const VideoPlayingModal = ({
   );
 };
 
-export default VideoPlayingModal;
+export default HeatDisplayModal;

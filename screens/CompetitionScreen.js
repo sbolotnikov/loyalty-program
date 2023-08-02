@@ -2,97 +2,114 @@ import { View, Text, Button } from 'react-native';
 import Layout from '../components/layout';
 import Btn from '../components/Btn';
 import TextBox from '../components/TextBox';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { collection, doc, query, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import tw from 'twrnc';
 import { TouchableOpacity } from 'react-native-web';
 import { deleteOldImage, pickImage } from '../util/functions';
 import useAuth from '../hooks/useAuth';
-import ChooseFiles from '../components/ChooseFiles'; 
+import ChooseFiles from '../components/ChooseFiles';
 import VideoPlayingModal from '../components/VideoPlayingModal';
 import PlayerButtons from '../components/svg/PlayerButtons';
+import { Buffer } from 'buffer';
+import useCompetition from '../hooks/useCompetition';
+import SelectDropdown from 'react-native-select-dropdown';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import HeatDisplayModal from '../components/HeatDisplayModal';
 
 const CompetitionScreen = () => {
   const { currentUser } = useAuth();
   const [videoFile, setVideoFile] = useState({ uri: '', name: '' });
   const [modalVisible, setModalVisible] = useState(false);
-  const [compArray, setCompArray] = useState({
-    image: '',
-    dates: '',
-    currentHeat: '',
-    name: '',
-    message: '',
-    id: '',
-  });
+  const [modal2Visible, setModal2Visible] = useState(false);
+  const {
+    image,
+    dates,
+    currentHeat,
+    name,
+    message,
+    id,
+    programFileName,
+    competitors,
+    heatIDs,
+    heatIndex,
+    dances,
+    items,
+    records,
+  } = useCompetition();
 
-  const [snapshot, loading, err] = useCollection(
-    query(collection(db, 'competitions')),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
   function handleChange(text, eventName) {
-    updateDoc(doc(db, 'competitions', compArray.id), {
+    updateDoc(doc(db, 'competitions', id), {
       [eventName]: text,
     });
-    setCompArray((prev) => {
-      return {
-        ...prev,
-        [eventName]: text,
-      };
-    });
+    // setCompArray((prev) => {
+    //   return {
+    //     ...prev,
+    //     [eventName]: text,
+    //   };
+    // });
   }
+  //convert RTF to txt NOT WORKING YET!!!
+  function convertToPlain(rtf) {
+    rtf = rtf.replace(/\\par[d]?/g, '');
+    return rtf
+      .replace(/\{\*?\\[^{}]+}|[{}]|\\\n?[A-Za-z]+\n?(?:-?\d+)?[ ]?/g, '')
+      .trim();
+  }
+  //Function to check if it is single dance or Combination
+  const nameOfDance = (str) => {
+    let danceSet = [
+      'Cha Cha',
+      'Samba',
+      'Rumba',
+      'Paso Doble',
+      'Jive',
+      'Waltz',
+      'Tango',
+      'Viennese Waltz',
+      'Foxtrot',
+      'Quickstep',
+      'Swing',
+      'Bolero',
+      'Mambo',
+      'Argentine Tango',
+      'Merengue',
+      'West Coast Swing',
+      'Salsa',
+      'Hustle',
+      'Bachata',
+    ];
+    for (let i = 0; i < danceSet.length; i++) {
+      if (str.toLowerCase().includes(danceSet[i].toLowerCase()))
+        return danceSet[i];
+    }
+    return '';
+  };
+
   const onPressPicture = async (e) => {
     e.preventDefault();
     let picURL = await pickImage('competitions', '', 300);
-    console.log(picURL);
-    deleteOldImage('competitions', compArray.image);
+    deleteOldImage('competitions', image);
     handleChange(picURL, 'image');
   };
-  useEffect(() => {
-    if (snapshot) {
-      let arr = [];
-      snapshot.docs.forEach((doc1) => {
-        console.log(doc1.id);
-        arr.push({
-          ...doc1.data(),
-          id: doc1.id,
-        });
-      });
-
-      console.log(snapshot.docs[0].data());
-      setCompArray(arr[0]);
-    }
-  }, [snapshot]);
-
   return (
     <Layout>
-            <VideoPlayingModal
-            videoUri={ videoFile.uri}
-            button1={'Ok'}
-            button2={''}
-            heatNum={compArray.currentHeat}
-            vis={modalVisible}
-            onReturn={(ret) => setModalVisible(false)}
-            
-          />
-      {/* <View
-        style={{
-          width: '100vw',
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: 'red' }}>hello world </Text>
-      </View> */}
+      <VideoPlayingModal
+        videoUri={videoFile.uri}
+        button1={'Ok'}
+        button2={''}
+        heatNum={currentHeat}
+        vis={modalVisible}
+        onReturn={(ret) => setModalVisible(false)}
+      />
+      <HeatDisplayModal
+        heatText={items[heatIndex]}
+        button1={'Ok'}
+        heatNum={currentHeat}
+        vis={modal2Visible}
+        onReturn={(ret) => setModal2Visible(false)}
+      />
       <View
         style={{
           width: '100%',
@@ -109,22 +126,22 @@ const CompetitionScreen = () => {
               placeholder="Enter Competion Name"
               onChangeText={(text) => handleChange(text, 'name')}
               secureTextEntry={false}
-              value={compArray.name}
+              value={name}
             />
             <TextBox
               placeholder="Enter comp dates"
               onChangeText={(text) => handleChange(text, 'dates')}
               secureTextEntry={false}
-              value={compArray.dates}
+              value={dates}
             />
           </>
         ) : (
           <>
             <View>
-              <Text>{compArray.name}</Text>
+              <Text>{name}</Text>
             </View>
             <View>
-              <Text>{compArray.dates}</Text>
+              <Text>{dates}</Text>
             </View>
           </>
         )}
@@ -135,7 +152,7 @@ const CompetitionScreen = () => {
               style={tw`w-[92%] h-48 m-1 `}
               onPress={(e) => onPressPicture(e)}
             >
-              {compArray.image > '' ? (
+              {image > '' ? (
                 <View
                   style={[
                     tw` h-full w-full rounded-md`,
@@ -143,7 +160,7 @@ const CompetitionScreen = () => {
                       objectFit: 'contain',
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundImage: `url(${compArray.image})`,
+                      backgroundImage: `url(${image})`,
                     },
                   ]}
                 />
@@ -153,18 +170,151 @@ const CompetitionScreen = () => {
                 </View>
               )}
             </TouchableOpacity>
-            <View>
-              <Text>{videoFile.name}</Text>
-            </View>
-            <ChooseFiles
-              fileType={'video/*'}
-              multiple={false}
-              onFileChoice={(file) => {
-                setVideoFile({ uri: file.uri, name: file.name });
-              }}
-            />
-            <PlayerButtons icon={'List'} color={'#776548'} color2={'#C9AB78'} size={40} onButtonPress={()=>setModalVisible(true)}/>
+            
 
+            <View style={tw` w-full flex-row justify-center items-start`}>
+            <View>
+              <ChooseFiles
+                fileType={'video/*'}
+                multiple={false}
+                label={'Choose Video'}
+                onFileChoice={(file) => {
+                  setVideoFile({ uri: file.uri, name: file.name });
+                }}
+              />
+              
+              <Text style={{textAlign:'center', fontStyle: 'oblique'}}>{videoFile.name}</Text>
+            </View>
+              <PlayerButtons
+                icon={'Play'}
+                color={'#776548'}
+                color2={'#C9AB78'}
+                size={40}
+                onButtonPress={() => setModalVisible(true)}
+              />
+              <View>
+              <ChooseFiles
+                fileType={'text/*'}
+                multiple={false}
+                label={'Choose Program'}
+                onFileChoice={async (file) => {
+                  let programBuffer = Buffer.from(file.uri, 'base64').toString(
+                    'ascii'
+                  );
+                  handleChange(file.name, 'programFileName');
+                  // handleChange(decoded, 'program');
+
+                  let decoded = programBuffer
+                    .split('Heat 1b\x00\x06 b\x00\x06')[0]
+                    .split('\n');
+                  let str1 = [];
+                  let competitors = [];
+                  for (let i = 0; i < decoded.length; i++) {
+                    str1 = decoded[i].split(' ');
+
+                    if (+str1[1] > 0)
+                      competitors.push({
+                        number1: str1[1],
+                        nameFull: str1[2] + ' ' + str1[3].split('\t')[0],
+                        studio: decoded[i].split('\t')[1],
+                      });
+                  }
+
+                  decoded = programBuffer;
+                  decoded =
+                    ' Heat 1b\x00\x06 b\x00\x06' +
+                    decoded.split('Heat 1b\x00\x06 b\x00\x06')[1];
+                  decoded = decoded.split('b\x00\x06 b\x00\x06');
+
+                  let arrayOfStrings = [];
+                  let items = [];
+                  let heatIDs = [];
+                  let dances = [];
+                  let cuttingTheEnd = 0;
+                  for (let i = 1; i < decoded.length; i++) {
+                    arrayOfStrings = decoded[i - 1].split('\n');
+                    dances[i - 1] = decoded[i].split('\n')[0];
+                    items[i - 1] =
+                      arrayOfStrings[arrayOfStrings.length - 1] + decoded[i];
+                    heatIDs[i - 1] = arrayOfStrings[arrayOfStrings.length - 1];
+                    cuttingTheEnd =
+                      arrayOfStrings[arrayOfStrings.length - 1].length;
+                    items[i - 1] = items[i - 1].slice(0, -cuttingTheEnd);
+                  }
+                  let records = [];
+                  let group = '';
+                  let heat = [];
+                  let danceName = '';
+                  for (let i = 0; i < items.length; i++) {
+                    heat = items[i];
+                    danceName = nameOfDance(dances[i]);
+                    group = dances[i].replace(nameOfDance(dances[i]), '');
+                    for (let j = 1; j < heat.split('\n').length; j++) {
+                      let rec = heat.split('\n')[j];
+                      if (heat.split('\n')[j].split('\t')[0] == ' ___') {
+                        records.push(
+                          heatIDs[i] +
+                            ' ' +
+                            danceName +
+                            '  ' +
+                            group +
+                            ' ' +
+                            rec.replace(' ___\t', '')
+                        );
+
+                        if (
+                          competitors.findIndex(
+                            (x) => x.nameFull === rec.split('\t')[3]
+                          ) == -1
+                        ) {
+                          let person =
+                            competitors[
+                              competitors.findIndex(
+                                (x) => x.nameFull === rec.split('\t')[4]
+                              )
+                            ];
+                          competitors.push({
+                            number1: '',
+                            nameFull: rec.split('\t')[3],
+                            studio: person.studio,
+                          });
+                        } else if (
+                          competitors.findIndex(
+                            (x) => x.nameFull === rec.split('\t')[4]
+                          ) == -1
+                        ) {
+                          let person =
+                            competitors[
+                              competitors.findIndex(
+                                (x) => x.nameFull === rec.split('\t')[3]
+                              )
+                            ];
+                          competitors.push({
+                            number1: '',
+                            nameFull: rec.split('\t')[4],
+                            studio: person.studio,
+                          });
+                        }
+                      } else {
+                        if (heat.split('\n')[j].length > 3)
+                          group = heat.split('\n')[j];
+                      }
+                    }
+                    group = '';
+                  }
+                  for (let i = 0; i < items.length; i++) {
+                    items[i] = items[i].replace(/ ___\t/g, '');
+                  }
+                  handleChange(competitors, 'competitors');
+                  handleChange(heatIDs, 'heatIDs');
+                  handleChange(dances, 'dances');
+                  handleChange(items, 'items');
+                  handleChange(records, 'records');
+                  //   records.filter(x => x.includes('Artur Aleksandrov'))
+                }}
+              />
+              <Text style={{textAlign:'center', fontStyle: 'oblique'}}>{programFileName}</Text></View>
+            </View>
           </View>
         ) : (
           <></>
@@ -173,21 +323,89 @@ const CompetitionScreen = () => {
           placeholder="Enter urgent message"
           onChangeText={(text) => handleChange(text, 'message')}
           secureTextEntry={false}
-          value={compArray.message}
+          value={message}
         />
         <View
           style={tw`flex-row justify-center items-center flex-wrap w-[95%]`}
         >
+          <View style={tw`flex-col justify-center items-center mb-2 w-full`}>
           <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
-            Current Heat #
+            Current Heat:
           </Text>
-          <View style={tw`flex-row justify-center items-center mb-2 w-[50%]`}>
             <TextBox
               placeholder="Enter current heat number"
               onChangeText={(text) => handleChange(text, 'currentHeat')}
               secureTextEntry={false}
-              value={compArray.currentHeat}
+              value={currentHeat}
             />
+            <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
+              Choose current Heat
+            </Text>
+            <View style={tw`flex-row justify-center items-center mb-2 w-[50%]`}>
+              <SelectDropdown
+                dropdownBackgroundColor={'white'}
+                data={heatIDs}
+                defaultValue={heatIndex}
+                onSelect={(selectedItem, index) => {
+                  handleChange(selectedItem, 'currentHeat');
+                  handleChange(index, 'heatIndex');
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  //   console.log(selectedItem, index);
+                  // text represented after item is selected
+                  // if data array is an array of objects then return selectedItem.property to render after item is selected
+                  return selectedItem;
+                }}
+                rowTextForSelection={(item, index) => {
+                  // text represented for each item in dropdown
+                  // if data array is an array of objects then return item.property to represent item in dropdown
+                  return item;
+                }}
+                buttonStyle={{
+                  width: 140,
+                  height: 35,
+                  backgroundColor: '#FFF',
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: '#776548',
+                }}
+                buttonTextStyle={{ color: '#444', textAlign: 'left' }}
+                renderDropdownIcon={(isOpened) => {
+                  return (
+                    <FontAwesome
+                      name={isOpened ? 'chevron-up' : 'chevron-down'}
+                      color={'#776548'}
+                      size={14}
+                    />
+                  );
+                }}
+                dropdownStyle={{
+                  backgroundColor: '#EFEFEF',
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  width: 90,
+                  borderColor: '#776548',
+                }}
+                rowStyle={{
+                  backgroundColor: '#EFEFEF',
+                  height: 45,
+                  borderBottomColor: '#C5C5C5',
+                }}
+                rowTextStyle={{
+                  color: '#444',
+                  textAlign: 'center',
+                  margin: 'auto',
+                  textSize: 18,
+                }}
+              />
+              <PlayerButtons
+                icon={'List'}
+                color={'#776548'}
+                color2={'#C9AB78'}
+                size={40}
+                onButtonPress={() => setModal2Visible(true)}
+              />
+            </View>
           </View>
         </View>
         <View
@@ -195,21 +413,31 @@ const CompetitionScreen = () => {
         >
           <Btn
             onClick={(e) => {
-              if (compArray.currentHeat.match(/\d+/g) * 1 > 1)
-                handleChange(
-                  (compArray.currentHeat.match(/\d+/g) * 1 - 1).toString(),
-                  'currentHeat'
-                );
+              console.log(heatIndex);
+              if (heatIndex > 0) {
+                handleChange(heatIndex - 1, 'heatIndex');
+                handleChange(heatIDs[heatIndex - 1], 'currentHeat');
+              }
+              // if (currentHeat.match(/\d+/g) * 1 > 1)
+              //   handleChange(
+              //     (currentHeat.match(/\d+/g) * 1 - 1).toString(),
+              //     'currentHeat'
+              //   );
             }}
             title="Previous"
             style={{ width: '48%', backgroundColor: '#3D1152', marginTop: 0 }}
           />
           <Btn
             onClick={() => {
-              handleChange(
-                (compArray.currentHeat.match(/\d+/g) * 1 + 1).toString(),
-                'currentHeat'
-              );
+              console.log(heatIndex);
+              if (heatIndex < heatIDs.length-1) {
+                handleChange(heatIndex + 1, 'heatIndex');
+                handleChange(heatIDs[heatIndex + 1], 'currentHeat');
+              }
+              // handleChange(
+              //   (currentHeat.match(/\d+/g) * 1 + 1).toString(),
+              //   'currentHeat'
+              // );
             }}
             title="Next"
             style={{ width: '48%', backgroundColor: '#344869', marginTop: 0 }}
