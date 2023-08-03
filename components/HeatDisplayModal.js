@@ -35,9 +35,16 @@ const HeatDisplayModal = ({
 
           <Btn
             onClick={(e) => handleSubmit(e, button1)}
-            title={'Return'}
+            title={'Back'}
             style={{
-              width: '48%',
+              position: 'absolute',
+              top: 0,
+              right:0,
+              marginTop:5,
+              marginRight:15,
+              zIndex: 100,
+              width: 40,
+              fontSize:10,
               backgroundColor: '#C9AB78',
               zIndex: 100,
             }}

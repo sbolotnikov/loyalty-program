@@ -76,7 +76,7 @@ const ChooseFiles = ({ fileType, multiple, label, onFileChoice }) => {
           size={40}
           onButtonPress={() => selectOneFile()}
         />
-        <Text  style={{ fontSize: 15, textAlign:'center' }}>{label}</Text>
+        <Text  style={{ fontSize: 15, textAlign:'center', width: 58  }}>{label}</Text>
       </View>
   
   );

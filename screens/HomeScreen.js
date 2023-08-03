@@ -18,7 +18,6 @@ const Homescreen = () => {
   const { currentUser } = useAuth();
   const studioReady = () => {
     const navigation = useNavigation();
-    console.log(currentUser);
     const [summed, setSums] = useState(0);
     const [size1, setSize] = useState(0);
     const [textSize, setTextSize] = useState(0);
@@ -44,7 +43,6 @@ const Homescreen = () => {
     useEffect(() => {
       if (snapshot) {
         let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;
-        console.log(snapshot.docs[0].id);
         setCarousel(
           arr1.map((item, i) => ({
             ...item,

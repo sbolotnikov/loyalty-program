@@ -170,150 +170,176 @@ const CompetitionScreen = () => {
                 </View>
               )}
             </TouchableOpacity>
-            
 
             <View style={tw` w-full flex-row justify-center items-start`}>
-            <View>
-              <ChooseFiles
-                fileType={'video/*'}
-                multiple={false}
-                label={'Choose Video'}
-                onFileChoice={(file) => {
-                  setVideoFile({ uri: file.uri, name: file.name });
-                }}
-              />
-              
-              <Text style={{textAlign:'center', fontStyle: 'oblique'}}>{videoFile.name}</Text>
-            </View>
-              <PlayerButtons
-                icon={'Play'}
-                color={'#776548'}
-                color2={'#C9AB78'}
-                size={40}
-                onButtonPress={() => setModalVisible(true)}
-              />
               <View>
+                <ChooseFiles
+                  fileType={'video/*'}
+                  multiple={false}
+                  label={'Choose Video'}
+                  onFileChoice={(file) => {
+                    setVideoFile({ uri: file.uri, name: file.name });
+                  }}
+                />
+
+                <Text style={{ textAlign: 'center', fontStyle: 'oblique' }}>
+                  {videoFile.name}
+                </Text>
+              </View>
+              <View>
+                <PlayerButtons
+                  icon={'Play'}
+                  color={'#776548'}
+                  color2={'#C9AB78'}
+                  size={40}
+                  onButtonPress={() => setModalVisible(true)}
+                />
+                <Text style={{ textAlign: 'center', width: 45 }}>
+                  Show Video
+                </Text>
+              </View>
+              <View>
+                <ChooseFiles
+                  fileType={'text/*'}
+                  multiple={false}
+                  label={'Choose Program'}
+                  onFileChoice={async (file) => {
+                    let programBuffer = Buffer.from(
+                      file.uri,
+                      'base64'
+                    ).toString('ascii');
+                    handleChange(file.name, 'programFileName');
+
+                    let decoded = programBuffer
+                      .split('Heat 1b\x00\x06 b\x00\x06')[0]
+                      .split('\n');
+                    let str1 = [];
+                    let competitors = [];
+                    for (let i = 0; i < decoded.length; i++) {
+                      str1 = decoded[i].split(' ');
+
+                      if (+str1[1] > 0)
+                        competitors.push({
+                          number1: str1[1],
+                          nameFull: str1[2] + ' ' + str1[3].split('\t')[0],
+                          studio: decoded[i].split('\t')[1],
+                        });
+                    }
+
+                    decoded = programBuffer;
+                    decoded =
+                      ' Heat 1b\x00\x06 b\x00\x06' +
+                      decoded.split('Heat 1b\x00\x06 b\x00\x06')[1];
+                    decoded = decoded.split('b\x00\x06 b\x00\x06');
+
+                    let arrayOfStrings = [];
+                    let items = [];
+                    let heatIDs = [];
+                    let dances = [];
+                    let cuttingTheEnd = 0;
+                    for (let i = 1; i < decoded.length; i++) {
+                      arrayOfStrings = decoded[i - 1].split('\n');
+                      dances[i - 1] = decoded[i].split('\n')[0];
+                      items[i - 1] =
+                        arrayOfStrings[arrayOfStrings.length - 1] + decoded[i];
+                      heatIDs[i - 1] =
+                        arrayOfStrings[arrayOfStrings.length - 1];
+                      cuttingTheEnd =
+                        arrayOfStrings[arrayOfStrings.length - 1].length;
+                      items[i - 1] = items[i - 1].slice(0, -cuttingTheEnd);
+                    }
+                    let records = [];
+                    let group = '';
+                    let heat = [];
+                    let danceName = '';
+                    for (let i = 0; i < items.length; i++) {
+                      heat = items[i];
+                      danceName = nameOfDance(dances[i]);
+                      group = dances[i].replace(nameOfDance(dances[i]), '');
+                      for (let j = 1; j < heat.split('\n').length; j++) {
+                        let rec = heat.split('\n')[j];
+                        if (heat.split('\n')[j].split('\t')[0] == ' ___') {
+                          records.push(
+                            heatIDs[i] +
+                              ' ' +
+                              danceName +
+                              '  ' +
+                              group +
+                              ' ' +
+                              rec.replace(' ___\t', '')
+                          );
+
+                          if (
+                            competitors.findIndex(
+                              (x) => x.nameFull === rec.split('\t')[3]
+                            ) == -1
+                          ) {
+                            let person =
+                              competitors[
+                                competitors.findIndex(
+                                  (x) => x.nameFull === rec.split('\t')[4]
+                                )
+                              ];
+                            competitors.push({
+                              number1: '',
+                              nameFull: rec.split('\t')[3],
+                              studio: person.studio,
+                            });
+                          } else if (
+                            competitors.findIndex(
+                              (x) => x.nameFull === rec.split('\t')[4]
+                            ) == -1
+                          ) {
+                            let person =
+                              competitors[
+                                competitors.findIndex(
+                                  (x) => x.nameFull === rec.split('\t')[3]
+                                )
+                              ];
+                            competitors.push({
+                              number1: '',
+                              nameFull: rec.split('\t')[4],
+                              studio: person.studio,
+                            });
+                          }
+                        } else {
+                          if (heat.split('\n')[j].length > 3)
+                            group = heat.split('\n')[j];
+                        }
+                      }
+                      group = '';
+                    }
+                    for (let i = 0; i < items.length; i++) {
+                      items[i] = items[i].replace(/ ___\t/g, '');
+                    }
+                    handleChange(competitors, 'competitors');
+                    handleChange(heatIDs, 'heatIDs');
+                    handleChange(dances, 'dances');
+                    handleChange(items, 'items');
+                    handleChange(records, 'records');
+                    //   records.filter(x => x.includes('Artur Aleksandrov'))
+                  }}
+                />
+                <Text style={{ textAlign: 'center', fontStyle: 'oblique' }}>
+                  {programFileName}
+                </Text>
+              </View>
+            </View>
+            <View>
               <ChooseFiles
                 fileType={'text/*'}
                 multiple={false}
-                label={'Choose Program'}
+                label={'Test rtf'}
                 onFileChoice={async (file) => {
-                  let programBuffer = Buffer.from(file.uri, 'base64').toString(
+                  let tempFile=convertToPlain(file.uri)
+                  console.log(tempFile);
+                  let programBuffer = Buffer.from(tempFile, 'base64').toString(
                     'ascii'
                   );
-                  handleChange(file.name, 'programFileName');
-                  // handleChange(decoded, 'program');
-
-                  let decoded = programBuffer
-                    .split('Heat 1b\x00\x06 b\x00\x06')[0]
-                    .split('\n');
-                  let str1 = [];
-                  let competitors = [];
-                  for (let i = 0; i < decoded.length; i++) {
-                    str1 = decoded[i].split(' ');
-
-                    if (+str1[1] > 0)
-                      competitors.push({
-                        number1: str1[1],
-                        nameFull: str1[2] + ' ' + str1[3].split('\t')[0],
-                        studio: decoded[i].split('\t')[1],
-                      });
-                  }
-
-                  decoded = programBuffer;
-                  decoded =
-                    ' Heat 1b\x00\x06 b\x00\x06' +
-                    decoded.split('Heat 1b\x00\x06 b\x00\x06')[1];
-                  decoded = decoded.split('b\x00\x06 b\x00\x06');
-
-                  let arrayOfStrings = [];
-                  let items = [];
-                  let heatIDs = [];
-                  let dances = [];
-                  let cuttingTheEnd = 0;
-                  for (let i = 1; i < decoded.length; i++) {
-                    arrayOfStrings = decoded[i - 1].split('\n');
-                    dances[i - 1] = decoded[i].split('\n')[0];
-                    items[i - 1] =
-                      arrayOfStrings[arrayOfStrings.length - 1] + decoded[i];
-                    heatIDs[i - 1] = arrayOfStrings[arrayOfStrings.length - 1];
-                    cuttingTheEnd =
-                      arrayOfStrings[arrayOfStrings.length - 1].length;
-                    items[i - 1] = items[i - 1].slice(0, -cuttingTheEnd);
-                  }
-                  let records = [];
-                  let group = '';
-                  let heat = [];
-                  let danceName = '';
-                  for (let i = 0; i < items.length; i++) {
-                    heat = items[i];
-                    danceName = nameOfDance(dances[i]);
-                    group = dances[i].replace(nameOfDance(dances[i]), '');
-                    for (let j = 1; j < heat.split('\n').length; j++) {
-                      let rec = heat.split('\n')[j];
-                      if (heat.split('\n')[j].split('\t')[0] == ' ___') {
-                        records.push(
-                          heatIDs[i] +
-                            ' ' +
-                            danceName +
-                            '  ' +
-                            group +
-                            ' ' +
-                            rec.replace(' ___\t', '')
-                        );
-
-                        if (
-                          competitors.findIndex(
-                            (x) => x.nameFull === rec.split('\t')[3]
-                          ) == -1
-                        ) {
-                          let person =
-                            competitors[
-                              competitors.findIndex(
-                                (x) => x.nameFull === rec.split('\t')[4]
-                              )
-                            ];
-                          competitors.push({
-                            number1: '',
-                            nameFull: rec.split('\t')[3],
-                            studio: person.studio,
-                          });
-                        } else if (
-                          competitors.findIndex(
-                            (x) => x.nameFull === rec.split('\t')[4]
-                          ) == -1
-                        ) {
-                          let person =
-                            competitors[
-                              competitors.findIndex(
-                                (x) => x.nameFull === rec.split('\t')[3]
-                              )
-                            ];
-                          competitors.push({
-                            number1: '',
-                            nameFull: rec.split('\t')[4],
-                            studio: person.studio,
-                          });
-                        }
-                      } else {
-                        if (heat.split('\n')[j].length > 3)
-                          group = heat.split('\n')[j];
-                      }
-                    }
-                    group = '';
-                  }
-                  for (let i = 0; i < items.length; i++) {
-                    items[i] = items[i].replace(/ ___\t/g, '');
-                  }
-                  handleChange(competitors, 'competitors');
-                  handleChange(heatIDs, 'heatIDs');
-                  handleChange(dances, 'dances');
-                  handleChange(items, 'items');
-                  handleChange(records, 'records');
-                  //   records.filter(x => x.includes('Artur Aleksandrov'))
+                  console.log(programBuffer.split('Heat 1 '), programBuffer[26], programBuffer[27], programBuffer[28], programBuffer[29])
+                  
                 }}
               />
-              <Text style={{textAlign:'center', fontStyle: 'oblique'}}>{programFileName}</Text></View>
             </View>
           </View>
         ) : (
@@ -329,9 +355,9 @@ const CompetitionScreen = () => {
           style={tw`flex-row justify-center items-center flex-wrap w-[95%]`}
         >
           <View style={tw`flex-col justify-center items-center mb-2 w-full`}>
-          <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
-            Current Heat:
-          </Text>
+            <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
+              Current Heat:
+            </Text>
             <TextBox
               placeholder="Enter current heat number"
               onChangeText={(text) => handleChange(text, 'currentHeat')}
@@ -383,7 +409,7 @@ const CompetitionScreen = () => {
                   backgroundColor: '#EFEFEF',
                   borderRadius: 8,
                   borderWidth: 1,
-                  width: 90,
+                  width: 140,
                   borderColor: '#776548',
                 }}
                 rowStyle={{
@@ -418,11 +444,6 @@ const CompetitionScreen = () => {
                 handleChange(heatIndex - 1, 'heatIndex');
                 handleChange(heatIDs[heatIndex - 1], 'currentHeat');
               }
-              // if (currentHeat.match(/\d+/g) * 1 > 1)
-              //   handleChange(
-              //     (currentHeat.match(/\d+/g) * 1 - 1).toString(),
-              //     'currentHeat'
-              //   );
             }}
             title="Previous"
             style={{ width: '48%', backgroundColor: '#3D1152', marginTop: 0 }}
@@ -430,7 +451,7 @@ const CompetitionScreen = () => {
           <Btn
             onClick={() => {
               console.log(heatIndex);
-              if (heatIndex < heatIDs.length-1) {
+              if (heatIndex < heatIDs.length - 1) {
                 handleChange(heatIndex + 1, 'heatIndex');
                 handleChange(heatIDs[heatIndex + 1], 'currentHeat');
               }
