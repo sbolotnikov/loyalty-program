@@ -72,7 +72,7 @@ const StackNavigator = () => {
    
     }
   return (
-    <Stack.Navigator>
+    <Stack.Navigator  screenOptions={{headerShown: false}} >
     {currentUser && currentUser.email ? (
       alternativeStack(currentUser.status)
 

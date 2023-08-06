@@ -330,14 +330,109 @@ const CompetitionScreen = () => {
                 fileType={'text/*'}
                 multiple={false}
                 label={'Test rtf'}
-                onFileChoice={async (file) => {
+                onFileChoice={ (file) => {
+
                   let tempFile=convertToPlain(file.uri)
-                  console.log(tempFile);
                   let programBuffer = Buffer.from(tempFile, 'base64').toString(
                     'ascii'
                   );
-                  console.log(programBuffer.split('Heat 1 '), programBuffer[26], programBuffer[27], programBuffer[28], programBuffer[29])
-                  
+                  programBuffer=programBuffer.replace(/\{|\}/g, "")
+                  // programBuffer=programBuffer.replace(/\par}/g, "{n}")
+                  // programBuffer=programBuffer.replace(/\tab}/g, "{t}") 
+                  // programBuffer=programBuffer.replace(/\pard \keep\keepn/g, " {heatstart} ")  
+                  // console.log(programBuffer)
+                  programBuffer=programBuffer.replace(/\\\w+/g, "")
+                  // programBuffer=programBuffer.replace(/{t}/g, "\t")
+                  // programBuffer=programBuffer.replace(/{n}/g, "\n")
+                  console.log(programBuffer)
+                    let decoded=[]     
+                    decoded =
+                      ' Heat 1 ' +
+                      programBuffer.split('Heat 1 ')[1];
+                      // console.log(decoded)
+                    decoded = decoded.split('\r\n   \r\n \r\n   ');
+                    console.log(decoded)
+                    let arrayOfStrings = [];
+                    let items = [];
+                    let heatIDs = [];
+                    let dances = [];
+                    let cuttingTheEnd = 0;
+                    for (let i = 1; i < decoded.length; i++) {
+                      arrayOfStrings = decoded[i - 1].split('\n');
+                      dances[i - 1] = decoded[i].split('\n')[0];
+                      items[i - 1] =
+                        arrayOfStrings[arrayOfStrings.length - 1] + decoded[i];
+                      heatIDs[i - 1] =
+                        arrayOfStrings[arrayOfStrings.length - 1];
+                      cuttingTheEnd =
+                        arrayOfStrings[arrayOfStrings.length - 1].length;
+                      items[i - 1] = items[i - 1].slice(0, -cuttingTheEnd);
+                    }
+                    let records = [];
+                    let group = '';
+                    let heat = [];
+                    let danceName = '';
+                    for (let i = 0; i < items.length; i++) {
+                      heat = items[i];
+                      danceName = nameOfDance(dances[i]);
+                      group = dances[i].replace(nameOfDance(dances[i]), '');
+                      for (let j = 1; j < heat.split('\n').length; j++) {
+                        let rec = heat.split('\n')[j];
+                        if (heat.split('\n')[j].split('\t')[0] == ' ___') {
+                          records.push(
+                            heatIDs[i] +
+                              ' ' +
+                              danceName +
+                              '  ' +
+                              group +
+                              ' ' +
+                              rec.replace(' ___\t', '')
+                          );
+
+                          if (
+                            competitors.findIndex(
+                              (x) => x.nameFull === rec.split('\t')[3]
+                            ) == -1
+                          ) {
+                            let person =
+                              competitors[
+                                competitors.findIndex(
+                                  (x) => x.nameFull === rec.split('\t')[4]
+                                )
+                              ];
+                            competitors.push({
+                              number1: '',
+                              nameFull: rec.split('\t')[3],
+                              studio: person.studio,
+                            });
+                          } else if (
+                            competitors.findIndex(
+                              (x) => x.nameFull === rec.split('\t')[4]
+                            ) == -1
+                          ) {
+                            let person =
+                              competitors[
+                                competitors.findIndex(
+                                  (x) => x.nameFull === rec.split('\t')[3]
+                                )
+                              ];
+                            competitors.push({
+                              number1: '',
+                              nameFull: rec.split('\t')[4],
+                              studio: person.studio,
+                            });
+                          }
+                        } else {
+                          if (heat.split('\n')[j].length > 3)
+                            group = heat.split('\n')[j];
+                        }
+                      }
+                      group = '';
+                    }
+                    for (let i = 0; i < items.length; i++) {
+                      items[i] = items[i].replace(/ ___\t/g, '');
+                    }
+
                 }}
               />
             </View>

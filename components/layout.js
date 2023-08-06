@@ -154,11 +154,7 @@ const Layout = ({ children }) => {
     hideSubscription.remove();
   };
   }, []);
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
+
   useEffect(() => {
     setSize(
       dimensions.screen.width > 1000

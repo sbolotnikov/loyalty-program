@@ -70,7 +70,7 @@ const Homescreen = () => {
         }
       }
       fetchData()
-    }, []);
+    }, [currentUser.status]);
     useEffect(() => {
       setSize(
         dimensions.width > 1000

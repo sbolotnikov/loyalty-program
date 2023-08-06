@@ -7,36 +7,18 @@ import { db } from '../firebase';
 import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native';
 import Btn from '../components/Btn';
+import useCompetition from '../hooks/useCompetition';
 
 const CompetitionSmallScreen = () => {
-    const [compArray, setCompArray] = useState([{image: '', dates: '', currentHeat: '', name: '', message: ''}]);
-
+    const { currentHeat, message } = useCompetition();
  
-  const [snapshot, loading, err] = useCollection(
-    query(collection(db, 'competitions')),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
-  useEffect(() => {
-    if (snapshot) {
-      let arr = [];
-      snapshot.docs.forEach((doc) => {
-        console.log(doc.id)
-        arr.push({
-          ...doc.data(),id: doc.id
-        });
-      });
 
-      setCompArray([...arr]);
-    }
-  }, [snapshot]);
   return (
     <View>
         <Btn
@@ -53,8 +35,8 @@ const CompetitionSmallScreen = () => {
               fontSize:10
             }}
           />
-     <Text style={tw`font-semibold text-4xl text-[#ff0000] text-center`}> {compArray[0].message}</Text>
-     <Text style={tw`font-semibold text-4xl text-[#3D1152] text-center`}>{compArray[0].currentHeat}</Text>
+     <Text style={tw`font-semibold text-4xl text-[#ff0000] text-center`}> {message}</Text>
+     <Text style={tw`font-semibold text-4xl text-[#3D1152] text-center`}>{currentHeat}</Text>
     </View>
   )
 }
