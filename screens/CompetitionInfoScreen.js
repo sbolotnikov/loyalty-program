@@ -58,11 +58,11 @@ const CompetitionInfoScreen = () => {
   }, [message]);
   const navigation = useNavigation();
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerShown: false,
+  //   });
+  // }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -75,14 +75,25 @@ const CompetitionInfoScreen = () => {
         // error reading value
       }
     }
- 
+    const setLastScreen =async(value) =>{
+      console.log(value)
+      try {
+        await AsyncStorage.setItem('lastScreen', JSON.stringify({link:'Competition',params:''}));
+      } catch (e) {
+        // saving error
+        console.log(e);
+      }
+    } 
+    if (competitors){
     for (let i = 0; i < competitors.length; i++) {
       list[i] = competitors[i].nameFull;
     }
     list.sort();
     setCompetitorsList(list);
+    setLastScreen();
     fetchData();
-  }, []);
+  }
+  }, [competitors]);
 
 
   const nextHeatGet = (selectedItem) => {
@@ -134,11 +145,11 @@ const CompetitionInfoScreen = () => {
   };
 
   useEffect(() => {
-    nextHeatGet(selectedItem1);
+    if(heatIndex>-1) nextHeatGet(selectedItem1);
   }, [heatIndex]);
 
   return (
-    <SafeAreaView
+    (heatIndex>-1)?<SafeAreaView
       style={[
         tw` bg-[#c9ab78] pt-5  h-[${dimensions.screen.height}px] w-[${dimensions.screen.width}px] relative m-auto`,
         {
@@ -284,7 +295,7 @@ const CompetitionInfoScreen = () => {
           )}
         </View>
       </View>
-    </SafeAreaView>
+    </SafeAreaView>:<></>
   );
 };
 

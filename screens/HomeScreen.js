@@ -11,11 +11,13 @@ import { useFonts } from 'expo-font';
 import useDimensions from '../hooks/useDimensions';
 import ShowIcon from '../components/svg/showIcon';
 
+
 // import Swiper from 'react-native-swiper/src';
 //   <Swiper  width={width>900?800:Math.round(width*.8)} height={Math.round(height*.6)} loop={true} index={0} showsButtons>
 const logo = require('../assets/dancerslogosm.png');
 const Homescreen = () => {
   const { currentUser } = useAuth();
+  
   const studioReady = () => {
     const navigation = useNavigation();
     const [summed, setSums] = useState(0);

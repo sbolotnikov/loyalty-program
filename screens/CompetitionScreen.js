@@ -58,6 +58,15 @@ const CompetitionScreen = () => {
       .trim();
   }
   //Function to check if it is single dance or Combination
+
+
+
+
+  console.log(heatIDs, heatIndex);
+
+
+
+
   const nameOfDance = (str) => {
     let danceSet = [
       'Cha Cha',
@@ -94,7 +103,7 @@ const CompetitionScreen = () => {
     handleChange(picURL, 'image');
   };
   return (
-    <Layout>
+    (heatIndex>-1)?<Layout>
       <VideoPlayingModal
         videoUri={videoFile.uri}
         button1={'Ok'}
@@ -218,7 +227,7 @@ const CompetitionScreen = () => {
                     for (let i = 0; i < decoded.length; i++) {
                       str1 = decoded[i].split(' ');
 
-                      if (+str1[1] > 0)
+                      if (str1[1] > 0)
                         competitors.push({
                           number1: str1[1],
                           nameFull: str1[2] + ' ' + str1[3].split('\t')[0],
@@ -345,7 +354,26 @@ const CompetitionScreen = () => {
                   // programBuffer=programBuffer.replace(/{t}/g, "\t")
                   // programBuffer=programBuffer.replace(/{n}/g, "\n")
                   console.log(programBuffer)
-                    let decoded=[]     
+                  let str1 = [];
+                    let competitors = [];
+                    let decoded=[];
+                    decoded =
+                      programBuffer.split('Heat 1 ')[0]; 
+                      decoded = decoded.split('List of Gentleman Professionals')[1];
+                      decoded= decoded.split('\n').splice(2, 1)+ decoded.split('\n').splice(6, 1)
+                      // decoded=decoded
+                      console.log(decoded)
+                    for (let i = 0; i < decoded.length; i++) {
+                      str1 = decoded[i].split(' ');
+
+                      if (str1[1] > 0)
+                        competitors.push({
+                          number1: str1[1],
+                          nameFull: str1[2] + ' ' + str1[3].split('\t')[0],
+                          studio: decoded[i].split('\t')[1],
+                        });
+                    }
+                        
                     decoded =
                       ' Heat 1 ' +
                       programBuffer.split('Heat 1 ')[1];
@@ -560,7 +588,7 @@ const CompetitionScreen = () => {
           />
         </View>
       </View>
-    </Layout>
+    </Layout>:<></>
   );
 };
 

@@ -9,14 +9,10 @@ import {
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
-import React, { useLayoutEffect, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import {
-  UserIcon,
-  ChevronDownIcon,
-  SearchIcon,
-  AdjustmentsIcon,
-} from 'react-native-heroicons/outline';
+import { UserIcon} from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import Burger from './svg/burger';
 import Navbar from './navbar';
@@ -28,6 +24,7 @@ import BasketModal from './BasketModal';
 import ShoppingCartIcon from './svg/shoppingCart';
 import useDimensions from '../hooks/useDimensions';
 import StudioSetModal from './StudioSetModal';
+import { usePreviousRouteName, useRouteName } from '../hooks/usePreviousRouteName';
 const Layout = ({ children }) => {
   const items = useSelector(selectItems);
   const [visNav, setVisNav] = useState(false);
@@ -39,6 +36,8 @@ const Layout = ({ children }) => {
   const logo = require('../assets/dancerslogo.png');
   const navigation = useNavigation();
   const { currentUser, loading } = useAuth();
+  const previousRouteName = usePreviousRouteName();
+  const currentScreenName =  useRouteName()
   const [modalStudioVisible, setModalStudioVisible] = useState(!currentUser.studio?true:false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const array = {
@@ -134,7 +133,29 @@ const Layout = ({ children }) => {
       }
     ],
   };
+  const checkLastScreen =async() =>{
+    try {
+      const value = await AsyncStorage.getItem('lastScreen');
+      let value1=JSON.parse(value);
+        if ((value1.link!=null)&&(value1.link!="Home")){
+        navigation.navigate(value1.link,value1.params)
+        }
+    } catch(e) {
+        console.log(e);
+    }
+  } 
+  const setLastScreen =async(value) =>{
+    console.log(value)
+    try {
+      await AsyncStorage.setItem('lastScreen', JSON.stringify(value));
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  } 
+
   useEffect(() => {
+
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardStatus(true);
     });
@@ -149,10 +170,19 @@ const Layout = ({ children }) => {
       : (profile = 'default');
    setNavArray(array[profile]);  
    console.log(profile, array[profile]);
+   console.log(previousRouteName, currentScreenName)
+   if (previousRouteName=='None')
+     checkLastScreen(array[profile])
+   else{
+     setLastScreen({link:currentScreenName.name,params:currentScreenName.params})
+   }
    return () => {
     showSubscription.remove();
     hideSubscription.remove();
   };
+
+   
+ 
   }, []);
 
   useEffect(() => {
