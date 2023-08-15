@@ -29,7 +29,7 @@ const HeatDisplayModal = ({
         <View
           style={tw`flex-col justify-center items-center bg-black  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
         >
-         <Text style={tw`text-white text-4xl`}>
+         <Text style={tw`text-white text-xl`}>
           {heatText}
          </Text>
 

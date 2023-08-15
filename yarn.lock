@@ -3464,6 +3464,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base-64@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
+  integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
+
 base64-js@^1.1.2, base64-js@^1.2.3, base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -4620,15 +4625,6 @@ depd@~1.1.2:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha512-7emPTl6Dpo6JRXOXjLRxck+FlLRX5847cLKEn00PLAgc3g2hTZZgr+e4c2v6QpSmLeFP3n5yUo7ft6avBK/5jQ==
 
-deprecated-react-native-prop-types@^2.2.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/deprecated-react-native-prop-types/-/deprecated-react-native-prop-types-2.3.0.tgz#c10c6ee75ff2b6de94bb127f142b814e6e08d9ab"
-  integrity sha512-pWD0voFtNYxrVqvBMYf5gq3NA2GCpfodS1yNynTPc93AYA/KEMGeWDqqeUB6R2Z9ZofVhks2aeJXiuQqKNpesA==
-  dependencies:
-    "@react-native/normalize-color" "*"
-    invariant "*"
-    prop-types "*"
-
 deprecated-react-native-prop-types@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/deprecated-react-native-prop-types/-/deprecated-react-native-prop-types-3.0.1.tgz#a275f84cd8519cd1665e8df3c99e9067d57a23ec"
@@ -4761,11 +4757,6 @@ electron-to-chromium@^1.4.477:
   version "1.4.477"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.477.tgz#05669aa6f161ee9076a6805457e9bd9fe6d0dfd1"
   integrity sha512-shUVy6Eawp33dFBFIoYbIwLHrX0IZ857AlH9ug2o4rvbWmpaCUdBpQ5Zw39HRrfzAFm4APJE9V+E2A/WB0YqJw==
-
-eme-encryption-scheme-polyfill@^2.0.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/eme-encryption-scheme-polyfill/-/eme-encryption-scheme-polyfill-2.1.1.tgz#91c823ed584e8ec5a9f03a6a676def8f80c57a4c"
-  integrity sha512-njD17wcUrbqCj0ArpLu5zWXtaiupHb/2fIUQGdInf83GlI+Q6mmqaPGLdrke4savKAu15J/z1Tg/ivDgl14g0g==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6726,11 +6717,6 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-keymirror@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/keymirror/-/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
-  integrity sha512-vIkZAFWoDijgQT/Nvl2AHCMmnegN2ehgTPYuyy2hWQkQSntI0S7ESYqdLkoSe1HyEBFHHkCgSIvVdSEiWwKvCg==
-
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -6789,6 +6775,11 @@ lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
+
+link@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/link/-/link-1.5.1.tgz#2fd37e759820ee077267c8473e4e31cde30a3c6d"
+  integrity sha512-80GBz0JfARAPedegdwtMHJ4tiPCQNqi9UZ0womJ5YU6Zw/Jc8JRji5cnhqkxGTTFAPLs1HftUDf81qUQg0aY0Q==
 
 loader-runner@^4.2.0:
   version "4.3.0"
@@ -8925,6 +8916,14 @@ react-native-elements@^3.4.2:
     react-native-ratings "8.0.4"
     react-native-size-matters "^0.3.1"
 
+react-native-fs@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.20.0.tgz#05a9362b473bfc0910772c0acbb73a78dbc810f6"
+  integrity sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ==
+  dependencies:
+    base-64 "^0.1.0"
+    utf8 "^3.0.0"
+
 react-native-gradle-plugin@^0.71.18:
   version "0.71.19"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz#3379e28341fcd189bc1f4691cefc84c1a4d7d232"
@@ -9011,16 +9010,6 @@ react-native-swiper@^1.6.0:
   integrity sha512-OnkTTZi+9uZUgy0uz1I9oYDhCU3z36lZn+LFsk9FXPRelxb/KeABzvPs3r3SrHWy1aA67KGtSFj0xNK2QD0NJQ==
   dependencies:
     prop-types "^15.5.10"
-
-react-native-video@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-5.2.1.tgz#a17e856759d7e17eee9cbd9df0d05ba22e88d457"
-  integrity sha512-aJlr9MeTuQ0LpZ4n+EC9RvhoKeiPbLtI2Rxy8u7zo/wzGevbRpWHSBj9xZ5YDBXnAVXzuqyNIkGhdw7bfdIBZw==
-  dependencies:
-    deprecated-react-native-prop-types "^2.2.0"
-    keymirror "^0.1.1"
-    prop-types "^15.7.2"
-    shaka-player "^2.5.9"
 
 react-native-web@~0.18.7:
   version "0.18.12"
@@ -9633,13 +9622,6 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
-
-shaka-player@^2.5.9:
-  version "2.5.23"
-  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-2.5.23.tgz#db92d1c6cf2314f0180a2cec11b0e2f2560336f5"
-  integrity sha512-3MC9k0OXJGw8AZ4n/ZNCZS2yDxx+3as5KgH6Tx4Q5TRboTBBCu6dYPI5vp1DxKeyU12MBN1Zcbs7AKzXv2EnCg==
-  dependencies:
-    eme-encryption-scheme-polyfill "^2.0.1"
 
 shallow-clone@^3.0.0:
   version "3.0.1"
@@ -10690,6 +10672,11 @@ use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
+
+utf8@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/utf8/-/utf8-3.0.0.tgz#f052eed1364d696e769ef058b183df88c87f69d1"
+  integrity sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

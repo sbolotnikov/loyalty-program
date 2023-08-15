@@ -24,7 +24,6 @@ export const CompetitionProvider = ({ children }) => {
 
 
   useEffect(() => {
-    let decoded = '';
     if (snapshot) {
       let arr = [];
       snapshot.docs.forEach((doc1) => {
@@ -53,6 +52,7 @@ export const CompetitionProvider = ({ children }) => {
     items: compArray.items,
     records: compArray.records,
     heatIndex: compArray.heatIndex,
+    studios: compArray.studios,
   };
 
   return (

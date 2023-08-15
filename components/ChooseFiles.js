@@ -20,7 +20,7 @@ const ChooseFiles = ({ fileType, multiple, label, onFileChoice }) => {
         type: fileType,
         multiple: multiple,
       });
- 
+      
       onFileChoice(res);
     } catch (err) {
       //Handling any exception (If any)

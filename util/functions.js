@@ -102,6 +102,26 @@ import {
           });
       }
     }
+
+// String functions
+
+    export const getPositionOfSubstring = (array, string) =>{
+      let i=0;
+      // let subString=array[i].split(' ')[0]
+      while ((string.indexOf(array[i].split(' ')[0])<0)&&(i<array.length)){
+        i++
+           
+      }
+      return string.indexOf(array[i].split(' ')[0])
+    }
+    export const getStudioFullName = (array, string) =>{
+      let i=0;
+      while ((string.indexOf(array[i].split(' ')[0])<0)&&(i<array.length)){
+        i++
+           
+      }
+      return array[i]
+    }
     // export const convertRTF = async (file) => {
     //   const { UnRTF } = require("node-unrtf"); 
     //   const unRtf = new UnRTF();

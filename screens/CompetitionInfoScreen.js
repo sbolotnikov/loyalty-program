@@ -14,6 +14,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Btn from '../components/Btn';
+import { getPositionOfSubstring } from '../util/functions';
 
 const CompetitionInfoScreen = () => {
   const {
@@ -27,8 +28,7 @@ const CompetitionInfoScreen = () => {
     competitors,
     heatIDs,
     heatIndex,
-    dances,
-    items,
+    studios,
     records,
   } = useCompetition();
   let list = [];
@@ -124,9 +124,11 @@ const CompetitionInfoScreen = () => {
             );
             nextHeatGet(selectedItem);
             for (let i = 0; i < arrayRecords.length; i++) {
-              let sub1 = arrayRecords[i].split('\t');
-              arrayRecords[i] =
-                sub1[0] + ' ' + sub1[1] + ' with ' + sub1[2] + ' ' + sub1[3];
+              
+              let sub1 = arrayRecords[i];
+              // console.log(sub1)
+              sub1=sub1.slice(0,getPositionOfSubstring(studios, sub1))
+              arrayRecords[i] =sub1;
               arrayRecords[i] = arrayRecords[i].replace(selectedItem, '');
               arrayRecords[i] = arrayRecords[i].replace(
                 competitor[0].number1,
@@ -283,7 +285,7 @@ const CompetitionInfoScreen = () => {
             heatList.map((record, key) => (
               <Text
                 key={'key' + key}
-                style={tw`font-semibold text-lg text-black  text-center ${
+                style={tw`font-semibold text-lg text-black  text-left ${
                   key == nextHeat ? 'text-red-500' : ''
                 }`}
               >
