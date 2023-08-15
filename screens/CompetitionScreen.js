@@ -207,7 +207,7 @@ const CompetitionScreen = () => {
                   Show Video
                 </Text>
               </View>
-              <View>
+              {/* <View>
                 <ChooseFiles
                   fileType={'text/*'}
                   multiple={false}
@@ -332,191 +332,188 @@ const CompetitionScreen = () => {
                 <Text style={{ textAlign: 'center', fontStyle: 'oblique' }}>
                   {programFileName}
                 </Text>
-              </View>
-            </View>
-            <View>
-              {/* <ChooseFilePath /> */}
-              <ChooseFiles
-                fileType={'text/*.rtf'}
-                multiple={false}
-                label={'Test rtf'}
-                onFileChoice={(file) => {
-                  console.log(file);
-                  let tempFile = convertToPlain(file.uri);
-                  let programBuffer = Buffer.from(tempFile, 'base64').toString(
-                    'ascii'
-                  );
-                  
-                  programBuffer = programBuffer.replace(/\{|\}/g, '');
-                  // programBuffer=programBuffer.replace(/\par}/g, "{n}")
-                  // programBuffer=programBuffer.replace(/\tab}/g, "{t}")
-                  // programBuffer=programBuffer.replace(/\pard \keep\keepn/g, " {heatstart} ")
-                  // console.log(programBuffer)
-                  programBuffer = programBuffer.replace(/\\\w+/g, '');
-                  // programBuffer=programBuffer.replace(/{t}/g, "\t")
-                  // programBuffer=programBuffer.replace(/{n}/g, "\n")
-                  let str1 = [];
-                  let st = '';
-                  let competitors = [];
-                  let decoded = [];
-                  decoded = programBuffer.split('Heat 1 ')[0];
-                  decoded = decoded.split('List of Studios')[1];
-                  decoded = decoded.split('List of Gentleman Professionals')[0];
-                  decoded = decoded.split('\r\n    \r\n   ')[1];
-                  decoded = decoded.split('\r\n');
-                  let studios = [];
-                  for (let i = 0; i < decoded.length; i++) {
-                    if (decoded[i].trim() > '') studios.push(decoded[i].trim());
-                  }
+              </View> */}
 
-                  decoded = programBuffer.split('Heat 1 ')[0];
-                  decoded = decoded.split('List of Gentleman Professionals')[1];
-                  decoded =
-                    decoded.split('\n').splice(2, 1) +
-                    decoded.split('\n').splice(6, 1);
-                  decoded = decoded.replaceAll('   ', '\n');
-
-                  for (let i = 0; i < decoded.split('\n').length; i++) {
-                    str1 = decoded.split('\n')[i];
-                    (str1 = str1.split(' ')), (st = decoded.split('\n')[i]);
-                    if (str1[0] > 0) {
-                      competitors.push({
-                        number1: str1[0],
-                        nameFull: st
-                          .substring(
-                            st.indexOf(' '),
-                            getPositionOfSubstring(studios, st)
-                          )
-                          .trim(),
-                        studio: st
-                          .substring(getPositionOfSubstring(studios, st))
-                          .trim(),
-                      });
+              <View>
+                {/* <ChooseFilePath /> */}
+                <ChooseFiles
+                  fileType={'text/*.rtf'}
+                  multiple={false}
+                  label={'Test rtf'}
+                  onFileChoice={(file) => {
+                    console.log(file);
+                    let tempFile = convertToPlain(file.uri);
+                    let programBuffer = Buffer.from(
+                      tempFile,
+                      'base64'
+                    ).toString('ascii');
+                    handleChange(file.name, 'programFileName');
+                    programBuffer = programBuffer.replace(/\{|\}/g, '');
+                    programBuffer = programBuffer.replace(/\\\w+/g, '');
+                    let str1 = [];
+                    let st = '';
+                    let competitors = [];
+                    let decoded = [];
+                    decoded = programBuffer.split('Heat 1 ')[0];
+                    decoded = decoded.split('List of Studios')[1];
+                    decoded = decoded.split(
+                      'List of Gentleman Professionals'
+                    )[0];
+                    decoded = decoded.split('\r\n    \r\n   ')[1];
+                    decoded = decoded.split('\r\n');
+                    let studios = [];
+                    for (let i = 0; i < decoded.length; i++) {
+                      if (decoded[i].trim() > '')
+                        studios.push(decoded[i].trim());
                     }
-                  }
-                  decoded =  programBuffer.split('Heat 1 ')[1];
-                  decoded = decoded.split('Heat');
-                  decoded[0]=' 1 '+decoded[0]
-                  for (let i=0; i<decoded.length; i++) {
-                    decoded[i] = 'Heat' +decoded[i];
 
-                    let sss1=decoded[i].split(' \r\n   Solo ')
-                    if (sss1.length>1){
-                      decoded[i]=sss1[0]
-                      for (let j=1; j<sss1.length; j++){
-                        decoded.splice(i+1,0, 'Solo '+sss1[j])
-                        i++
+                    decoded = programBuffer.split('Heat 1 ')[0];
+                    decoded = decoded.split(
+                      'List of Gentleman Professionals'
+                    )[1];
+                    decoded =
+                      decoded.split('\n').splice(2, 1) +
+                      decoded.split('\n').splice(6, 1);
+                    decoded = decoded.replaceAll('   ', '\n');
+
+                    for (let i = 0; i < decoded.split('\n').length; i++) {
+                      str1 = decoded.split('\n')[i];
+                      (str1 = str1.split(' ')), (st = decoded.split('\n')[i]);
+                      if (str1[0] > 0) {
+                        competitors.push({
+                          number1: str1[0],
+                          nameFull: st
+                            .substring(
+                              st.indexOf(' '),
+                              getPositionOfSubstring(studios, st)
+                            )
+                            .trim(),
+                          studio: st
+                            .substring(getPositionOfSubstring(studios, st))
+                            .trim(),
+                        });
                       }
                     }
-                  }
-                  let decodedSize=decoded.length
-                  for (let i=decodedSize-1; i>=0; i--){
-                    if (decoded[i].indexOf('Awards')>-1) decoded.splice(i+1,0, 'Awards')
-                  }
-                  // decoded = decoded.split('\r\n \r\n\r\n \r\n   ');
-                                          // '\r\n \r\n\r\n   '
-                  // '\r\n   \r\n \r\n   '
-                 
-                  let arrayOfStrings = [];
-                  let items = [];
-                  let heatIDs = [];
-                  let dances = [];
-                  for (let j = 0; j < decoded.length; j++) {
-                    arrayOfStrings = decoded[j].split('\r\n');
-                    dances[j] = decoded[j].split('\r\n')[0];
-                    items[j] = decoded[j].split('\r\n');
-                    heatIDs[j] = arrayOfStrings[0].split('  ')[0];
-                    dances[j] = dances[j].replace(heatIDs[j] + '  ', '');
-                  }
-                  let records = [];
-                  let group = '';
-                  let heat = [];
-                  let danceName = '';
+                    decoded = programBuffer.split('Heat 1 ')[1];
+                    decoded = decoded.split('Heat');
+                    decoded[0] = ' 1 ' + decoded[0];
+                    for (let i = 0; i < decoded.length; i++) {
+                      decoded[i] = 'Heat' + decoded[i];
 
-                  for (let i = 0; i < items.length; i++) {
-                    heat = items[i];
-                    danceName = nameOfDance(dances[i]);
-                    group = dances[i].replace(nameOfDance(dances[i]), '');
-                    for (let k = 1; k < heat.length - 1; k++) {
-                      let rec = heat[k];
-                      if (heat[k].indexOf(' ___') > -1) {
-                        records.push(
-                          heatIDs[i] +
-                            ' ' +
-                            danceName +
-                            '  ' +
-                            group +
-                            ' ' +
-                            rec.replace('  ___ ', '')
-                        );
-                        rec = rec.replace('  ___ ', '').trim();
-
-                        let p = 0;
-                       
-                        if (rec.split(' ')[1]==''){
-                          rec = rec.slice(0,getPositionOfSubstring(studios, rec))
-                          p = 0;
-                        while (
-                          rec.indexOf(competitors[p].nameFull) < 0 &&
-                          p < competitors.length
-                        ) {
-                          p++;
-                        }           
-                        }else{
-                          while (
-                          rec.indexOf(competitors[p].number1) < 0 &&
-                          p < competitors.length
-                        ) {
-                          p++;
+                      let sss1 = decoded[i].split(' \r\n   Solo ');
+                      if (sss1.length > 1) {
+                        decoded[i] = sss1[0];
+                        for (let j = 1; j < sss1.length; j++) {
+                          decoded.splice(i + 1, 0, 'Solo ' + sss1[j]);
+                          i++;
                         }
-                        }
-                        rec=rec.split(competitors[p].studio)[0];
-                        if (rec.split(' ')[1]=='') rec=rec.split(rec.split(' ')[0])[1]
-                        else rec=rec.split(competitors[p].number1)[1];
-                        rec=rec.replace(competitors[p].nameFull,"").trim()
-
-
-
-
-
-                        if (
-                          competitors.findIndex(
-                            (x) =>
-                              x.nameFull === rec
-                          ) == -1
-                        ) {
-                          if (rec=='Mike Krick Michele Krick'){ 
-                    console.log('- person')
-                    }
-                          competitors.push({
-                            number1: '',
-                            nameFull:rec,
-                            studio: competitors[p].studio,
-                          });
-                        }
-                      } else {
-                        if (heat[k].length > 3) group = heat[k].trim();
                       }
                     }
-                    group = '';
-                  }
-                  let item=''
-                  for (let i = 0; i < items.length; i++) {
-                    item=''
-                    for (let j=0; j<items[i].length; j++)
-                    item += items[i][j]+'\n';
-                    items[i] =item.replaceAll(/ ___ /g, '');
-                  }
+                    let decodedSize = decoded.length;
+                    for (let i = decodedSize - 1; i >= 0; i--) {
+                      if (decoded[i].indexOf('Awards') > -1)
+                        decoded.splice(i + 1, 0, 'Awards');
+                    }
+                    // decoded = decoded.split('\r\n \r\n\r\n \r\n   ');
+                    // '\r\n \r\n\r\n   '
+                    // '\r\n   \r\n \r\n   '
+                    let arrayOfStrings = [];
+                    let items = [];
+                    let heatIDs = [];
+                    let dances = [];
+                    for (let j = 0; j < decoded.length; j++) {
+                      arrayOfStrings = decoded[j].split('\r\n');
+                      dances[j] = decoded[j].split('\r\n')[0];
+                      items[j] = decoded[j].split('\r\n');
+                      heatIDs[j] = arrayOfStrings[0].split('  ')[0];
+                      dances[j] = dances[j].replace(heatIDs[j] + '  ', '');
+                    }
+                    let records = [];
+                    let group = '';
+                    let heat = [];
+                    let danceName = '';
+                    for (let i = 0; i < items.length; i++) {
+                      heat = items[i];
+                      danceName = nameOfDance(dances[i]);
+                      group = dances[i].replace(nameOfDance(dances[i]), '');
+                      for (let k = 1; k < heat.length - 1; k++) {
+                        let rec = heat[k];
+                        if (heat[k].indexOf(' ___') > -1) {
+                          records.push(
+                            heatIDs[i] +
+                              ' ' +
+                              danceName +
+                              '  ' +
+                              group +
+                              ' ' +
+                              rec.replace('  ___ ', '')
+                          );
+                          rec = rec.replace('  ___ ', '').trim();
+                          let p = 0;
+                          if (rec.split(' ')[1] == '') {
+                            rec = rec.slice(
+                              0,
+                              getPositionOfSubstring(studios, rec)
+                            );
+                            p = 0;
+                            while (
+                              rec.indexOf(competitors[p].nameFull) < 0 &&
+                              p < competitors.length
+                            ) {
+                              p++;
+                            }
+                          } else {
+                            while (
+                              rec.indexOf(competitors[p].number1) < 0 &&
+                              p < competitors.length
+                            ) {
+                              p++;
+                            }
+                          }
+                          rec = rec.split(competitors[p].studio)[0];
+                          if (rec.split(' ')[1] == '')
+                            rec = rec.split(rec.split(' ')[0])[1];
+                          else rec = rec.split(competitors[p].number1)[1];
+                          rec = rec.replace(competitors[p].nameFull, '').trim();
+                          if (
+                            competitors.findIndex((x) => x.nameFull === rec) ==
+                            -1
+                          ) {
+                            if (rec == 'Mike Krick Michele Krick') {
+                              console.log('- person');
+                            }
+                            competitors.push({
+                              number1: '',
+                              nameFull: rec,
+                              studio: competitors[p].studio,
+                            });
+                          }
+                        } else {
+                          if (heat[k].length > 3) group = heat[k].trim();
+                        }
+                      }
+                      group = '';
+                    }
+                    let item = '';
+                    for (let i = 0; i < items.length; i++) {
+                      item = '';
+                      for (let j = 0; j < items[i].length; j++)
+                        item += items[i][j] + '\n';
+                      items[i] = item.replaceAll(/ ___ /g, '');
+                    }
 
-
-                  handleChange(competitors, 'competitors');
+                    handleChange(competitors, 'competitors');
                     handleChange(heatIDs, 'heatIDs');
                     handleChange(dances, 'dances');
                     handleChange(items, 'items');
                     handleChange(records, 'records');
                     handleChange(studios, 'studios');
-                }}
-              />
+                  }}
+                />
+                <Text style={{ textAlign: 'center', fontStyle: 'oblique' }}>
+                  {programFileName}
+                </Text>
+              </View>
             </View>
           </View>
         ) : (
