@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import Layout from '../components/layout';
 import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
 import { Audio } from 'expo-av';

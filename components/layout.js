@@ -1,9 +1,6 @@
 import {
   View,
   Text,
-  Animated,
-  Easing,
-  SafeAreaView,
   Image,
   Pressable,
   Keyboard,
@@ -113,6 +110,14 @@ const Layout = ({ children }) => {
         title: 'Use Stars',
         link: 'ActivitySet',
         params: { collectionName: 'goodies' },
+      },
+      {
+        title: 'Music Player',
+        link: 'Music',
+      },
+      {
+        title: 'About',
+        link: 'About',
       },
     ],
     MC: [
@@ -301,7 +306,7 @@ const Layout = ({ children }) => {
         >
         {/* `${size1}px` */}
           <View style={tw`relative  w-full`}>
-            <View style={tw`flex-row justify-around w-full max-w-6xl mx-auto`}>
+            <View style={tw`flex-row justify-around w-full  mx-auto`}>
               <Navbar
                 textSize={textSize}
                 size1={size1}

@@ -40,7 +40,7 @@ const MusicPlayerScreen = () => {
           music={musicFile.uri}
           onSongEnd={() => {
             console.log("end of song")
-            setMusicFile({ uri: music3, name: 'Shekspire' });
+            // setMusicFile({ uri: music3, name: 'Shekspire' });
           }}
         />
         <ChooseFiles fileType={'audio/*'} label={"Choose Song"} multiple={true} onFileChoice={(file) => setMusicFile(file)} />

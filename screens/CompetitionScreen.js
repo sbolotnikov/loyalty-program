@@ -207,132 +207,7 @@ const CompetitionScreen = () => {
                   Show Video
                 </Text>
               </View>
-              {/* <View>
-                <ChooseFiles
-                  fileType={'text/*'}
-                  multiple={false}
-                  label={'Choose Program'}
-                  onFileChoice={async (file) => {
-                    let programBuffer = Buffer.from(
-                      file.uri,
-                      'base64'
-                    ).toString('ascii');
-                    handleChange(file.name, 'programFileName');
-
-                    let decoded = programBuffer
-                      .split('Heat 1b\x00\x06 b\x00\x06')[0]
-                      .split('\n');
-                    let str1 = [];
-                    let competitors = [];
-                    for (let i = 0; i < decoded.length; i++) {
-                      str1 = decoded[i].split(' ');
-
-                      if (str1[1] > 0)
-                        competitors.push({
-                          number1: str1[1],
-                          nameFull: str1[2] + ' ' + str1[3].split('\t')[0],
-                          studio: decoded[i].split('\t')[1],
-                        });
-                    }
-
-                    decoded = programBuffer;
-                    decoded =
-                      ' Heat 1b\x00\x06 b\x00\x06' +
-                      decoded.split('Heat 1b\x00\x06 b\x00\x06')[1];
-                    decoded = decoded.split('b\x00\x06 b\x00\x06');
-
-                    let arrayOfStrings = [];
-                    let items = [];
-                    let heatIDs = [];
-                    let dances = [];
-                    let cuttingTheEnd = 0;
-                    for (let i = 1; i < decoded.length; i++) {
-                      arrayOfStrings = decoded[i - 1].split('\n');
-                      dances[i - 1] = decoded[i].split('\n')[0];
-                      items[i - 1] =
-                        arrayOfStrings[arrayOfStrings.length - 1] + decoded[i];
-                      heatIDs[i - 1] =
-                        arrayOfStrings[arrayOfStrings.length - 1];
-                      cuttingTheEnd =
-                        arrayOfStrings[arrayOfStrings.length - 1].length;
-                      items[i - 1] = items[i - 1].slice(0, -cuttingTheEnd);
-                    }
-                    let records = [];
-                    let group = '';
-                    let heat = [];
-                    let danceName = '';
-                    for (let i = 0; i < items.length; i++) {
-                      heat = items[i];
-                      danceName = nameOfDance(dances[i]);
-                      group = dances[i].replace(nameOfDance(dances[i]), '');
-                      for (let j = 1; j < heat.split('\n').length; j++) {
-                        let rec = heat.split('\n')[j];
-                        if (heat.split('\n')[j].split('\t')[0] == ' ___') {
-                          records.push(
-                            heatIDs[i] +
-                              ' ' +
-                              danceName +
-                              '  ' +
-                              group +
-                              ' ' +
-                              rec.replace(' ___\t', '')
-                          );
-
-                          if (
-                            competitors.findIndex(
-                              (x) => x.nameFull === rec.split('\t')[3]
-                            ) == -1
-                          ) {
-                            let person =
-                              competitors[
-                                competitors.findIndex(
-                                  (x) => x.nameFull === rec.split('\t')[4]
-                                )
-                              ];
-                            competitors.push({
-                              number1: '',
-                              nameFull: rec.split('\t')[3],
-                              studio: person.studio,
-                            });
-                          } else if (
-                            competitors.findIndex(
-                              (x) => x.nameFull === rec.split('\t')[4]
-                            ) == -1
-                          ) {
-                            let person =
-                              competitors[
-                                competitors.findIndex(
-                                  (x) => x.nameFull === rec.split('\t')[3]
-                                )
-                              ];
-                            competitors.push({
-                              number1: '',
-                              nameFull: rec.split('\t')[4],
-                              studio: person.studio,
-                            });
-                          }
-                        } else {
-                          if (heat.split('\n')[j].length > 3)
-                            group = heat.split('\n')[j];
-                        }
-                      }
-                      group = '';
-                    }
-                    for (let i = 0; i < items.length; i++) {
-                      items[i] = items[i].replace(/ ___\t/g, '');
-                    }
-                    handleChange(competitors, 'competitors');
-                    handleChange(heatIDs, 'heatIDs');
-                    handleChange(dances, 'dances');
-                    handleChange(items, 'items');
-                    handleChange(records, 'records');
-                    //   records.filter(x => x.includes('Artur Aleksandrov'))
-                  }}
-                />
-                <Text style={{ textAlign: 'center', fontStyle: 'oblique' }}>
-                  {programFileName}
-                </Text>
-              </View> */}
+             
 
               <View>
                 {/* <ChooseFilePath /> */}
@@ -364,18 +239,20 @@ const CompetitionScreen = () => {
                     let studios = [];
                     for (let i = 0; i < decoded.length; i++) {
                       if (decoded[i].trim() > '')
-                        studios.push(decoded[i].trim());
+                        studios.push(decoded[i].trim().replace(',',''));
                     }
 
                     decoded = programBuffer.split('Heat 1 ')[0];
                     decoded = decoded.split(
                       'List of Gentleman Professionals'
-                    )[1];
+                    )[1]; 
                     decoded =
                       decoded.split('\n').splice(2, 1) +
                       decoded.split('\n').splice(6, 1);
                     decoded = decoded.replaceAll('   ', '\n');
-
+                    decoded = decoded.substring(1,decoded.length)
+                    console.log(decoded)
+                    let role1="Pro"
                     for (let i = 0; i < decoded.split('\n').length; i++) {
                       str1 = decoded.split('\n')[i];
                       (str1 = str1.split(' ')), (st = decoded.split('\n')[i]);
@@ -388,11 +265,10 @@ const CompetitionScreen = () => {
                               getPositionOfSubstring(studios, st)
                             )
                             .trim(),
-                          studio: st
-                            .substring(getPositionOfSubstring(studios, st))
-                            .trim(),
-                        });
-                      }
+                          studio: getStudioFullName(studios, st.substring(getPositionOfSubstring(studios, st)).trim()),
+                          role:role1  
+                        }); 
+                      } else role1="Am"
                     }
                     decoded = programBuffer.split('Heat 1 ')[1];
                     decoded = decoded.split('Heat');
@@ -429,6 +305,7 @@ const CompetitionScreen = () => {
                       dances[j] = dances[j].replace(heatIDs[j] + '  ', '');
                     }
                     let records = [];
+                    let program = [];
                     let group = '';
                     let heat = [];
                     let danceName = '';
@@ -443,13 +320,16 @@ const CompetitionScreen = () => {
                             heatIDs[i] +
                               ' ' +
                               danceName +
-                              '  ' +
-                              group +
-                              ' ' +
-                              rec.replace('  ___ ', '')
+                              '\n' +
+                              rec.replace('  ___ ', '')+
+                              '\n' +
+                              group 
                           );
-                          rec = rec.replace('  ___ ', '').trim();
+                          rec = rec.replace('  ___ ', '').replaceAll(',','').trim();
                           let p = 0;
+                          // rec=rec.replace(',','')
+                          let studio1=getStudioFullName(studios, rec);
+                          let event1 =group +" "+rec.split(' ')[0];
                           if (rec.split(' ')[1] == '') {
                             rec = rec.slice(
                               0,
@@ -470,22 +350,26 @@ const CompetitionScreen = () => {
                               p++;
                             }
                           }
-                          rec = rec.split(competitors[p].studio)[0];
+                          rec = rec.split(studio1)[0];
+                          console.log(rec.split(' ')[0])
+                          let eventGroup=rec.split(' ')[0]
                           if (rec.split(' ')[1] == '')
                             rec = rec.split(rec.split(' ')[0])[1];
                           else rec = rec.split(competitors[p].number1)[1];
                           rec = rec.replace(competitors[p].nameFull, '').trim();
+                          if (eventGroup.indexOf('G')>-1) program.push({heat: heatIDs[i],number:competitors[p].number1,competitor1:competitors[p].nameFull, competitor2:rec,studio:studio1, event:event1})
+                          else program.push({heat: heatIDs[i],number:competitors[p].number1,competitor2:competitors[p].nameFull, competitor1:rec,studio:studio1, event:event1})
                           if (
                             competitors.findIndex((x) => x.nameFull === rec) ==
                             -1
                           ) {
-                            if (rec == 'Mike Krick Michele Krick') {
-                              console.log('- person');
-                            }
+                            if (eventGroup.indexOf('G')>-1) competitors.push({ number1: '', nameFull: rec,  studio: studio1, role:"Pro"})
+                            if ((eventGroup.indexOf('L')>-1)||(eventGroup.indexOf('AC')>-1))
                             competitors.push({
                               number1: '',
                               nameFull: rec,
-                              studio: competitors[p].studio,
+                              studio: studio1,
+                              role: 'Am'
                             });
                           }
                         } else {
@@ -507,6 +391,7 @@ const CompetitionScreen = () => {
                     handleChange(dances, 'dances');
                     handleChange(items, 'items');
                     handleChange(records, 'records');
+                    handleChange(program, 'program');
                     handleChange(studios, 'studios');
                   }}
                 />

@@ -19,6 +19,8 @@ import AboutScreen from './screens/AboutScreen';
 import CompetitionScreen from './screens/CompetitionScreen';
 import CompetitionInfoScreen from './screens/CompetitionInfoScreen';
 import CompetitionSmallScreen from './screens/CompetitionSmallScreen';
+import CompetitionProgramScreen from './screens/CompetitionProgramScreen';
+import CompetitionParticipantsScreen from './screens/CompetitionParticipantsScreen';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -36,6 +38,8 @@ const StackNavigator = () => {
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="Competition" component={CompetitionInfoScreen} />
+        <Stack.Screen name="Program" component={CompetitionProgramScreen} />
+        <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />
       </>
        if (currentUser.status=="teacher") return <>
         <Stack.Screen name="Home" component={Homescreen} />
@@ -45,6 +49,8 @@ const StackNavigator = () => {
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="Competition" component={CompetitionInfoScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="Program" component={CompetitionProgramScreen} />
+        <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />
       </>
        if (currentUser.status=="super") return <>
         <Stack.Screen name="Home" component={Homescreen} />
@@ -57,6 +63,8 @@ const StackNavigator = () => {
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="Competition" component={CompetitionScreen} />
+        <Stack.Screen name="Program" component={CompetitionProgramScreen} />
+        <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />
       </>
            if (currentUser.status=="MC") return <>
            <Stack.Screen name="Home" component={Homescreen} />

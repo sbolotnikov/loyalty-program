@@ -51,6 +51,7 @@ export const CompetitionProvider = ({ children }) => {
     dances: compArray.dances,
     items: compArray.items,
     records: compArray.records,
+    program: compArray.program,
     heatIndex: compArray.heatIndex,
     studios: compArray.studios,
   };
