@@ -12,14 +12,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <Provider store={store}>
-        
-          <AuthProvider>
-           <CompetitionProvider>
-            <DimensionsProvider>
-              <StackNavigator />
-            </DimensionsProvider>
-           </CompetitionProvider>
-          </AuthProvider>
+        <AuthProvider>
+            <CompetitionProvider>
+              <DimensionsProvider>
+                <StackNavigator />
+              </DimensionsProvider>
+            </CompetitionProvider>
+        </AuthProvider>
       </Provider>
     </NavigationContainer>
   );

@@ -1,9 +1,7 @@
 import { View, Text, Modal } from 'react-native';
 import tw from 'twrnc';
-import Btn from './Btn';
-// import Video from "react-native-video";
-import { Video, ResizeMode } from 'expo-av';
-import { useEffect, useState, useRef } from 'react';
+import Btn from './Btn'; 
+import { useState } from 'react';
 import useDimensions from '../hooks/useDimensions';
 import CountBox from './CountBox';
 const HeatDisplayModal = ({ heatText, button1, heatNum, vis, onReturn }) => {

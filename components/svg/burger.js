@@ -1,5 +1,5 @@
 import { View, Animated, Easing } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Svg, { Path, G } from 'react-native-svg';
 import tw from 'twrnc';
 function Burger({ status, color }) {

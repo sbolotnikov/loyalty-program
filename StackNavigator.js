@@ -37,7 +37,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
-        <Stack.Screen name="Competition" component={CompetitionInfoScreen} />
+        <Stack.Screen name="Heatlists" component={CompetitionInfoScreen} />
         <Stack.Screen name="Program" component={CompetitionProgramScreen} />
         <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />
       </>
@@ -47,7 +47,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Profile" component={Profilescreen} />
         <Stack.Screen name="Scan" component={ScanScreen} />
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
-        <Stack.Screen name="Competition" component={CompetitionInfoScreen} />
+        <Stack.Screen name="Heatlists" component={CompetitionInfoScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="Program" component={CompetitionProgramScreen} />
         <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />

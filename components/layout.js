@@ -62,8 +62,8 @@ const Layout = ({ children }) => {
         params: { collectionName: 'goodies' },
       },
       {
-        title: 'Competition',
-        link: 'Competition',
+        title: 'Competitions',
+        link: 'Program',
       },
     ],
     teacher: [
@@ -80,8 +80,8 @@ const Layout = ({ children }) => {
         link: 'Scan',
       },
       {
-        title: 'Competition',
-        link: 'Competition',
+        title: 'Competitions',
+        link: 'Program',
       },
     ],
     super: [
@@ -98,7 +98,7 @@ const Layout = ({ children }) => {
         link: 'Users',
       },
       {
-        title: 'Competition',
+        title: 'Competitions',
         link: 'Competition',
       },
       {
@@ -123,7 +123,7 @@ const Layout = ({ children }) => {
     MC: [
 
       {
-        title: 'Competition',
+        title: 'Competitions',
         link: 'Competition',
       },
     ],

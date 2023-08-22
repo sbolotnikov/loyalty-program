@@ -11,9 +11,7 @@ import { doc, setDoc,deleteDoc, Timestamp } from 'firebase/firestore';
 import AlertModal from './AlertModal';
 const EnterActivity = ({name, desc, price,image, uid, collectionName, onReturn}) => {
   const [error, setError] = useState('');
-  const { currentUser } = useAuth();
-  // const [loadingLocal, setLoadingLocal] = useState(false);
-  // const [updateLocal, setUpdateLocal] = useState(false);
+  const { currentUser } = useAuth(); 
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [values, setValues] = useState({

@@ -60,9 +60,10 @@ const CompetitionProgramScreen = () => {
     );
   }, []);
 
- 
-  return heatIndex > -1 ? (
+ console.log(program)
+  return ( 
     <LayoutComp>
+     {heatIndex > -1 ? (
       <View
         style={[
           tw` bg-[#c9ab78]  h-[${dimensions.screen.height - 50}px] w-[${
@@ -97,7 +98,7 @@ const CompetitionProgramScreen = () => {
                 tw`font-semibold text-4xl text-white my-4 text-center`,
               ]}
             >
-              {heatIDs[value1]}
+              {(heatIDs)?heatIDs[value1]:""}
             </Text>
             <PlayerButtons
               icon={'Forward'}
@@ -167,7 +168,7 @@ const CompetitionProgramScreen = () => {
               Participants
             </Text>
           </View>
-          {heatIndex ? (
+          {heatIndex >-1? (
             program
               .filter((x) => x.heat == heatIDs[value1])
               .map((record, key) => (
@@ -185,10 +186,10 @@ const CompetitionProgramScreen = () => {
           )}
         </View>
       </View>
-    </LayoutComp>
-  ) : (
+      ) : (
     <></>
-  );
-};
+  )}
+    </LayoutComp>
+)}
 
 export default CompetitionProgramScreen;

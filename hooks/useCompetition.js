@@ -21,7 +21,7 @@ export const CompetitionProvider = ({ children }) => {
     program: '',
     programFileName: '',
   });
-
+  const [compID, setCompID] = useState('');
 
   useEffect(() => {
     if (snapshot) {
@@ -32,28 +32,43 @@ export const CompetitionProvider = ({ children }) => {
           id: doc1.id,
         });
       });
-      setCompArray(arr[0]);
+      setCompArray(arr.filter((x)=>x.id==compID));
 
      
     }
   }, [snapshot]);
+  useEffect(() => {
+    console.log("in useEffect" +compID)
+    if (snapshot) {
+      let arr = [];
+      snapshot.docs.forEach((doc1) => {
+        arr.push({
+          ...doc1.data(),
+          id: doc1.id,
+        });
+      });
+      setCompArray(arr.filter((x)=>x.id==compID));
 
+     
+    }
+  }, [compID]);
   const value = {
-    image: compArray.image,
-    dates: compArray.dates,
-    currentHeat: compArray.currentHeat,
-    name: compArray.name,
-    message: compArray.message,
-    id: compArray.id,
-    programFileName: compArray.programFileName,
-    competitors: compArray.competitors,
-    heatIDs: compArray.heatIDs,
-    dances: compArray.dances,
-    items: compArray.items,
-    records: compArray.records,
-    program: compArray.program,
-    heatIndex: compArray.heatIndex,
-    studios: compArray.studios,
+    image: compArray[0] ? compArray[0].image:"",
+    dates: compArray[0] ? compArray[0].dates:"",
+    currentHeat: compArray[0] ? compArray[0].currentHeat:"",
+    name: compArray[0]? compArray[0].name:"",
+    message: compArray[0]? compArray[0].message:"",
+    id: compArray[0] ? compArray[0].id: "",
+    programFileName: compArray[0]? compArray[0].programFileName:"",
+    competitors: compArray[0]? compArray[0].competitors:[],
+    heatIDs: compArray[0]? compArray[0].heatIDs:[],
+    dances: compArray[0] ? compArray[0].dances:[],
+    items: compArray[0] ? compArray[0].items:[],
+    records: compArray[0]? compArray[0].records:[],
+    program: compArray[0] ? compArray[0].program:[],
+    heatIndex: compArray[0] ? compArray[0].heatIndex:undefined,
+    studios: compArray[0] ? compArray[0].studios:[],
+    setCompID
   };
 
   return (

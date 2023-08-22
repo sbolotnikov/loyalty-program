@@ -71,8 +71,9 @@ const CompetitionParticipantsScreen = () => {
       }, []);
     
      
-      return heatIndex > -1 ? (
+      return  (
         <LayoutComp>
+        {(heatIndex > -1) ?(
           <View
             style={[
               tw` bg-[#c9ab78]  h-[${dimensions.screen.height - 50}px] w-[${
@@ -199,9 +200,9 @@ const CompetitionParticipantsScreen = () => {
               )}
             </View>
           </View>
-        </LayoutComp>
-      ) : (
+          ) : (
         <></>
-      );
-    };
+      )}
+        </LayoutComp>
+    )}
 export default CompetitionParticipantsScreen

@@ -18,6 +18,7 @@ import LayoutComp from '../components/layoutComp';
 import PlayerButtons from '../components/svg/PlayerButtons';
 import Slider from '@react-native-community/slider';
 import DisplayHeatlistItem from '../components/DisplayHeatlistItem';
+import CompetitionChoiceModal from '../components/CompetitionChoiceModal';
 
 const CompetitionInfoScreen = () => {
   const {
@@ -69,8 +70,8 @@ const CompetitionInfoScreen = () => {
       try {
         const value = await AsyncStorage.getItem('lastSchedule');
         console.log(value);
-        if (value !== null)  {showSchedule(value); setName1(value);}
-        else  {showSchedule(list[0]); setName1(list[0]);}
+        if (value !== null)  {showSchedule(value);setValue(list.indexOf(value))}
+        else  showSchedule(list[0])
       } catch (e) {
         // error reading value
       }
@@ -167,11 +168,12 @@ const CompetitionInfoScreen = () => {
  const handleChoice = (selectedItem ) => {
   setSelectedItem1(selectedItem);
   showSchedule(selectedItem);
-  setName1(selectedItem)
+  // setName1(selectedItem)
   storeData(selectedItem)
 }
   return (
-    (heatIndex>-1)?<LayoutComp>
+    <LayoutComp>
+    {(heatIndex>-1)?(
  <View
         style={[
           tw` bg-[#c9ab78]  h-[${dimensions.screen.height - 50}px] w-[${
@@ -263,8 +265,11 @@ const CompetitionInfoScreen = () => {
         </View>
       </View>
       
-    </View></LayoutComp>:<></>
-  );
+    </View>):
+    <></>}
+    
+    </LayoutComp> 
+    )
 };
 
 export default CompetitionInfoScreen;

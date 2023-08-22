@@ -19,6 +19,7 @@ const Homescreen = () => {
   const { currentUser } = useAuth();
   
   const studioReady = () => {
+    // console.log(currentUser)
     const navigation = useNavigation();
     const [summed, setSums] = useState(0);
     const [size1, setSize] = useState(0);
@@ -205,6 +206,7 @@ const Homescreen = () => {
     );
   };
   return <Layout>{currentUser.studio ? studioReady() : <></>}</Layout>;
+  
 };
 
 export default Homescreen;

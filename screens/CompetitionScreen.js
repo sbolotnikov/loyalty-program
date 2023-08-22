@@ -1,10 +1,10 @@
-import { View, Text, Button } from 'react-native';
+import { View, Text, } from 'react-native';
 import Layout from '../components/layout';
 import Btn from '../components/Btn';
 import TextBox from '../components/TextBox';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import tw from 'twrnc';
 import { TouchableOpacity } from 'react-native-web';
 import {
@@ -22,13 +22,22 @@ import useCompetition from '../hooks/useCompetition';
 import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HeatDisplayModal from '../components/HeatDisplayModal';
+import CompetitionChoiceModal from '../components/CompetitionChoiceModal';
 // import ChooseFilePath from '../components/ChooseFilePath';
 
 const CompetitionScreen = () => {
   const { currentUser } = useAuth();
   const [videoFile, setVideoFile] = useState({ uri: '', name: '' });
   const [modalVisible, setModalVisible] = useState(false);
+  const [modal1Visible, setModal1Visible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
+
+
+  useEffect(() => {
+    setModal1Visible(true)
+    console.log("start modal Comp choice") 
+  }, []);
+
   const {
     image,
     dates,
@@ -37,12 +46,10 @@ const CompetitionScreen = () => {
     message,
     id,
     programFileName,
-    competitors,
     heatIDs,
     heatIndex,
-    dances,
     items,
-    records,
+    setCompID,
   } = useCompetition();
 
   function handleChange(text, eventName) {
@@ -56,7 +63,6 @@ const CompetitionScreen = () => {
     //   };
     // });
   }
-  //convert RTF to txt NOT WORKING YET!!!
   function convertToPlain(rtf) {
     rtf = rtf.replace(/\\par[d]?/g, '');
     return rtf
@@ -64,8 +70,6 @@ const CompetitionScreen = () => {
       .trim();
   }
   //Function to check if it is single dance or Combination
-
-  console.log(heatIDs, heatIndex);
 
   const nameOfDance = (str) => {
     let danceSet = [
@@ -112,6 +116,7 @@ const CompetitionScreen = () => {
         vis={modalVisible}
         onReturn={(ret) => setModalVisible(false)}
       />
+
       <HeatDisplayModal
         heatText={items[heatIndex]}
         button1={'Ok'}
@@ -207,7 +212,6 @@ const CompetitionScreen = () => {
                   Show Video
                 </Text>
               </View>
-             
 
               <View>
                 {/* <ChooseFilePath /> */}
@@ -239,20 +243,20 @@ const CompetitionScreen = () => {
                     let studios = [];
                     for (let i = 0; i < decoded.length; i++) {
                       if (decoded[i].trim() > '')
-                        studios.push(decoded[i].trim().replace(',',''));
+                        studios.push(decoded[i].trim().replace(',', ''));
                     }
 
                     decoded = programBuffer.split('Heat 1 ')[0];
                     decoded = decoded.split(
                       'List of Gentleman Professionals'
-                    )[1]; 
+                    )[1];
                     decoded =
                       decoded.split('\n').splice(2, 1) +
                       decoded.split('\n').splice(6, 1);
                     decoded = decoded.replaceAll('   ', '\n');
-                    decoded = decoded.substring(1,decoded.length)
-                    console.log(decoded)
-                    let role1="Pro"
+                    decoded = decoded.substring(1, decoded.length);
+                    console.log(decoded);
+                    let role1 = 'Pro';
                     for (let i = 0; i < decoded.split('\n').length; i++) {
                       str1 = decoded.split('\n')[i];
                       (str1 = str1.split(' ')), (st = decoded.split('\n')[i]);
@@ -265,10 +269,15 @@ const CompetitionScreen = () => {
                               getPositionOfSubstring(studios, st)
                             )
                             .trim(),
-                          studio: getStudioFullName(studios, st.substring(getPositionOfSubstring(studios, st)).trim()),
-                          role:role1  
-                        }); 
-                      } else role1="Am"
+                          studio: getStudioFullName(
+                            studios,
+                            st
+                              .substring(getPositionOfSubstring(studios, st))
+                              .trim()
+                          ),
+                          role: role1,
+                        });
+                      } else role1 = 'Am';
                     }
                     decoded = programBuffer.split('Heat 1 ')[1];
                     decoded = decoded.split('Heat');
@@ -321,15 +330,18 @@ const CompetitionScreen = () => {
                               ' ' +
                               danceName +
                               '\n' +
-                              rec.replace('  ___ ', '')+
+                              rec.replace('  ___ ', '') +
                               '\n' +
-                              group 
+                              group
                           );
-                          rec = rec.replace('  ___ ', '').replaceAll(',','').trim();
+                          rec = rec
+                            .replace('  ___ ', '')
+                            .replaceAll(',', '')
+                            .trim();
                           let p = 0;
                           // rec=rec.replace(',','')
-                          let studio1=getStudioFullName(studios, rec);
-                          let event1 =group +" "+rec.split(' ')[0];
+                          let studio1 = getStudioFullName(studios, rec);
+                          let event1 = group + ' ' + rec.split(' ')[0];
                           if (rec.split(' ')[1] == '') {
                             rec = rec.slice(
                               0,
@@ -351,26 +363,51 @@ const CompetitionScreen = () => {
                             }
                           }
                           rec = rec.split(studio1)[0];
-                          console.log(rec.split(' ')[0])
-                          let eventGroup=rec.split(' ')[0]
+                          console.log(rec.split(' ')[0]);
+                          let eventGroup = rec.split(' ')[0];
                           if (rec.split(' ')[1] == '')
                             rec = rec.split(rec.split(' ')[0])[1];
                           else rec = rec.split(competitors[p].number1)[1];
                           rec = rec.replace(competitors[p].nameFull, '').trim();
-                          if (eventGroup.indexOf('G')>-1) program.push({heat: heatIDs[i],number:competitors[p].number1,competitor1:competitors[p].nameFull, competitor2:rec,studio:studio1, event:event1})
-                          else program.push({heat: heatIDs[i],number:competitors[p].number1,competitor2:competitors[p].nameFull, competitor1:rec,studio:studio1, event:event1})
+                          if (eventGroup.indexOf('G') > -1)
+                            program.push({
+                              heat: heatIDs[i],
+                              number: competitors[p].number1,
+                              competitor1: competitors[p].nameFull,
+                              competitor2: rec,
+                              studio: studio1,
+                              event: event1,
+                            });
+                          else
+                            program.push({
+                              heat: heatIDs[i],
+                              number: competitors[p].number1,
+                              competitor2: competitors[p].nameFull,
+                              competitor1: rec,
+                              studio: studio1,
+                              event: event1,
+                            });
                           if (
                             competitors.findIndex((x) => x.nameFull === rec) ==
                             -1
                           ) {
-                            if (eventGroup.indexOf('G')>-1) competitors.push({ number1: '', nameFull: rec,  studio: studio1, role:"Pro"})
-                            if ((eventGroup.indexOf('L')>-1)||(eventGroup.indexOf('AC')>-1))
-                            competitors.push({
-                              number1: '',
-                              nameFull: rec,
-                              studio: studio1,
-                              role: 'Am'
-                            });
+                            if (eventGroup.indexOf('G') > -1)
+                              competitors.push({
+                                number1: '',
+                                nameFull: rec,
+                                studio: studio1,
+                                role: 'Pro',
+                              });
+                            if (
+                              eventGroup.indexOf('L') > -1 ||
+                              eventGroup.indexOf('AC') > -1
+                            )
+                              competitors.push({
+                                number1: '',
+                                nameFull: rec,
+                                studio: studio1,
+                                role: 'Am',
+                              });
                           }
                         } else {
                           if (heat[k].length > 3) group = heat[k].trim();
@@ -526,7 +563,12 @@ const CompetitionScreen = () => {
       </View>
     </Layout>
   ) : (
-    <></>
+    <CompetitionChoiceModal
+    button1={'Ok'}
+    button2={''}
+    vis={modal1Visible}
+    onReturn={(ret) => setModal1Visible(false)}
+  />
   );
 };
 
