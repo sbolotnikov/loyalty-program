@@ -111,7 +111,7 @@ const CompetitionScreen = () => {
       <VideoPlayingModal
         videoUri={videoFile.uri}
         button1={'Ok'}
-        button2={''}
+        compName={name}
         heatNum={currentHeat}
         vis={modalVisible}
         onReturn={(ret) => setModalVisible(false)}
@@ -134,7 +134,7 @@ const CompetitionScreen = () => {
           alignItems: 'center',
         }}
       >
-        {currentUser.status == 'super' ? (
+        {currentUser.status == 'admin' ? (
           <>
             <TextBox
               placeholder="Enter Competion Name"
@@ -160,7 +160,7 @@ const CompetitionScreen = () => {
           </>
         )}
 
-        {currentUser.status == 'super' ? (
+        {currentUser.status == 'admin' ? (
           <View>
             <TouchableOpacity
               style={tw`w-[92%] h-48 m-1 `}
@@ -216,9 +216,9 @@ const CompetitionScreen = () => {
               <View>
                 {/* <ChooseFilePath /> */}
                 <ChooseFiles
-                  fileType={'text/*.rtf'}
+                  fileType={'text/*'}
                   multiple={false}
-                  label={'Test rtf'}
+                  label={'Choose Program'}
                   onFileChoice={(file) => {
                     console.log(file);
                     let tempFile = convertToPlain(file.uri);
@@ -318,14 +318,22 @@ const CompetitionScreen = () => {
                     let group = '';
                     let heat = [];
                     let danceName = '';
+                    let timeOfHeat="";
                     for (let i = 0; i < items.length; i++) {
                       heat = items[i];
                       danceName = nameOfDance(dances[i]);
                       group = dances[i].replace(nameOfDance(dances[i]), '');
+                      if (heatIDs[i]!=="Awards"){
+                      timeOfHeat=heatIDs[i].split('[')[1];
+                      timeOfHeat=timeOfHeat.split(']')[0]
+                      } else timeOfHeat=""
+                      heatIDs[i]=heatIDs[i].split('[')[0]
                       for (let k = 1; k < heat.length - 1; k++) {
                         let rec = heat[k];
                         if (heat[k].indexOf(' ___') > -1) {
                           records.push(
+                            timeOfHeat +
+                              ' ' + 
                             heatIDs[i] +
                               ' ' +
                               danceName +

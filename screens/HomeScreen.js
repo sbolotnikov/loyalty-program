@@ -43,6 +43,7 @@ const Homescreen = () => {
         link: 'About',
       },
     ]);
+    
     useEffect(() => {
       if (snapshot) {
         let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;

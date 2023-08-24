@@ -97,7 +97,7 @@ const CompetitionChoiceModal = ({ button1, button2, vis, onReturn }) => {
               backgroundColor: '#C9AB78',
             }}
           />
-          {currentUser.status == 'super' && (
+          {currentUser.status == 'admin' && (
             <Btn
               onClick={(e) => getNewCompetitions()}
               title={'Add New Comp'}
@@ -126,7 +126,7 @@ const CompetitionChoiceModal = ({ button1, button2, vis, onReturn }) => {
                 <Image
                   key={'img' + i}
                   source={item.image}
-                  style={tw`h-14 w-14 bg-gray-300  rounded m-2`}
+                  style={[tw`h-14 w-14 bg-gray-300  rounded m-2`, {cursor:'pointer'}]}
                   onClick={() => {
                     setCompID(item.id);
                     console.log(item.id);
@@ -148,7 +148,7 @@ const CompetitionChoiceModal = ({ button1, button2, vis, onReturn }) => {
                   >
                     {item.dates}
                   </Text>
-                  {(currentUser.status=='super')&&<Btn
+                  {currentUser.status == 'admin' && (<Btn
                     onClick={(e) => {
                       setDeleteItem(item.id);
                       setModalVisible(true);
@@ -165,7 +165,7 @@ const CompetitionChoiceModal = ({ button1, button2, vis, onReturn }) => {
                       fontSize: 8,
                       backgroundColor: 'red',
                     }}
-                  />}
+                  />)}
                 </View>
               </View>
             ))

@@ -7,12 +7,10 @@ import useDimensions from '../hooks/useDimensions';
 const VideoPlayingModal = ({
   videoUri,
   button1,
-  button2,
+  compName,
   heatNum,
   vis,
   onReturn,
-  onChangeRate,
-  onChangeDuration,
 }) => {
   const handleSubmit = (e, submitten) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ const VideoPlayingModal = ({
               { cursor: 'pointer' },
             ]}
           >
-           {/* absolute top-0 left-0 */}
+            {/* absolute top-0 left-0 */}
             <Text
               style={[
                 tw`text-white font-bold text-5xl m-0`,
@@ -54,29 +52,45 @@ const VideoPlayingModal = ({
               {heatNum}
             </Text>
           </View>
+          <View
+            style={[
+              tw`flex justify-center items-center overflow-hidden`,
+              { width: '93%', height: '93%' },
+            ]}
+          >
+            <Video
+              ref={video}
+              style={{
+                width: `${dimensions.screen.width * 0.98}px`,
+                height: `${dimensions.screen.height * 0.78}px`,
+                overflow: 'hidden',
+              }}
+              source={{
+                uri: videoUri,
+              }}
+              isMuted
+              resizeMode={ResizeMode.COVER}
+              useNativeControls
+              shouldPlay
+              isLooping
+              onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+            />
+          </View>
           <View 
-          style={[
-              tw`flex justify-center items-center `,
-              {width: '93%',
-              height: '93%',  }
-          ]}>
-          <Video
-            ref={video}
-            style={{
-              width: `${dimensions.screen.width*0.98}px`,
-              height: `${dimensions.screen.height*0.88}px`,
-              overflow: 'hidden', 
-            }}
-            source={{
-              uri: videoUri,
-            }}
-            isMuted
-            resizeMode={ResizeMode.COVER}
-            useNativeControls
-            shouldPlay
-            isLooping
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-          />
+            style={[
+              tw`flex-1 justify-center items-center w-full`, 
+            ]}
+          > 
+            <Text
+              style={[
+                tw`text-white font-bold text-5xl m-0`,
+                {
+                  textShadow: '5px 5px #C9AB78',
+                },
+              ]}
+            >
+              {compName}
+            </Text>
           </View>
           {/* <Btn
             onClick={(e) => handleSubmit(e, button1)}

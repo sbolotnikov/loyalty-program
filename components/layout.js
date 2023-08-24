@@ -99,6 +99,42 @@ const Layout = ({ children }) => {
       },
       {
         title: 'Competitions',
+        link: 'Program',
+      },
+      {
+        title: 'Get Stars',
+        link: 'ActivitySet',
+        params: { collectionName: 'activities' },
+      },
+      {
+        title: 'Use Stars',
+        link: 'ActivitySet',
+        params: { collectionName: 'goodies' },
+      },
+      {
+        title: 'Music Player',
+        link: 'Music',
+      },
+      {
+        title: 'About',
+        link: 'About',
+      },
+    ],
+    admin: [
+      {
+        title: 'Calendar',
+        link: 'CalendarSet',
+      },
+      {
+        title: 'Scan',
+        link: 'Scan',
+      },
+      {
+        title: 'Users',
+        link: 'Users',
+      },
+      {
+        title: 'Competitions',
         link: 'Competition',
       },
       {

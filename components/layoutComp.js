@@ -72,55 +72,35 @@ const LayoutComp = ({ children }) => {
     ],
     super: [
       {
-        title: 'Calendar',
-        link: 'CalendarSet',
+        title: 'Heatlists',
+        link: 'Heatlists',
       },
       {
-        title: 'Scan',
-        link: 'Scan',
+        title: 'Program',
+        link: 'Program',
       },
       {
-        title: 'Users',
-        link: 'Users',
+        title: 'Home',
+        link: 'Home',
       },
+
       {
-        title: 'Competition',
-        link: 'Competition',
-      },
-      {
-        title: 'Get Stars',
-        link: 'ActivitySet',
-        params: { collectionName: 'activities' },
-      },
-      {
-        title: 'Use Stars',
-        link: 'ActivitySet',
-        params: { collectionName: 'goodies' },
-      },
-      {
-        title: 'Music Player',
-        link: 'Music',
-      },
-      {
-        title: 'About',
-        link: 'About',
+        title: 'Participants',
+        link: 'Participants',
       },
     ],
+    admin: [
+
+    ],
     MC: [
-      {
-        title: 'Competition',
-        link: 'Competition',
-      },
+  
     ],
     default: [
       {
         title: 'Home',
         link: 'Home',
       },
-      {
-        title: 'About',
-        link: 'About',
-      },
+ 
     ],
   };
   const checkLastScreen = async () => {

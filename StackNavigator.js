@@ -62,10 +62,24 @@ const StackNavigator = () => {
         <Stack.Screen name="Users" component={UsersScreen} />
         <Stack.Screen name="Music" component={MusicPlayerScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
-        <Stack.Screen name="Competition" component={CompetitionScreen} />
+        <Stack.Screen name="Heatlists" component={CompetitionInfoScreen} />
         <Stack.Screen name="Program" component={CompetitionProgramScreen} />
         <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />
       </>
+             if (currentUser.status=="admin") return <>
+             <Stack.Screen name="Home" component={Homescreen} />
+             <Stack.Screen name="ActivitySet" component={ActivitysetScreen} />
+             <Stack.Screen name="CalendarSet" component={AddingImagesScreen} />
+             <Stack.Screen name="Getstars" component={Getstarsscreen} />
+             <Stack.Screen name="Profile" component={Profilescreen} />
+             <Stack.Screen name="Scan" component={ScanScreen} />
+             <Stack.Screen name="Users" component={UsersScreen} />
+             <Stack.Screen name="Music" component={MusicPlayerScreen} />
+             <Stack.Screen name="About" component={AboutScreen} />
+             <Stack.Screen name="Competition" component={CompetitionScreen} />
+             <Stack.Screen name="Program" component={CompetitionProgramScreen} />
+             <Stack.Screen name="Participants" component={CompetitionParticipantsScreen} />
+           </>
            if (currentUser.status=="MC") return <>
            <Stack.Screen name="Home" component={Homescreen} />
            <Stack.Screen name="Profile" component={Profilescreen} />

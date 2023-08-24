@@ -146,7 +146,7 @@ const UsersScreen = () => {
                 <DataTable.Cell style={[tw`justify-end items-center`,{flex: 2}]} numeric>
                   <SelectDropdown
                     dropdownBackgroundColor={'white'}
-                    data={['student', 'super','MC', 'teacher']}
+                    data={['student', 'super','MC', 'teacher',(currentUser.status=='admin')?'admin':null]}
                     defaultValue={user.status}
                     onSelect={(selectedItem, index) => {
                       console.log(

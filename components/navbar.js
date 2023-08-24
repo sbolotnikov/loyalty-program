@@ -11,12 +11,12 @@ const Navbar = ({ textSize, size1, color, names, logged }) => {
     const { dimensions } =useDimensions();
     const [justifyLocal, setJustifyLocal] = useState({});
     useEffect(() => {
-      if (dimensions.screen.width/names.length<60) setJustifyLocal({})
+      if (dimensions.screen.width/names.length <60) setJustifyLocal({})
       else setJustifyLocal({justifyContent:"space-around"})
-  }, [dimensions.screen.width]);
+  }, [names]);
   return (
     <View
-      style={tw.style(`flex-row  w-full`,justifyLocal,{ overflowX: 'auto', })}
+      style={tw.style(`flex-row  w-full m-auto`,justifyLocal,{ overflowX: 'auto', })}
     >
        {names.map((item, key) => {
         return <Pressable key={key} style={tw`flex justify-center items-center relative flex-wrap m-1`} onPress={() =>

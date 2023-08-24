@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import tw from 'twrnc';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { collection } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import useDimensions from '../hooks/useDimensions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import useAuth from '../hooks/useAuth';
 import Btn from './Btn';
+
 function StudioSetModal({ vis, onReturn }) {
     const { dimensions } =useDimensions();
     const { setCurrentStudio } = useAuth();
@@ -16,6 +17,18 @@ function StudioSetModal({ vis, onReturn }) {
     const [value, loading, error] = useCollection(collection(db, 'studios'), {
         snapshotListenOptions: { includeMetadataChanges: true },
       });
+      useEffect(() => {
+        async function fetchData() {
+          let arr = [];
+            const querySnapshot = await getDoc(doc(db, 'studios', 'vQjZg0gVkwUUrXjqpaMY'));
+            console.log("creating studio"+querySnapshot.data())
+            let obj=querySnapshot.data()
+            await setDoc(doc(db, "studios"),querySnapshot.data())
+      
+          }
+        
+        fetchData();
+      }, []);
   return (
     <View style={tw` flex-1 justify-center items-center`}>
       <Modal
