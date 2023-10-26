@@ -20,6 +20,10 @@ export const CompetitionProvider = ({ children }) => {
     id: '',
     program: '',
     programFileName: '',
+    mode:'',
+    fontSize:"",
+    displayedPictures:"",
+    seconds:0
   });
   const [compID, setCompID] = useState('');
 
@@ -68,6 +72,10 @@ export const CompetitionProvider = ({ children }) => {
     program: compArray[0] ? compArray[0].program:[],
     heatIndex: compArray[0] ? compArray[0].heatIndex:undefined,
     studios: compArray[0] ? compArray[0].studios:[],
+    mode: compArray[0] ? compArray[0].mode:'',
+    fontSize: compArray[0] ? compArray[0].fontSize:'',
+    displayedPictures: compArray[0] ? compArray[0].displayedPictures:[],
+    seconds: compArray[0] ? compArray[0].seconds:10,
     setCompID
   };
 

@@ -22,8 +22,10 @@ import { DataTable } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AlertModal from '../components/AlertModal';
 import ActivityModal from '../components/ActivityModal';
+import useDimensions from '../hooks/useDimensions';
 const UsersScreen = () => {
   const { currentUser } = useAuth();
+  const { dimensions } =useDimensions();
   const [usersArray, setUsersArray] = useState([]);
   const [changeStatus, setChangeStatus] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,7 +33,7 @@ const UsersScreen = () => {
   const [currentUserIndex, setCurrentUserIndex] = useState(null);
   const [snapshot, loading, err] = useCollection(
     query(collection(db, 'users'),
-    where('studio', '==', currentUser.studio)),
+    (currentUser.status=='admin')?{}:where('studio', '==', currentUser.studio)),
     orderBy('lastSeen', 'desc'),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
@@ -107,7 +109,7 @@ const UsersScreen = () => {
           onReturn={() => setModalVisible2(!modalVisible2)}
         />
         <View
-          style={tw`max-w-[800px] w-full h-full justify-start items-center`}
+          style={tw`max-w-[800px] w-full h-[${dimensions.screen.height-20}px] justify-start items-center overflow-hidden`}
         >
           <Text style={tw`text-3xl font-extrabold mb-2 text-[#3D1152]`}>
             Users Manage screen

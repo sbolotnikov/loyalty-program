@@ -341,7 +341,7 @@ const Layout = ({ children }) => {
           )]}
         >
         {/* `${size1}px` */}
-          <View style={tw`relative  w-full`}>
+          <View style={tw`   w-full`}>
             <View style={tw`flex-row justify-around w-full  mx-auto`}>
               <Navbar
                 textSize={textSize}

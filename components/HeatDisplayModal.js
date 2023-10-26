@@ -22,7 +22,7 @@ const HeatDisplayModal = ({ heatText, button1, heatNum, vis, onReturn }) => {
         onRequestClose={() => {}}
       >
         <View
-          style={tw`flex-col justify-center items-center bg-black  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
+          style={tw`flex-col justify-center items-center  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px] bg-black`}
         >
           <Text style={tw`text-white text-[${fontSize}px]`}>{heatText}</Text>
           <View style={[tw`absolute top-0 left-0  m-2`,{
@@ -43,8 +43,8 @@ const HeatDisplayModal = ({ heatText, button1, heatNum, vis, onReturn }) => {
             title={'Back'}
             style={{
               position: 'absolute',
-              top: 0,
-              right: 0,
+              top: 5,
+              right: 5,
               marginTop: 5,
               marginRight: 15,
               zIndex: 100,
