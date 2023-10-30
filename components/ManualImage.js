@@ -26,9 +26,9 @@ const ManualImage = ({ seconds, image1, text1 }) => {
         toValue: 1, 
         useNativeDriver: false,
       }).start(
-    //     ()=>{
-    //       fadeAnim.setValue(0); 
-    //   }
+        ()=>{
+          fadeLogoAnim.setValue(0); 
+      }
       );
     Animated.timing(fadeAnim, {
       duration: parseInt((seconds * 1000) / 8),
