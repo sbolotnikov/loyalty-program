@@ -10,8 +10,6 @@ import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { UserIcon} from 'react-native-heroicons/outline';
-import { LinearGradient } from 'expo-linear-gradient';
-import Burger from './svg/burger';
 import Navbar from './navbar';
 import tw from 'twrnc';
 import useAuth from '../hooks/useAuth';
@@ -210,8 +208,6 @@ const Layout = ({ children }) => {
       ? (profile = currentUser.status)
       : (profile = 'default');
    setNavArray(array[profile]);  
-   console.log(profile, array[profile]);
-   console.log(previousRouteName, currentScreenName)
    if (previousRouteName=='None')
      checkLastScreen(array[profile])
    else{

@@ -34,10 +34,11 @@ const CompetitionScreen = () => {
   const [modal1Visible, setModal1Visible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [modal3Visible, setModal3Visible] = useState(false);
+  const [galleryType, setGalleryType] = useState(null);
+  const [galleryArr, setGalleryArr] = useState(null);
 
   useEffect(() => {
     setModal1Visible(true);
-    console.log('start modal Comp choice');
   }, []);
 
   const {
@@ -54,10 +55,11 @@ const CompetitionScreen = () => {
     mode,
     fontSize,
     displayedPictures,
+    displayedPicturesAuto,
     seconds,
+    manualPicture,
     setCompID,
-  } = useCompetition();
-
+  } = useCompetition(); 
   function handleChange(text, eventName) {
     updateDoc(doc(db, 'competitions', id), {
       [eventName]: text,
@@ -105,7 +107,6 @@ const CompetitionScreen = () => {
     }
     return '';
   };
-
   const onPressPicture = async (e) => {
     e.preventDefault();
     let picURL = await pickImage('competitions', '', 300);
@@ -129,7 +130,8 @@ const CompetitionScreen = () => {
       <VideoPlayingModal
         videoUri={videoFile.uri}
         heatText={items[heatIndex]}
-        displayedPictures={displayedPictures}
+        manualPicture={manualPicture}
+        displayedPicturesAuto={displayedPicturesAuto}
         button1={'Ok'}
         compName={name}
         heatNum={currentHeat}
@@ -139,15 +141,21 @@ const CompetitionScreen = () => {
         seconds={seconds}
         onReturn={(ret) => setModalVisible(false)}
       />
-     <ChoosePicturesModal
-      displayPics={displayedPictures} 
-      vis={modal3Visible}
-      onReturn ={(ret) => {
-        if (ret.length>0){  
-          handleChange(ret,'displayedPictures')
-        }       
-        setModal3Visible(false)}}
-     />
+      {galleryType && (
+        <ChoosePicturesModal
+          displayPics={galleryArr}
+          galleryType={galleryType}
+          vis={modal3Visible}
+          onReturn={(ret) => {
+            if (ret && ret.length > 0) {
+              galleryType == 'auto'
+                ? handleChange(ret, 'displayedPicturesAuto')
+                : handleChange(ret, 'displayedPictures');
+            }
+            setModal3Visible(false);
+          }}
+        />
+      )}
       <Layout>
         <View
           style={{
@@ -210,8 +218,201 @@ const CompetitionScreen = () => {
                   </View>
                 )}
               </TouchableOpacity>
-
               <View style={tw` w-full flex-row justify-center items-start`}>
+                <View style={tw` flex-col justify-center items-center`}>
+                  <SelectDropdown
+                    dropdownBackgroundColor={'white'}
+                    data={['Auto', 'Video', 'Heats', 'Manual']}
+                    defaultValue={mode}
+                    onSelect={(selectedItem, index) => {
+                      handleChange(selectedItem, 'mode');
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      //   console.log(selectedItem, index);
+                      // text represented after item is selected
+                      // if data array is an array of objects then return selectedItem.property to render after item is selected
+                      return selectedItem;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      // text represented for each item in dropdown
+                      // if data array is an array of objects then return item.property to represent item in dropdown
+                      return item;
+                    }}
+                    buttonStyle={{
+                      width: 140,
+                      height: 35,
+                      backgroundColor: '#FFF',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: '#776548',
+                    }}
+                    buttonTextStyle={{ color: '#444', textAlign: 'left' }}
+                    renderDropdownIcon={(isOpened) => {
+                      return (
+                        <FontAwesome
+                          name={isOpened ? 'chevron-up' : 'chevron-down'}
+                          color={'#776548'}
+                          size={14}
+                        />
+                      );
+                    }}
+                    dropdownStyle={{
+                      backgroundColor: '#EFEFEF',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      width: 140,
+                      borderColor: '#776548',
+                    }}
+                    rowStyle={{
+                      backgroundColor: '#EFEFEF',
+                      height: 45,
+                      borderBottomColor: '#C5C5C5',
+                    }}
+                    rowTextStyle={{
+                      color: '#444',
+                      textAlign: 'center',
+                      margin: 'auto',
+                      textSize: 18,
+                    }}
+                  />
+                  <Text style={{ textAlign: 'center', width: 130 }}>
+                    Choose casting mode
+                  </Text>
+                </View>
+                <View>
+                  <CountBox
+                    startValue={
+                      parseInt(fontSize) > 0 ? parseInt(fontSize) : 34
+                    }
+                    setWidth={4}
+                    onChange={(num) => {
+                      console.log(num);
+                      handleChange(num, 'fontSize');
+                    }}
+                  />
+                  <Text style={{ textAlign: 'center', width: 90 }}>
+                    Choose font size
+                  </Text>
+                </View>
+                <View>
+                  <CountBox
+                    startValue={parseInt(seconds) > 0 ? parseInt(seconds) : 10}
+                    setWidth={2}
+                    onChange={(num) => {
+                      console.log(num);
+                      handleChange(num, 'seconds');
+                    }}
+                  />
+                  <Text style={{ textAlign: 'center', width: 95 }}>
+                    Choose seconds/frame
+                  </Text>
+                </View>
+              </View>
+              <View style={tw` w-full flex-col justify-center items-center`}>
+                <SelectDropdown
+                  dropdownBackgroundColor={'white'}
+                  data={displayedPictures
+                    .sort(function (a, b) {
+                      return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
+                    })
+                    .map((item) => item.tag)}
+                  defaultValue={manualPicture.name}
+                  onSelect={(selectedItem, index) => {
+                    handleChange(
+                      {
+                        name: selectedItem,
+                        link: displayedPictures.sort(function (a, b) {
+                          return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
+                        })[index].image,
+                      },
+                      'manualPicture'
+                    );
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    //   console.log(selectedItem, index);
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item;
+                  }}
+                  buttonStyle={{
+                    width: 240,
+                    height: 35,
+                    backgroundColor: '#FFF',
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: '#776548',
+                  }}
+                  buttonTextStyle={{ color: '#444', textAlign: 'left' }}
+                  renderDropdownIcon={(isOpened) => {
+                    return (
+                      <FontAwesome
+                        name={isOpened ? 'chevron-up' : 'chevron-down'}
+                        color={'#776548'}
+                        size={14}
+                      />
+                    );
+                  }}
+                  dropdownStyle={{
+                    backgroundColor: '#EFEFEF',
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    width: 240,
+                    borderColor: '#776548',
+                  }}
+                  rowStyle={{
+                    backgroundColor: '#EFEFEF',
+                    height: 45,
+                    borderBottomColor: '#C5C5C5',
+                  }}
+                  rowTextStyle={{
+                    color: '#444',
+                    textAlign: 'center',
+                    margin: 'auto',
+                    textSize: 18,
+                  }}
+                />
+                <Text style={{ textAlign: 'center', width: 195 }}>
+                  Choose Picture for manual
+                </Text>
+              </View>
+              <View style={tw` w-full flex-row justify-center items-start`}>
+                <View style={tw` flex-col justify-center items-center`}>
+                  <PlayerButtons
+                    icon={'List'}
+                    color={'#776548'}
+                    color2={'#C9AB78'}
+                    size={40}
+                    onButtonPress={() => {
+                      setGalleryType('manual');
+                      setGalleryArr([...displayedPictures]);
+                      setModal3Visible(true);
+                    }}
+                  />
+                  <Text style={{ textAlign: 'center', width: 85 }}>
+                    Choose pictures for manual
+                  </Text>
+                </View>
+                <View style={tw` flex-col justify-center items-center`}>
+                  <PlayerButtons
+                    icon={'List'}
+                    color={'#776548'}
+                    color2={'#C9AB78'}
+                    size={40}
+                    onButtonPress={() => {
+                      setGalleryType('auto');
+                      setGalleryArr([...displayedPicturesAuto]);
+                      setModal3Visible(true);
+                    }}
+                  />
+                  <Text style={{ textAlign: 'center', width: 85 }}>
+                    Choose pictures for auto
+                  </Text>
+                </View>
                 <View>
                   <ChooseFiles
                     fileType={'video/*'}
@@ -567,104 +768,6 @@ const CompetitionScreen = () => {
                   onButtonPress={() => setModal2Visible(true)}
                 />
               </View>
-              {currentUser.status == 'admin' ? (
-                <View>
-                  <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
-                    Choose casting mode
-                  </Text>
-                  <View
-                    style={tw`flex-row justify-center items-center mb-2 w-full`}
-                  >
-                    <SelectDropdown
-                      dropdownBackgroundColor={'white'}
-                      data={['Auto', 'Video', 'Heats','Manual']}
-                      defaultValue={mode}
-                      onSelect={(selectedItem, index) => {
-                        handleChange(selectedItem, 'mode');
-                      }}
-                      buttonTextAfterSelection={(selectedItem, index) => {
-                        //   console.log(selectedItem, index);
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem;
-                      }}
-                      rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item;
-                      }}
-                      buttonStyle={{
-                        width: 140,
-                        height: 35,
-                        backgroundColor: '#FFF',
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: '#776548',
-                      }}
-                      buttonTextStyle={{ color: '#444', textAlign: 'left' }}
-                      renderDropdownIcon={(isOpened) => {
-                        return (
-                          <FontAwesome
-                            name={isOpened ? 'chevron-up' : 'chevron-down'}
-                            color={'#776548'}
-                            size={14}
-                          />
-                        );
-                      }}
-                      dropdownStyle={{
-                        backgroundColor: '#EFEFEF',
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        width: 140,
-                        borderColor: '#776548',
-                      }}
-                      rowStyle={{
-                        backgroundColor: '#EFEFEF',
-                        height: 45,
-                        borderBottomColor: '#C5C5C5',
-                      }}
-                      rowTextStyle={{
-                        color: '#444',
-                        textAlign: 'center',
-                        margin: 'auto',
-                        textSize: 18,
-                      }}
-                    />
-                    <CountBox
-                      startValue={(parseInt(fontSize)>0)?parseInt(fontSize):34}
-                      setWidth={4}
-                      onChange={(num) => {
-                        console.log(num);
-                        handleChange(num, 'fontSize');
-                      }}
-                    />
-                    <CountBox
-                      startValue={(parseInt(seconds)>0)?parseInt(seconds):10}
-                      setWidth={4}
-                      onChange={(num) => {
-                        console.log(num);
-                        handleChange(num, 'seconds');
-                      }}
-                    />
-                    <PlayerButtons
-                      icon={'List'}
-                      color={'#776548'}
-                      color2={'#C9AB78'}
-                      size={40}
-                      onButtonPress={() => setModalVisible(true)}
-                    />
-                    <PlayerButtons
-                      icon={'List'}
-                      color={'#776548'}
-                      color2={'#C9AB78'}
-                      size={40}
-                      onButtonPress={() => setModal3Visible(true)}
-                    />
-                  </View>
-                </View>
-              ) : (
-                <></>
-              )}
             </View>
           </View>
           <View

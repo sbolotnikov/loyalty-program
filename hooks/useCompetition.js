@@ -22,7 +22,9 @@ export const CompetitionProvider = ({ children }) => {
     programFileName: '',
     mode:'',
     fontSize:"",
-    displayedPictures:"",
+    displayedPictures:[],
+    displayedPicturesAuto:[],
+    manualPicture:{},
     seconds:0
   });
   const [compID, setCompID] = useState('');
@@ -75,10 +77,12 @@ export const CompetitionProvider = ({ children }) => {
     mode: compArray[0] ? compArray[0].mode:'',
     fontSize: compArray[0] ? compArray[0].fontSize:'',
     displayedPictures: compArray[0] ? compArray[0].displayedPictures:[],
+    displayedPicturesAuto: compArray[0] ? compArray[0].displayedPicturesAuto:[],
     seconds: compArray[0] ? compArray[0].seconds:10,
+    manualPicture: compArray[0] ? compArray[0].manualPicture:{},
     setCompID
   };
-
+  
   return (
     <CompetitionContext.Provider value={value}>
       {children}

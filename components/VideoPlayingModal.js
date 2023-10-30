@@ -1,9 +1,11 @@
-import { View, Text, Modal, Image } from 'react-native';
+import { View, Text, Modal, Image, Animated, Easing } from 'react-native';
 import tw from 'twrnc';
 import Btn from './Btn';
 import { Video, ResizeMode } from 'expo-av';
 import { useEffect, useState, useRef } from 'react';
 import useDimensions from '../hooks/useDimensions';
+import SwitchingImage from './SwitchingImage';
+import ManualImage from './ManualImage';
 const VideoPlayingModal = ({
   videoUri,
   button1,
@@ -12,7 +14,8 @@ const VideoPlayingModal = ({
   mode,
   fontSize,
   seconds,
-  displayedPictures,
+  manualPicture,
+  displayedPicturesAuto,
   vis,
   onReturn,
   heatText,
@@ -25,31 +28,57 @@ const VideoPlayingModal = ({
   const video = useRef(null);
   const [status, setStatus] = useState({});
   const { dimensions } = useDimensions();
-  const [firstTime, setFirstTime] = useState(true);
+  // const [firstTime, setFirstTime] = useState(true);
   const [activePic, setActivePic] = useState(0);
-  const [nextActivePic, setNextActivePic] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
+  const FadeInView = props => {
+  
+    useEffect(() => {
+
+      Animated.timing(fadeAnim, {
+        duration: parseInt((seconds * 1000) / 8),
+        toValue: 1,
+        easing: Easing.inOut(Easing.ease), 
+        useNativeDriver: false,
+      }).start(()=>{
+        Animated.timing(fadeAnim, {
+          duration: parseInt((seconds * 1000) / 8),
+          delay: parseInt((seconds * 1000 * 6) / 8),
+          toValue: 0,
+          easing: Easing.inOut(Easing.ease), 
+          useNativeDriver: false,
+        }).start();
+      });
+
+    }, [fadeAnim]);
+  
+    return (
+      <Animated.View // Special animatable View
+        style={[
+          tw.style(`absolute inset-0 m-auto w-full h-full `),
+          {opacity: fadeAnim}, // Bind opacity to animated value
+        ]}>
+        {props.children}
+      </Animated.View>
+    );
+  };
   const nextActive = (num) => {
     let timerInterval = setInterval(function () {
       clearInterval(timerInterval);
       let localPic = num;
-      if (localPic < displayedPictures.length - 1) localPic++;
+      if (localPic < displayedPicturesAuto.length - 1) localPic++;
       else localPic = 0;
-      // setNextActivePic(localPic)
       setActivePic(localPic);
       nextActive(localPic);
     }, seconds * 1000);
+
   };
 
   useEffect(() => {
-    if (mode == 'Auto') nextActive(0);
+    if ((mode == 'Auto')&&(displayedPicturesAuto)) nextActive(0);
   }, [mode]);
-  useEffect(() => {
-    if (!firstTime) {
-      let imgEl = document.getElementById(`image${activePic}`);
 
-      let imgEl1 = document.getElementById(`image${nextActivePic}`);
-    } else setFirstTime(false);
-  }, [nextActivePic]);
 
   return (
     <View
@@ -128,31 +157,29 @@ const VideoPlayingModal = ({
             <View
               style={tw`w-full h-full flex justify-start items-center bg-black`}
             >
-              {displayedPictures.map((item, index) => (
-                <View
-                  key={'img' + index}
-                  style={tw`absolute inset-0 m-auto w-full h-full ${
-                    index !== activePic ? 'opacity-0' : 'opacity-100'
-                  }`}
-                >
-                  <Image
-                    id={'image' + index}
-                    source={item.image}
-                    resizeMethod={'scale'}
-                    resizeMode={'center'}
-                    style={tw`h-full w-auto`}
-                  />
-                </View>
-              ))}
+              {displayedPicturesAuto &&<FadeInView>
+                <Image
+                  source={displayedPicturesAuto[activePic]}
+                  resizeMethod={'scale'}
+                  resizeMode={'center'}
+                  style={[tw`h-full w-auto`]}
+                />
+                </FadeInView>}
+                <SwitchingImage seconds={seconds} activePic={activePic}/>
             </View>
-          ): mode == 'Heats' ? (
+          ): mode == 'Manual' ? (
+            
+                <ManualImage
+                  image1={manualPicture.link} text1={manualPicture.name} seconds={seconds}  />
+            
+          ) : mode == 'Heats' ? (
             <View
               style={tw`w-full h-full flex justify-center items-center bg-black`}
             >
-            
-          <Text style={tw`text-white text-[${fontSize}px]`}>{heatText}</Text>
-
-        </View>
+              <Text style={tw`text-white text-[${fontSize}px]`}>
+                {heatText}
+              </Text>
+            </View>
           ) : (
             <View>
               <Text>Underfined</Text>

@@ -2,20 +2,25 @@ import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
 import tw from 'twrnc';
 import Btn from './Btn';
 import SvgIcons from './svg/SvgIcons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TextBox from './TextBox';
-const ChoosePicturesModal = ({displayPics, vis, onReturn }) => {
+const ChoosePicturesModal = ({displayPics,galleryType, vis, onReturn }) => {
   const handleSubmit = (e, submitten) => {
     e.preventDefault();
     if (submitten="Save"){
       onReturn(displayPictures)
-    }
-    onReturn([]);
+    }else onReturn([]);
   };
   
-  const [displayPictures, setDisplayPictures] = useState(displayPics);
+  const [displayPictures, setDisplayPictures] = useState([]);
   const [pictureLink, setPictureLink] = useState('');
   const [pictureText, setPictureText] = useState('');
+  
+  useEffect(() => {
+    (displayPics) ?setDisplayPictures(displayPics):setDisplayPictures([]);
+    console.log('start ');
+  }, [displayPics]);
+  console.log(displayPictures);
   return (
     <View style={tw` flex-1 justify-center items-center absolute top-0 left-0`}>
       <Modal
@@ -29,7 +34,7 @@ const ChoosePicturesModal = ({displayPics, vis, onReturn }) => {
         >
           <View
             style={[
-              tw` justify-start items-center bg-white w-[92%] h-[92%] max-w-[800px] rounded-md relative`,
+              tw` justify-center items-center bg-white w-[92%] h-[92%] max-w-[800px] rounded-md relative`,
               {
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
@@ -65,7 +70,7 @@ const ChoosePicturesModal = ({displayPics, vis, onReturn }) => {
                           }}
                         >
                           <Image
-                            source={item.image}
+                            source={galleryType=="manual"?item.image:item}
                             style={tw`h-7 w-7 bg-gray-300 p-4 rounded-sm m-2`}
                           />
                         </View>
@@ -82,9 +87,9 @@ const ChoosePicturesModal = ({displayPics, vis, onReturn }) => {
                             }}
                         />
                         </View>
-                        <Text style={tw`max-w-[100px] text-center`}>
+                        {galleryType=="manual" &&<Text style={tw`max-w-[100px] text-center`}>
                           {item.tag}
-                        </Text>
+                        </Text>}
                       </View>
                     </TouchableOpacity>
                   ))}
@@ -95,9 +100,9 @@ const ChoosePicturesModal = ({displayPics, vis, onReturn }) => {
                             source={{uri:pictureLink}}
                             resizeMethod={'scale'}
                             resizeMode={'center'}
-                            style={tw`h-16 w-16 bg-gray-300 rounded-sm m-2`}
+                            style={tw`h-16 w-16 bg-gray-300 rounded-sm m-1`}
                           />
-              <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
+              <Text style={tw`font-semibold text-lg mt-1 text-[#344869]`}>
                 Enter your picture link:
               </Text>
               <TextBox
@@ -106,20 +111,20 @@ const ChoosePicturesModal = ({displayPics, vis, onReturn }) => {
                 secureTextEntry={false}
                 value={pictureLink}
               />
-              <Text style={tw`font-semibold text-lg mt-3 text-[#344869]`}>
+              {galleryType=="manual" &&<Text style={tw`font-semibold text-lg mt-1 text-[#344869]`}>
                 Choose text to picture:
-              </Text>
-              <TextBox
+              </Text>}
+              {galleryType=="manual" &&<TextBox
                 placeholder="Enter text"
                 onChangeText={(text) => setPictureText(text)}
                 secureTextEntry={false}
                 value={pictureText}
-              />
+              />}
               <Btn
               onClick={(e) =>{
                 let pic={tag:pictureText,image:pictureLink};
-                let arr=displayPictures
-                arr.push(pic);
+                let arr=displayPictures;
+                (galleryType=="manual")?arr.push(pic):arr.push(pictureLink)
                 setDisplayPictures([...arr])
               }}
               title={'Add Picture'}
