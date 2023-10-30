@@ -10,7 +10,8 @@ import { db } from '../firebase';
 import useCompetition from '../hooks/useCompetition';
 import AlertModal from './AlertModal';
 import useAuth from '../hooks/useAuth';
-const CompetitionChoiceModal = ({ button1, button2, vis, onReturn }) => {
+import SvgIcons from './svg/SvgIcons';
+const CompetitionChoiceModal = ({   vis,   }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
@@ -148,24 +149,20 @@ const CompetitionChoiceModal = ({ button1, button2, vis, onReturn }) => {
                   >
                     {item.dates}
                   </Text>
-                  {currentUser.status == 'admin' && (<Btn
-                    onClick={(e) => {
-                      setDeleteItem(item.id);
-                      setModalVisible(true);
-                    }}
-                    title={'Delete'}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 80,
-                      marginTop: 5,
-                      marginRight: 15,
-                      zIndex: 100,
-                      width: 150,
-                      fontSize: 8,
-                      backgroundColor: 'red',
-                    }}
-                  />)}
+                  {currentUser.status == 'admin' && (
+                   
+                  <View style={tw`absolute top-0 right-0`}>
+                        <SvgIcons
+                          icon={'DeleteIcon'}
+                          color={'red'}
+                          size={25}
+                          onButtonPress={() =>{   
+                            setDeleteItem(item.id);
+                            setModalVisible(true);
+                            }}
+                        />
+                        </View>
+                  )}
                 </View>
               </View>
             ))

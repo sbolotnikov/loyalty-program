@@ -134,6 +134,7 @@ const VideoPlayingModal = ({
                   }}
                   isMuted
                   resizeMode={ResizeMode.COVER}
+                  resizeMethod={'scale'}
                   useNativeControls
                   shouldPlay
                   isLooping

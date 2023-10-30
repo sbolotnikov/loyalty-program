@@ -297,7 +297,7 @@ const CompetitionScreen = () => {
                 <View>
                   <CountBox
                     startValue={parseInt(seconds) > 0 ? parseInt(seconds) : 10}
-                    setWidth={2}
+                    setWidth={4}
                     onChange={(num) => {
                       console.log(num);
                       handleChange(num, 'seconds');
@@ -308,7 +308,7 @@ const CompetitionScreen = () => {
                   </Text>
                 </View>
               </View>
-              <View style={tw` w-full flex-col justify-center items-center`}>
+              {displayedPictures &&<View style={tw` w-full flex-col justify-center items-center`}>
                 <SelectDropdown
                   dropdownBackgroundColor={'white'}
                   data={displayedPictures
@@ -316,7 +316,7 @@ const CompetitionScreen = () => {
                       return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
                     })
                     .map((item) => item.tag)}
-                  defaultValue={manualPicture.name}
+                  defaultValue={(manualPicture)?manualPicture.name:""}
                   onSelect={(selectedItem, index) => {
                     handleChange(
                       {
@@ -379,7 +379,7 @@ const CompetitionScreen = () => {
                 <Text style={{ textAlign: 'center', width: 195 }}>
                   Choose Picture for manual
                 </Text>
-              </View>
+              </View>}
               <View style={tw` w-full flex-row justify-center items-start`}>
                 <View style={tw` flex-col justify-center items-center`}>
                   <PlayerButtons
@@ -389,7 +389,7 @@ const CompetitionScreen = () => {
                     size={40}
                     onButtonPress={() => {
                       setGalleryType('manual');
-                      setGalleryArr([...displayedPictures]);
+                      if (displayedPictures) setGalleryArr([...displayedPictures]);
                       setModal3Visible(true);
                     }}
                   />
@@ -405,7 +405,7 @@ const CompetitionScreen = () => {
                     size={40}
                     onButtonPress={() => {
                       setGalleryType('auto');
-                      setGalleryArr([...displayedPicturesAuto]);
+                      if (displayedPicturesAuto) setGalleryArr([...displayedPicturesAuto]);
                       setModal3Visible(true);
                     }}
                   />
@@ -436,7 +436,7 @@ const CompetitionScreen = () => {
                     onButtonPress={() => setModalVisible(true)}
                   />
                   <Text style={{ textAlign: 'center', width: 45 }}>
-                    Show Video
+                    Start Show
                   </Text>
                 </View>
 
