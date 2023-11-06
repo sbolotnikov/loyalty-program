@@ -63,8 +63,9 @@ const VideoPlayingModal = ({
       </Animated.View>
     );
   };
+  let timerInterval
   const nextActive = (num) => {
-    let timerInterval = setInterval(function () {
+     timerInterval = setInterval(function () {
       clearInterval(timerInterval);
       let localPic = num;
       if (localPic < displayedPicturesAuto.length - 1) localPic++;
@@ -76,6 +77,7 @@ const VideoPlayingModal = ({
   };
 
   useEffect(() => {
+    clearInterval(timerInterval);
     if ((mode == 'Auto')&&(displayedPicturesAuto)) nextActive(0);
   }, [mode]);
 
