@@ -1,7 +1,8 @@
-import { View, Text, Animated, Easing, Image, SafeAreaView } from 'react-native';
+import { View, Text, Animated, Easing, Image, SafeAreaView, ImageBackground } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const ManualImage = ({ seconds, image1, text1 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -14,8 +15,10 @@ const ManualImage = ({ seconds, image1, text1 }) => {
     inputRange: [0, 1],
     outputRange: [1, 0],
   });
-  const logo = require('../assets/dancerslogo.png');
-  const [actPic, setActPic] = useState(logo);
+  const logo = require('../assets/winterClass.svg');
+  const awardsPic = require('../assets/awards.png');
+  const winterPic = require('../assets/winterClass.svg');
+  const [actPic, setActPic] = useState(winterPic);
   const [actText, setActText] = useState('Fred Astaire presents');
   const [activePic, setActivePic] = useState(0);
   const [size1, setSize] = useState(0);
@@ -63,7 +66,7 @@ const ManualImage = ({ seconds, image1, text1 }) => {
   }, [dimensions.screen.width]);
   return (
     <SafeAreaView
-      style={tw`w-full h-full flex justify-start items-center bg-black`}
+      style={tw`w-full h-full flex justify-start items-center`}
     >
       <Animated.View // Special animatable View
         style={[
@@ -71,14 +74,24 @@ const ManualImage = ({ seconds, image1, text1 }) => {
           { opacity: fadeAnim }, // Bind opacity to animated value
         ]}
       >
+      
         {image1 && (
-          <Image
+          <ImageBackground
             source={actPic}
             resizeMethod={'scale'}
             resizeMode={'center'}
-            style={[tw`h-full w-auto`]}
-          />
+            style={[tw`h-full w-auto my-auto`, {boxShadow: '0 30px 40px rgba(0,0,0,.1)'}]}
+          >
+            <LinearGradient
+        colors={['#4169e1','#4169e1', 'transparent','#4169e1','#4169e1']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        
+              style={tw`w-full h-full flex justify-start items-center`}
+            ></LinearGradient>
+          </ImageBackground>
         )}
+          <Image source={awardsPic} style={tw`absolute top-0 left-0 h-[200px] pt-1 w-full z-100 `} resizeMethod={'scale'} resizeMode={'center'}/>
         {text1 && (
           <View
             style={[
@@ -92,7 +105,7 @@ const ManualImage = ({ seconds, image1, text1 }) => {
             />
             <Text
               style={[
-                tw` font-bold text-6xl text-center `,
+                tw` font-bold text-white opacity-100 text-6xl text-center `,
                 {
                   textShadow: '5px 5px #C9AB78',
                   fontFamily: 'DancingScript',
@@ -102,6 +115,7 @@ const ManualImage = ({ seconds, image1, text1 }) => {
             >
               {actText}
             </Text>
+          
           </View>
         )}
       </Animated.View>

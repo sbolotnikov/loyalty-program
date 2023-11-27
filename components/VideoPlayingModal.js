@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react';
 import useDimensions from '../hooks/useDimensions';
 import SwitchingImage from './SwitchingImage';
 import ManualImage from './ManualImage';
+import { LinearGradient } from 'expo-linear-gradient';
 const VideoPlayingModal = ({
   videoUri,
   button1,
@@ -95,10 +96,15 @@ const VideoPlayingModal = ({
         <View
           style={tw`  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
         >
-          {mode == 'Video' ? (
-            <View
-              style={tw`w-full h-full flex justify-start items-center bg-black`}
+                    <LinearGradient
+        colors={['#4169e1', 'black','#4169e1']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        
+              style={tw`w-full h-full flex justify-start items-center`}
             >
+          {mode == 'Video' ? (
+            <>
               <View
                 onClick={(e) => handleSubmit(e, button1)}
                 style={[
@@ -155,10 +161,10 @@ const VideoPlayingModal = ({
                   {compName}
                 </Text>
               </View>
-            </View>
+              </>
           ) : mode == 'Auto' ? (
             <View
-              style={tw`w-full h-full flex justify-start items-center bg-black`}
+              style={tw`w-full h-full flex justify-start items-center`}
             >
               {displayedPicturesAuto &&<FadeInView>
                 <Image
@@ -177,7 +183,7 @@ const VideoPlayingModal = ({
             
           ) : mode == 'Heats' ? (
             <View
-              style={tw`w-full h-full flex justify-center items-center bg-black`}
+              style={tw`w-full h-full flex justify-center items-center`}
             >
               <Text style={tw`text-white text-[${fontSize}px]`}>
                 {heatText}
@@ -188,6 +194,7 @@ const VideoPlayingModal = ({
               <Text>Underfined</Text>
             </View>
           )}
+          </LinearGradient>
         </View>
       </Modal>
     </View>
