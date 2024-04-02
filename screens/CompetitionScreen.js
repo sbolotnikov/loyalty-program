@@ -20,6 +20,7 @@ import PlayerButtons from '../components/svg/PlayerButtons';
 import { Buffer } from 'buffer';
 import useCompetition from '../hooks/useCompetition';
 import SelectDropdown from 'react-native-select-dropdown';
+import { SelectList } from 'react-native-dropdown-select-list';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HeatDisplayModal from '../components/HeatDisplayModal';
 import CompetitionChoiceModal from '../components/CompetitionChoiceModal';
@@ -59,7 +60,7 @@ const CompetitionScreen = () => {
     seconds,
     manualPicture,
     setCompID,
-  } = useCompetition(); 
+  } = useCompetition();
   function handleChange(text, eventName) {
     updateDoc(doc(db, 'competitions', id), {
       [eventName]: text,
@@ -222,7 +223,7 @@ const CompetitionScreen = () => {
                 <View style={tw` flex-col justify-center items-center`}>
                   <SelectDropdown
                     dropdownBackgroundColor={'white'}
-                    data={['Auto', 'Video', 'Heats', 'Manual']}
+                    data={['Auto', 'Video', 'Heats', 'Manual', 'Default']}
                     defaultValue={mode}
                     onSelect={(selectedItem, index) => {
                       handleChange(selectedItem, 'mode');
@@ -308,78 +309,80 @@ const CompetitionScreen = () => {
                   </Text>
                 </View>
               </View>
-              {displayedPictures &&<View style={tw` w-full flex-col justify-center items-center`}>
-                <SelectDropdown
-                  dropdownBackgroundColor={'white'}
-                  data={displayedPictures
-                    .sort(function (a, b) {
-                      return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
-                    })
-                    .map((item) => item.tag)}
-                  defaultValue={(manualPicture)?manualPicture.name:""}
-                  onSelect={(selectedItem, index) => {
-                    handleChange(
-                      {
-                        name: selectedItem,
-                        link: displayedPictures.sort(function (a, b) {
-                          return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
-                        })[index].image,
-                      },
-                      'manualPicture'
-                    );
-                  }}
-                  buttonTextAfterSelection={(selectedItem, index) => {
-                    //   console.log(selectedItem, index);
-                    // text represented after item is selected
-                    // if data array is an array of objects then return selectedItem.property to render after item is selected
-                    return selectedItem;
-                  }}
-                  rowTextForSelection={(item, index) => {
-                    // text represented for each item in dropdown
-                    // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item;
-                  }}
-                  buttonStyle={{
-                    width: 240,
-                    height: 35,
-                    backgroundColor: '#FFF',
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: '#776548',
-                  }}
-                  buttonTextStyle={{ color: '#444', textAlign: 'left' }}
-                  renderDropdownIcon={(isOpened) => {
-                    return (
-                      <FontAwesome
-                        name={isOpened ? 'chevron-up' : 'chevron-down'}
-                        color={'#776548'}
-                        size={14}
-                      />
-                    );
-                  }}
-                  dropdownStyle={{
-                    backgroundColor: '#EFEFEF',
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    width: 240,
-                    borderColor: '#776548',
-                  }}
-                  rowStyle={{
-                    backgroundColor: '#EFEFEF',
-                    height: 45,
-                    borderBottomColor: '#C5C5C5',
-                  }}
-                  rowTextStyle={{
-                    color: '#444',
-                    textAlign: 'center',
-                    margin: 'auto',
-                    textSize: 18,
-                  }}
-                />
-                <Text style={{ textAlign: 'center', width: 195 }}>
-                  Choose Picture for manual
-                </Text>
-              </View>}
+              {displayedPictures && (
+                <View style={tw` w-full flex-col justify-center items-center`}>
+                  <SelectDropdown
+                    dropdownBackgroundColor={'white'}
+                    data={displayedPictures
+                      .sort(function (a, b) {
+                        return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
+                      })
+                      .map((item) => item.tag)}
+                    defaultValue={manualPicture ? manualPicture.name : ''}
+                    onSelect={(selectedItem, index) => {
+                      handleChange(
+                        {
+                          name: selectedItem,
+                          link: displayedPictures.sort(function (a, b) {
+                            return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
+                          })[index].image,
+                        },
+                        'manualPicture'
+                      );
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      //   console.log(selectedItem, index);
+                      // text represented after item is selected
+                      // if data array is an array of objects then return selectedItem.property to render after item is selected
+                      return selectedItem;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      // text represented for each item in dropdown
+                      // if data array is an array of objects then return item.property to represent item in dropdown
+                      return item;
+                    }}
+                    buttonStyle={{
+                      width: 240,
+                      height: 35,
+                      backgroundColor: '#FFF',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: '#776548',
+                    }}
+                    buttonTextStyle={{ color: '#444', textAlign: 'left' }}
+                    renderDropdownIcon={(isOpened) => {
+                      return (
+                        <FontAwesome
+                          name={isOpened ? 'chevron-up' : 'chevron-down'}
+                          color={'#776548'}
+                          size={14}
+                        />
+                      );
+                    }}
+                    dropdownStyle={{
+                      backgroundColor: '#EFEFEF',
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      width: 240,
+                      borderColor: '#776548',
+                    }}
+                    rowStyle={{
+                      backgroundColor: '#EFEFEF',
+                      height: 45,
+                      borderBottomColor: '#C5C5C5',
+                    }}
+                    rowTextStyle={{
+                      color: '#444',
+                      textAlign: 'center',
+                      margin: 'auto',
+                      textSize: 18,
+                    }}
+                  />
+                  <Text style={{ textAlign: 'center', width: 195 }}>
+                    Choose Picture for manual
+                  </Text>
+                </View>
+              )}
               <View style={tw` w-full flex-row justify-center items-start`}>
                 <View style={tw` flex-col justify-center items-center`}>
                   <PlayerButtons
@@ -389,7 +392,8 @@ const CompetitionScreen = () => {
                     size={40}
                     onButtonPress={() => {
                       setGalleryType('manual');
-                      if (displayedPictures) setGalleryArr([...displayedPictures]);
+                      if (displayedPictures)
+                        setGalleryArr([...displayedPictures]);
                       setModal3Visible(true);
                     }}
                   />
@@ -405,7 +409,8 @@ const CompetitionScreen = () => {
                     size={40}
                     onButtonPress={() => {
                       setGalleryType('auto');
-                      if (displayedPicturesAuto) setGalleryArr([...displayedPicturesAuto]);
+                      if (displayedPicturesAuto)
+                        setGalleryArr([...displayedPicturesAuto]);
                       setModal3Visible(true);
                     }}
                   />
@@ -465,8 +470,10 @@ const CompetitionScreen = () => {
                       decoded = decoded.split(
                         'List of Gentleman Professionals'
                       )[0];
-                      decoded = decoded.split('\r\n    \r\n   ')[1];
+                      // decoded = decoded.split('\r\n    \r\n   ')[1];
                       decoded = decoded.split('\r\n');
+                      decoded = decoded.filter((elm) => elm.trim());
+                      decoded = decoded.filter((elm) => elm);
                       let studios = [];
                       for (let i = 0; i < decoded.length; i++) {
                         if (decoded[i].trim() > '')
@@ -477,17 +484,54 @@ const CompetitionScreen = () => {
                       decoded = decoded.split(
                         'List of Gentleman Professionals'
                       )[1];
-                      decoded =
-                        decoded.split('\n').splice(2, 1) +
-                        decoded.split('\n').splice(6, 1);
-                      decoded = decoded.replaceAll('   ', '\n');
-                      decoded = decoded.substring(1, decoded.length);
+
+                      decoded = decoded.split('List of Gentleman Amateurs')[0];
+                      decoded = decoded.split('\r\n');
+                      decoded = decoded.filter((elm) => elm);
+                      let partArr = [];
+                      for (let i = 0; i < decoded.length; i++) {
+                        if (decoded[i].trim() > '')
+                          partArr.push(decoded[i].trim().replace(',', ''));
+                      }
                       console.log(decoded);
                       let role1 = 'Pro';
-                      for (let i = 0; i < decoded.split('\n').length; i++) {
-                        str1 = decoded.split('\n')[i];
-                        (str1 = str1.split(' ')), (st = decoded.split('\n')[i]);
-                        if (str1[0] > 0) {
+                      for (let i = 0; i < partArr.length; i++) {
+                        str1 = partArr[i];
+                        str1 = str1.split(' ');
+                        st = partArr[i];
+                        competitors.push({
+                          number1: str1[0],
+                          nameFull: st
+                            .substring(
+                              st.indexOf(' '),
+                              getPositionOfSubstring(studios, st)
+                            )
+                            .trim(),
+                          studio: getStudioFullName(
+                            studios,
+                            st
+                              .substring(getPositionOfSubstring(studios, st))
+                              .trim()
+                          ),
+                          role: role1,
+                        });
+                      }
+                      decoded = programBuffer.split('Heat 1 ')[0];
+                      decoded = decoded.split('List of Gentleman Amateurs')[1];
+                      decoded = decoded.split('\r\n');
+                      decoded = decoded.filter((elm) => elm);
+                      partArr = [];
+                      for (let i = 0; i < decoded.length; i++) {
+                        if (decoded[i].trim() > '')
+                          partArr.push(decoded[i].trim().replace(',', ''));
+                      }
+                      console.log(decoded);
+                      role1 = 'Am';
+                      for (let i = 0; i < partArr.length; i++) {
+                        str1 = partArr[i];
+                        str1 = str1.split(' ');
+                        st = partArr[i];
+                        if (parseInt(str1[0]) > 0)
                           competitors.push({
                             number1: str1[0],
                             nameFull: st
@@ -504,8 +548,8 @@ const CompetitionScreen = () => {
                             ),
                             role: role1,
                           });
-                        } else role1 = 'Am';
                       }
+
                       decoded = programBuffer.split('Heat 1 ')[1];
                       decoded = decoded.split('Heat');
                       decoded[0] = ' 1 ' + decoded[0];
@@ -526,9 +570,7 @@ const CompetitionScreen = () => {
                         if (decoded[i].indexOf('Awards') > -1)
                           decoded.splice(i + 1, 0, 'Awards');
                       }
-                      // decoded = decoded.split('\r\n \r\n\r\n \r\n   ');
-                      // '\r\n \r\n\r\n   '
-                      // '\r\n   \r\n \r\n   '
+
                       let arrayOfStrings = [];
                       let items = [];
                       let heatIDs = [];
@@ -551,8 +593,10 @@ const CompetitionScreen = () => {
                         danceName = nameOfDance(dances[i]);
                         group = dances[i].replace(nameOfDance(dances[i]), '');
                         if (heatIDs[i] !== 'Awards') {
-                          timeOfHeat = heatIDs[i].split('[')[1];
-                          timeOfHeat = timeOfHeat.split(']')[0];
+                          if (timeOfHeat.indexOf('[') > -1) {
+                            timeOfHeat = heatIDs[i].split('[')[1];
+                            timeOfHeat = timeOfHeat.split(']')[0];
+                          } else timeOfHeat = '';
                         } else timeOfHeat = '';
                         heatIDs[i] = heatIDs[i].split('[')[0];
                         for (let k = 1; k < heat.length - 1; k++) {
@@ -704,62 +748,31 @@ const CompetitionScreen = () => {
               <View
                 style={tw`flex-row justify-center items-center mb-2 w-[50%]`}
               >
-                <SelectDropdown
-                  dropdownBackgroundColor={'white'}
+                <SelectList
+                  selected={currentHeat}
+                  setSelected={(val) => {
+                    console.log(val,heatIDs.indexOf(val));
+                    
+                    handleChange(val, 'currentHeat');
+                    handleChange(heatIDs.indexOf(val), 'heatIndex');
+                  }}
                   data={heatIDs}
-                  defaultValue={heatIndex}
-                  onSelect={(selectedItem, index) => {
-                    handleChange(selectedItem, 'currentHeat');
-                    handleChange(index, 'heatIndex');
-                  }}
-                  buttonTextAfterSelection={(selectedItem, index) => {
-                    //   console.log(selectedItem, index);
-                    // text represented after item is selected
-                    // if data array is an array of objects then return selectedItem.property to render after item is selected
-                    return selectedItem;
-                  }}
-                  rowTextForSelection={(item, index) => {
-                    // text represented for each item in dropdown
-                    // if data array is an array of objects then return item.property to represent item in dropdown
-                    return item;
-                  }}
-                  buttonStyle={{
-                    width: 140,
+                  arrowicon={
+                    <FontAwesome
+                      name="chevron-down"
+                      size={12}
+                      color={'#776548'}
+                    />
+                  }
+                  search={false}
+                  boxStyles={{ width: 140,
                     height: 35,
                     backgroundColor: '#FFF',
                     borderRadius: 8,
                     borderWidth: 1,
-                    borderColor: '#776548',
-                  }}
-                  buttonTextStyle={{ color: '#444', textAlign: 'left' }}
-                  renderDropdownIcon={(isOpened) => {
-                    return (
-                      <FontAwesome
-                        name={isOpened ? 'chevron-up' : 'chevron-down'}
-                        color={'#776548'}
-                        size={14}
-                      />
-                    );
-                  }}
-                  dropdownStyle={{
-                    backgroundColor: '#EFEFEF',
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    width: 140,
-                    borderColor: '#776548',
-                  }}
-                  rowStyle={{
-                    backgroundColor: '#EFEFEF',
-                    height: 45,
-                    borderBottomColor: '#C5C5C5',
-                  }}
-                  rowTextStyle={{
-                    color: '#444',
-                    textAlign: 'center',
-                    margin: 'auto',
-                    textSize: 18,
-                  }}
+                    borderColor: '#776548', }} //override default styles //default selected option
                 />
+                
                 <PlayerButtons
                   icon={'List'}
                   color={'#776548'}

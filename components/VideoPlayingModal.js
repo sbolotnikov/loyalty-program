@@ -1,4 +1,4 @@
-import { View, Text, Modal, Image, Animated, Easing } from 'react-native';
+import { View, Text, Modal, Image, Animated, Easing, SafeAreaView } from 'react-native';
 import tw from 'twrnc';
 import Btn from './Btn';
 import { Video, ResizeMode } from 'expo-av';
@@ -27,6 +27,7 @@ const VideoPlayingModal = ({
   };
 
   const video = useRef(null);
+  const logo = require('../assets/VERTICAL-FADS-whtgold.png');
   const [status, setStatus] = useState({});
   const { dimensions } = useDimensions();
   // const [firstTime, setFirstTime] = useState(true);
@@ -181,7 +182,20 @@ const VideoPlayingModal = ({
                 <ManualImage
                   image1={manualPicture.link} text1={manualPicture.name} seconds={seconds}  />
             
-          ) : mode == 'Heats' ? (
+          ) : mode == 'Default' ? (
+            <SafeAreaView
+      style={tw`w-full h-full flex justify-center items-center`}
+    >
+          <Image
+            source={logo}
+            resizeMethod={'resize'}
+                  resizeMode={'center'}
+                  style={[tw`h-[750px] w-[760px]`]}
+                />
+
+    </SafeAreaView>
+        
+      ) : mode == 'Heats' ? (
             <View
               style={tw`w-full h-full flex justify-center items-center`}
             >
