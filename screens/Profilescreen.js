@@ -8,7 +8,7 @@ import TextBox from '../components/TextBox';
 import Btn from '../components/Btn';
 import { pickImage, deleteOldImage } from '../util/functions';
 const Profilescreen = () => {
-  const { currentUser, logout, updatePass, updateUser } = useAuth();
+  const { currentUser, logout, updatePass, updateUser, updatePhone } = useAuth();
   // const {loading, setLoading} = useContext(GlobalContext);
   const [error, setError] = useState('');
   const [loadingLocal, setLoadingLocal] = useState(false);
@@ -18,10 +18,11 @@ const Profilescreen = () => {
   const [values, setValues] = useState({
     pwd: '',
     pwd2: '',
+    phone: currentUser.phone ? currentUser.phone : '',
     name: currentUser.displayName ? currentUser.displayName : 'Guest',
     image: currentUser.photoURL,
   });
-
+console.log(currentUser)
   function handleChange(text, eventName) {
     setValues((prev) => {
       return {
@@ -37,13 +38,16 @@ const Profilescreen = () => {
     console.log(picURL);
     handleChange(picURL, 'image');
   };
+  let err1=""
   const submitReset = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
-    const { pwd, pwd2, name, image } = values;
+    const { pwd, pwd2, name, image, phone } = values;
+    
     if (pwd.length >= 6) {
       if (pwd == pwd2) {
+
         try {
           setError('');
           setLoadingLocal(true);
@@ -52,16 +56,22 @@ const Profilescreen = () => {
         } catch (err) {
           console.log(err.message);
           setError(`Failed to update password. ${err.message}`);
+          err1=err.message;
         }
+       
       } else {
         setError('Passwords are different!');
+        err1="Passwoards are different!";
       }
     } else {
-      if (pwd > '') setError('Password should be at least 6 characters');
+      if (pwd > '') {
+        setError('Password should be at least 6 characters');
+        err1="Password should be at least 6 characters";
+      }
     }
     if (
       (name !== currentUser.displayName || image !== currentUser.photoURL) &&
-      error == ''
+      err1 == ''
     ) {
       // finding name of the old profile image and if it is in db it will be replaced
       let userOldPicture = currentUser.photoURL;
@@ -72,14 +82,29 @@ const Profilescreen = () => {
         await updateUser(name, image);
       } catch (err) {
         console.log(err);
+        err1=err.message;
         setError(`Failed to update profile. ${err.message}`);
       }
     }
-    deleteOldImage('images', currentUser.photoURL);
+    if ((image !== currentUser.photoURL)&&(err1=="")) deleteOldImage('images', currentUser.photoURL);
+    if ((err1 == '')&&(phone !== currentUser.phone)&&(phone.length==10)) {
+      try {
+        setLoadingLocal(true);
+        setUpdateLocal(true);
+        await updatePhone(phone);
+      } catch (err) {
+        console.log(err);
+        err1=err.message;
+        setError(`Failed to update phone. ${err.message}`);
+      }
+    } else if (err1 === "") {
+      setError("Phone number should be 10 digits");
+      err1="10 digits"
+    }
     setUpdateLocal(false);
   };
   useEffect(() => {
-    if (updateLocal == false && loadingLocal == true && error == '') {
+    if (updateLocal == false && loadingLocal == true && err1 == '') {
       setMessage(
         'Profile updated successfully. To set changes please re-log in.'
       );
@@ -90,8 +115,11 @@ const Profilescreen = () => {
   return (
     <Layout>
       <View style={tw`w-full h-full justify-center items-center`}>
-        <Text style={tw`text-4xl font-extrabold mb-2 text-[#3D1152]`}>
-          Profile of {currentUser.status}
+      <Text style={tw`text-2xl text-center font-extrabold mb-2 text-[#3D1152]`}>
+           {((currentUser.substudio!==undefined)&&(currentUser.substudio!==""))?"Area "+currentUser.area:"Studio:"+currentUser.area}
+        </Text>
+        <Text style={tw`text-2xl text-center font-semibold mb-2 text-[#3D1152]`}>
+           {currentUser.status} profile{((currentUser.substudio!==undefined)&&(currentUser.substudio!==""))?" of "+currentUser.substudio:""}
         </Text>
         <View style={tw`w-full max-w-4xl justify-center items-center`}>
           <View style={tw`flex-row w-[92%] justify-between`}>
@@ -140,10 +168,28 @@ const Profilescreen = () => {
             onChangeText={(text) => handleChange(text, 'pwd')}
           />
           <TextBox
-            placeholder="Confirme Password"
+            placeholder="Confirm Password"
             secureTextEntry={true}
             onChangeText={(text) => handleChange(text, 'pwd2')}
           />
+          <Text
+              style={[tw`font-extrabold text-2xl text-center mt-3 text-[#3D1152]`]}
+            >
+              Telephone:
+              </Text>
+              <TextBox 
+                placeholder="Enter Telephone number"
+                value={values.phone}
+                onChangeText={(tel) => {
+                  console.log(tel)
+                  if (tel.length>values.phone.length){
+                    if (tel.length>10) return;
+                    if (parseInt(tel).toString()==tel) handleChange(tel, 'phone');
+
+                  }else handleChange(tel, 'phone');
+                }}
+              />
+           
           <View
             style={tw`flex-row justify-around items-center flex-wrap w-[92%]`}
           >

@@ -556,7 +556,7 @@ const CompetitionScreen = () => {
                       for (let i = 0; i < decoded.length; i++) {
                         decoded[i] = 'Heat' + decoded[i];
 
-                        let sss1 = decoded[i].split(' \r\n   Solo ');
+                        let sss1 = decoded[i].split('Solo ');
                         if (sss1.length > 1) {
                           decoded[i] = sss1[0];
                           for (let j = 1; j < sss1.length; j++) {

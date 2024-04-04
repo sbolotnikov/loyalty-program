@@ -1,5 +1,5 @@
-import { View, Text, ImageBackground, Pressable } from 'react-native';
-import { useEffect, useState } from 'react';
+import { View, Text, ImageBackground, Pressable, Animated, Easing } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 import Layout from '../components/layout';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
@@ -19,16 +19,18 @@ const Homescreen = () => {
   const { currentUser } = useAuth();
   
   const studioReady = () => {
-    // console.log(currentUser)
+    const scrollerRef = useRef(null);
     const navigation = useNavigation();
     const [summed, setSums] = useState(0);
     const [size1, setSize] = useState(0);
     const [textSize, setTextSize] = useState(0);
     const [carousel, setCarousel] = useState([{ url: '', text: '' }]);
+    const [movementRange, setMovementRange] = useState(['0%','-100%'])
     const [snapshot, loading, err] = useCollection(
       collection(doc(db, 'studios', currentUser.studio), 'settings'),
       { snapshotListenOptions: { includeMetadataChanges: true } }
     );
+    const moveAnim = useRef(new Animated.Value(0)).current;
     const [fontLoaded] = useFonts({
       DancingScript: require('../assets/fonts/DancingScriptVariableFont.ttf'),
     });
@@ -95,6 +97,36 @@ const Homescreen = () => {
           : 'sm'
       );
     }, [!!dimensions.width]);
+    
+    function moveGallery(n) {
+      let seconds=20
+      Animated.timing(moveAnim, {
+        duration: parseInt(seconds * 1000),
+        toValue: n,
+        easing: Easing.inOut(Easing.linear),
+        useNativeDriver: false,
+      }).start(() => {
+       moveGallery(n==0?1:0);
+      });
+    }
+    
+    useEffect(() => {
+      let widthContainer=0
+      let percentStr=[]
+      if(carousel.length>3){
+        
+          (dimensions.screen.width<800)?widthContainer=dimensions.screen.width:widthContainer=800;
+          setMovementRange(['0%',`-${Math.round((carousel.length*258-widthContainer)/258/carousel.length*100)}%`])
+
+          console.log(percentStr)
+
+       
+        // 258px
+        moveGallery(1)
+      }
+    }, [carousel]);
+    const move1 = moveAnim.interpolate({inputRange: [0, 1],outputRange: movementRange });
+
     return (
       <View>
         <View style={tw` bg-black`}>
@@ -175,9 +207,10 @@ const Homescreen = () => {
               tw`w-full justify-center items-center relative max-w-4xl`,
               { overflow: 'auto' },
               { height: dimensions.screen.height * 0.55 },
+              {mask: 'linear-gradient(90deg,transparent, white 20%, white 80%, transparent)',}
             ]}
           >
-            <View style={tw` absolute top-0 left-0 flex-row`}>
+            <Animated.View id="scroller" style={[tw` absolute top-0 left-0 flex-row`, {transform: [{translateX:move1}]},{width:"max-content"}]}> 
               {carousel.map((item, i) => (
                 <View
                   key={"news_"+item.id}
@@ -200,7 +233,7 @@ const Homescreen = () => {
                   </Text>
                 </View>
               ))}
-            </View>
+            </Animated.View>
           </View>
         </View>
       </View>

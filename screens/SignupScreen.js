@@ -81,7 +81,7 @@ const SignupScreen = () => {
             onChangeText={(text) => handleChange(text, 'pwd')}
           />
           <TextBox
-            placeholder="Confirme Password"
+            placeholder="Confirm Password"
             secureTextEntry={true}
             onChangeText={(text) => handleChange(text, 'pwd2')}
           />

@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const ManualImage = ({ seconds, image1, text1 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeLogoAnim = useRef(new Animated.Value(0)).current;
+  
   const sizeUp = fadeLogoAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['0px', '1650px'],

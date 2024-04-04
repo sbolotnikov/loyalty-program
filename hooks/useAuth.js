@@ -137,29 +137,65 @@ export const AuthProvider = ({ children }) => {
         console.log('error on Profile update'); // An error happened.
       });
   }
- function setCurrentStudio (studio){
+  
+  function updatePhone (tel){
+    const docRef = doc(db, 'users', currentUser.uid);
+      try {
+        setDoc(docRef,            
+          {
+            phone: tel
+          },
+          { merge: true })
+        }
+        catch (error) {
+          console.log('error on phone update'); // An error happened.
+        };
+   }
+ function setCurrentProfile (studio, tel){
   const docRef = doc(db, 'users', currentUser.uid);
     try {
       setDoc(docRef,            
         {
-          studio: studio
+          substudio: studio,
+          phone: tel
         },
         { merge: true })
       }
       catch (error) {
         console.log('error on Profile update'); // An error happened.
       };
-      setCurrentUser({...currentUser, studio})
  }
-
+ function setCurrentArea (area){
+  const docRef = doc(db, 'users', currentUser.uid);
+    try {
+      setDoc(docRef,            
+        {
+          studio: area
+        },
+        { merge: true })
+      }
+      catch (error) {
+        console.log('error on Profile update'); // An error happened.
+      };
+ }
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
 
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
+        let userObj = docSnap.data();
+        let areaID="";
+        let studioName="";
+        let studioSnap=null;
+        console.log(userObj)
+        if (userObj){
+          studioSnap =await getDoc(doc(db,'studios',docSnap.data().studio));
+          areaID=docSnap.data().studio;
+          studioName=studioSnap.data().name;
+        }
         if (docSnap.exists()) {
-          let userChange={...user, status:docSnap.data().status, studio:docSnap.data().studio}
+          let userChange={...user, status:docSnap.data().status, studio:areaID,phone:docSnap.data().phone,substudio:docSnap.data().substudio, area: studioName}
           setCurrentUser(userChange);
           setDoc(docRef,            
           {
@@ -222,7 +258,9 @@ export const AuthProvider = ({ children }) => {
     updateUser,
     signInWithGoogle,
     loading,
-    setCurrentStudio
+    setCurrentProfile,
+    setCurrentArea,
+    updatePhone
   };
 
   return (

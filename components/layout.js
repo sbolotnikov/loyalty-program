@@ -20,9 +20,9 @@ import ShoppingCartIcon from './svg/shoppingCart';
 import useDimensions from '../hooks/useDimensions';
 import StudioSetModal from './StudioSetModal';
 import { usePreviousRouteName, useRouteName } from '../hooks/usePreviousRouteName';
+import AlertModal from './AlertModal';
 const Layout = ({ children }) => {
   const items = useSelector(selectItems);
-  const [visNav, setVisNav] = useState(false);
   const [size1, setSize] = useState(0);
   const [textSize, setTextSize] = useState(0);
   const [navArray, setNavArray] = useState([]);
@@ -30,11 +30,13 @@ const Layout = ({ children }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const logo = require('../assets/dancerslogo.png');
   const navigation = useNavigation();
-  const { currentUser, loading } = useAuth();
+  const { currentUser, logout, loading } = useAuth();
   const previousRouteName = usePreviousRouteName();
   const currentScreenName =  useRouteName()
+  const [alertVisible, setAlertVisible] = useState(false);
   const [modalStudioVisible, setModalStudioVisible] = useState(!currentUser.studio?true:false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const [alertState, setAlertState] = useState({message:'',button1:'',button2:''});
   const array = {
     student: [
       {
@@ -245,9 +247,15 @@ const Layout = ({ children }) => {
 
   const onPressHomeFunction = () => {
     navigation.navigate('Home');
+   
   };
 
-
+  const onConfirmFunction=async (ret)=>{
+    setAlertVisible(false); 
+    if (ret=='Re-Login'){
+      logout();
+    }
+   }
   return (
     <View
       style={[
@@ -322,8 +330,25 @@ const Layout = ({ children }) => {
                 />}
                 {currentUser.email && !currentUser.studio && <StudioSetModal
                   vis={modalStudioVisible}
-                  onReturn={() => setModalStudioVisible(!modalStudioVisible)}
+                  onReturn={(message) =>{ 
+                    if(message.length>0) {
+                      if (message=="Reload"){
+                        setAlertState({
+                        message: "Profile updated successfully. Please re-Login",
+                        button1: 'Re-Login',
+                        button2: null
+                    })
+                      }else
+                      setAlertState({
+                        message: message,
+                        button1: 'Confirm',
+                        button2: null
+                    })
+                    setAlertVisible(true);
+                    }else setModalStudioVisible(!modalStudioVisible)
+                    }}
                 />}
+                {alertVisible &&<AlertModal title={alertState.message} button1={alertState.button1} button2={alertState.button2} vis={alertVisible} onReturn={(ret)=>onConfirmFunction(ret)}/>}
               {children}
             </View>
           </View>
