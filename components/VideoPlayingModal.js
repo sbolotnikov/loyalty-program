@@ -7,6 +7,7 @@ import useDimensions from '../hooks/useDimensions';
 import SwitchingImage from './SwitchingImage';
 import ManualImage from './ManualImage';
 import { LinearGradient } from 'expo-linear-gradient';
+import AutoImages from './AutoImages';
 const VideoPlayingModal = ({
   videoUri,
   button1,
@@ -32,10 +33,10 @@ const VideoPlayingModal = ({
   const { dimensions } = useDimensions();
   // const [firstTime, setFirstTime] = useState(true);
   const [activePic, setActivePic] = useState(0);
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
 
   const FadeInView = props => {
-  
+    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0 
     useEffect(() => {
 
       Animated.timing(fadeAnim, {
@@ -65,23 +66,7 @@ const VideoPlayingModal = ({
       </Animated.View>
     );
   };
-  let timerInterval
-  const nextActive = (num) => {
-     timerInterval = setInterval(function () {
-      clearInterval(timerInterval);
-      let localPic = num;
-      if (localPic < displayedPicturesAuto.length - 1) localPic++;
-      else localPic = 0;
-      setActivePic(localPic);
-      nextActive(localPic);
-    }, seconds * 1000);
-
-  };
-
-  useEffect(() => {
-    clearInterval(timerInterval);
-    if ((mode == 'Auto')&&(displayedPicturesAuto)) nextActive(0);
-  }, [mode]);
+ 
 
 
   return (
@@ -165,19 +150,7 @@ const VideoPlayingModal = ({
               </View>
               </>
           ) : mode == 'Auto' ? (
-            <View
-              style={tw`w-full h-full flex justify-start items-center`}
-            >
-              {displayedPicturesAuto && (mode==='Auto') &&<FadeInView>
-                <Image
-                  source={displayedPicturesAuto[activePic]}
-                  resizeMethod={'scale'}
-                  resizeMode={'center'}
-                  style={[tw`h-full w-auto`]}
-                />
-                </FadeInView>}
-                <SwitchingImage seconds={seconds} activePic={activePic}/>
-            </View>
+                <AutoImages picsArray={displayedPicturesAuto}  seconds={seconds}/>
           ): mode == 'Manual' ? (
             
                 <ManualImage

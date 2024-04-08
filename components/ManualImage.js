@@ -4,7 +4,7 @@ import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const ManualImage = ({ seconds, image1, text1 }) => {
+const ManualImage = ({ seconds, image1, text1, displaybar }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeLogoAnim = useRef(new Animated.Value(0)).current;
   
@@ -96,7 +96,7 @@ const ManualImage = ({ seconds, image1, text1 }) => {
         {text1 && (
           <View
             style={[
-              tw`bg-purple-400 absolute left-0 right-0 bottom-0 h-[${size1}%]  flex justify-${size2==24?'start':"center"} items-center`,
+              tw`bg-purple-400 absolute left-0 right-0 top-0 h-[${size1}%]  flex justify-${size2==24?'start':"center"} items-center`,
               { opacity: 0.7 },
             ]}
           >
