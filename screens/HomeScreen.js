@@ -49,12 +49,24 @@ const Homescreen = () => {
     useEffect(() => {
       if (snapshot) {
         let arr1 = snapshot.docs.map((doc) => doc.data())[0].carousel;
+        if (arr1.length >2){
         setCarousel(
-          arr1.map((item, i) => ({
+         [... arr1.map((item, i) => ({
             ...item,
             id: `image_carousel_${snapshot.docs[0].id + i}`,
+          })),
+          ... arr1.map((item, i) => ({
+            ...item,
+            id: `image_carousel_2${snapshot.docs[0].id +i}`,
           }))
+
+        ]
         );
+      } else setCarousel(
+           arr1.map((item, i) => ({
+             ...item,
+             id: `image_carousel_${snapshot.docs[0].id + i}`,
+           })))
       }
     }, [snapshot]);
     useEffect(() => {
@@ -106,7 +118,13 @@ const Homescreen = () => {
         easing: Easing.inOut(Easing.linear),
         useNativeDriver: false,
       }).start(() => {
-       moveGallery(n==0?1:0);
+        Animated.timing(moveAnim, {
+          duration: 0,
+          toValue: 0,
+          useNativeDriver: false,
+        }).start(() => {
+       moveGallery(1);
+        })
       });
     }
     
@@ -116,7 +134,7 @@ const Homescreen = () => {
       if(carousel.length>3){
         
           (dimensions.screen.width<800)?widthContainer=dimensions.screen.width:widthContainer=800;
-          setMovementRange(['0%',`-${Math.round((carousel.length*258-widthContainer)/258/carousel.length*100)}%`])
+          setMovementRange(['0%',`-50%`])
 
           console.log(percentStr)
 

@@ -642,8 +642,8 @@ const CompetitionScreen = () => {
                               }
                             }
                             rec = rec.split(studio1)[0];
-                            console.log(rec.split(' ')[0]);
-                            let eventGroup = rec.split(' ')[0];
+                            console.log(rec.split(' ')[1]);
+                            let eventGroup = rec.split(' ')[1];
                             if (rec.split(' ')[1] == '')
                               rec = rec.split(rec.split(' ')[0])[1];
                             else rec = rec.split(competitors[p].number1)[1];
@@ -703,6 +703,7 @@ const CompetitionScreen = () => {
                         for (let j = 0; j < items[i].length; j++)
                           item += items[i][j] + '\n';
                         items[i] = item.replaceAll(/ ___ /g, '');
+                        items[i] = items[i].trim();
                       }
 
                       handleChange(competitors, 'competitors');

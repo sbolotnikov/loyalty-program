@@ -53,7 +53,7 @@ const VideoPlayingModal = ({
         }).start();
       });
 
-    }, [fadeAnim]);
+    }, [fadeAnim, mode]);
   
     return (
       <Animated.View // Special animatable View
@@ -109,7 +109,7 @@ const VideoPlayingModal = ({
               <View
                 onClick={(e) => handleSubmit(e, button1)}
                 style={[
-                  tw`flex-1 justify-start items-center `,
+                  tw`flex-1 justify-center items-center `,
                   { cursor: 'pointer' },
                 ]}
               >
@@ -128,22 +128,23 @@ const VideoPlayingModal = ({
               <View
                 style={[
                   tw`flex justify-center items-center overflow-hidden`,
-                  { width: '93%', height: '93%' },
+                  { width: `${dimensions.screen.width * 0.98}px`,
+                    height: `${dimensions.screen.height * 0.78}px`, },
                 ]}
               >
                 <Video
                   ref={video}
                   style={{
-                    width: `${dimensions.screen.width * 0.98}px`,
+                    width: '100%',
                     height: `${dimensions.screen.height * 0.78}px`,
-                    overflow: 'hidden',
+                    overflow: 'hidden', 
                   }}
                   source={{
                     uri: videoUri,
                   }}
                   isMuted
-                  resizeMode={ResizeMode.COVER}
-                  resizeMethod={'scale'}
+                  resizeMode={ResizeMode.CONTAIN}
+                
                   useNativeControls
                   shouldPlay
                   isLooping
@@ -167,7 +168,7 @@ const VideoPlayingModal = ({
             <View
               style={tw`w-full h-full flex justify-start items-center`}
             >
-              {displayedPicturesAuto &&<FadeInView>
+              {displayedPicturesAuto && (mode==='Auto') &&<FadeInView>
                 <Image
                   source={displayedPicturesAuto[activePic]}
                   resizeMethod={'scale'}
@@ -199,7 +200,7 @@ const VideoPlayingModal = ({
             <View
               style={tw`w-full h-full flex justify-center items-center`}
             >
-              <Text style={tw`text-white text-[${fontSize}px]`}>
+              <Text style={[tw`text-white  text-[${fontSize}px]`, {textAlign: 'center'}]}>
                 {heatText}
               </Text>
             </View>

@@ -16,7 +16,7 @@ const ManualImage = ({ seconds, image1, text1 }) => {
     inputRange: [0, 1],
     outputRange: [1, 0],
   });
-  const logo = require('../assets/winterClass.svg');
+  const logo = require('../assets/risingStars.svg');
   const awardsPic = require('../assets/awards.png');
   const winterPic = require('../assets/winterClass.svg');
   const [actPic, setActPic] = useState(winterPic);
@@ -83,16 +83,16 @@ const ManualImage = ({ seconds, image1, text1 }) => {
             resizeMode={'center'}
             style={[tw`h-full w-auto my-auto`, {boxShadow: '0 30px 40px rgba(0,0,0,.1)'}]}
           >
-            <LinearGradient
+            {/* <LinearGradient
         colors={['#4169e1','#4169e1', 'transparent','#4169e1','#4169e1']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         
               style={tw`w-full h-full flex justify-start items-center`}
-            ></LinearGradient>
+            ></LinearGradient> */}
           </ImageBackground>
         )}
-          <Image source={awardsPic} style={tw`absolute top-0 left-0 h-[200px] pt-1 w-full z-100 `} resizeMethod={'scale'} resizeMode={'center'}/>
+          {/* <Image source={awardsPic} style={tw`absolute top-0 left-0 h-[200px] pt-1 w-full z-100 `} resizeMethod={'scale'} resizeMode={'center'}/> */}
         {text1 && (
           <View
             style={[
