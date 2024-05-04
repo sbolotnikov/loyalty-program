@@ -4,10 +4,10 @@ import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const ManualImage = ({ seconds, image1, text1, displaybar }) => {
+const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeLogoAnim = useRef(new Animated.Value(0)).current;
-  
+  console.log(image1, text1);
   const sizeUp = fadeLogoAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['0px', '1650px'],
@@ -93,7 +93,7 @@ const ManualImage = ({ seconds, image1, text1, displaybar }) => {
           </ImageBackground>
         )}
           {/* <Image source={awardsPic} style={tw`absolute top-0 left-0 h-[200px] pt-1 w-full z-100 `} resizeMethod={'scale'} resizeMode={'center'}/> */}
-        {text1 && (
+        {text1 && !titleBarHider && (
           <View
             style={[
               tw`bg-purple-400 absolute left-0 right-0 top-0 h-[${size1}%]  flex justify-${size2==24?'start':"center"} items-center`,
@@ -101,7 +101,7 @@ const ManualImage = ({ seconds, image1, text1, displaybar }) => {
             ]}
           >
             <Image
-              source={logo}
+              source={{uri:compLogo}}
               style={tw` absolute top-2 left-${size2==24?2:22} w-${size2} h-${size2} mt-${size2==24?8:1} `}
             />
             <Text
@@ -131,7 +131,7 @@ const ManualImage = ({ seconds, image1, text1, displaybar }) => {
         <Animated.View
           style={{ opacity: fadeOut, height: sizeUp, width: sizeUp }}
         >
-          <Image source={logo} style={[tw`h-full w-full`]} />
+          <Image source={compLogo} style={[tw`h-full w-full`]} />
         </Animated.View>
       </View>
     </SafeAreaView>

@@ -23,9 +23,13 @@ export const CompetitionProvider = ({ children }) => {
     mode:'',
     fontSize:"",
     displayedPictures:[],
+    displayedVideos:[],
+    videoChoice:{},
+    compLogo:{},
     displayedPicturesAuto:[],
     manualPicture:{},
-    seconds:0
+    seconds:0,
+    titleBarHider:false,
   });
   const [compID, setCompID] = useState('');
 
@@ -77,6 +81,10 @@ export const CompetitionProvider = ({ children }) => {
     mode: compArray[0] ? compArray[0].mode:'',
     fontSize: compArray[0] ? compArray[0].fontSize:'',
     displayedPictures: compArray[0] ? compArray[0].displayedPictures:[],
+    displayedVideos: compArray[0] ? compArray[0].displayedVideos:[],
+    videoChoice: compArray[0] ? compArray[0].videoChoice:{},
+    compLogo: compArray[0] ? compArray[0].compLogo:{},
+    titleBarHider: compArray[0] ? compArray[0].titleBarHider:false,
     displayedPicturesAuto: compArray[0] ? compArray[0].displayedPicturesAuto:[],
     seconds: compArray[0] ? compArray[0].seconds:10,
     manualPicture: compArray[0] ? compArray[0].manualPicture:{},

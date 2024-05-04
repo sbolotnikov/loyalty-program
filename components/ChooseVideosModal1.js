@@ -6,24 +6,21 @@ import { useEffect, useState } from 'react';
 import TextBox from './TextBox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SelectList } from 'react-native-dropdown-select-list';
-const ChoosePicturesModal = ({displayPics,galleryType, vis, onReturn }) => {
+const ChooseVideosModal = ({videosArray, vis, onReturn }) => {
   const handleSubmit = (e, submitten) => {
     e.preventDefault();
     if (submitten="Save"){
-      onReturn(displayPictures)
+      onReturn(displayVideos)
     }else onReturn([]);
   };
   
-  const [displayPictures, setDisplayPictures] = useState([]);
-  const [pictureLink, setPictureLink] = useState('');
-  const [pictureLinkType, setPictureLinkType] = useState('Regular link');
-  const [pictureText, setPictureText] = useState('');
+  const [displayVideos, setDisplayVideos] = useState([]);
+  const [videoLink, setVideoLink] = useState('');
   
   useEffect(() => {
-    (displayPics) ?setDisplayPictures(displayPics):setDisplayPictures([]);
+    (videosArray) ?setDisplayVideos(videosArray):setDisplayVideos([]);
     console.log('start ');
-  }, [displayPics]);
-  console.log(displayPictures);
+  }, [videosArray]);
   return (
     <View style={tw` flex-1 justify-center items-center absolute top-0 left-0`}>
       <Modal
@@ -50,7 +47,7 @@ const ChoosePicturesModal = ({displayPics,galleryType, vis, onReturn }) => {
             <Text
               style={tw`px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center`}
             >
-              Available pictures
+              Available videos
             </Text>
 
             <View
@@ -59,21 +56,21 @@ const ChoosePicturesModal = ({displayPics,galleryType, vis, onReturn }) => {
               <View
                 style={tw`absolute top-0 left-0  min-w-full h-full flex flex-wrap items-center justify-between`}
               >
-                {displayPictures &&
-                  displayPictures.map((item, i) => (
+                {displayVideos &&
+                  displayVideos.map((item, i) => (
                     <TouchableOpacity
                       key={'picturescasting' + i}
                       style={tw`m-1 mr-4 flex flex-col items-start justify-around`}
                     >
                       <View style={tw`relative`}>
-                        <View
+                      <View
                           style={tw` h-16 w-16 md:h-20 md:w-20 `}
                           onClick={(e) => {
                             e.preventDefault();
                           }}
                         >
                           <Image
-                            source={galleryType=="manual"?item.image:item}
+                            source={ 'http://img.youtube.com/vi/'+'tgbNymZ7vqY'+'/0.jpg'}
                             style={tw`h-7 w-7 bg-gray-300 p-4 rounded-sm m-2`}
                           />
                         </View>
@@ -84,86 +81,46 @@ const ChoosePicturesModal = ({displayPics,galleryType, vis, onReturn }) => {
                           size={25}
                           onButtonPress={() =>{  
                             console.log('Clicked');
-                            let arr=displayPictures;
+                            let arr=displayVideos;
                             arr.splice(i, 1)
-                             setDisplayPictures([...arr])
+                             setDisplayVideos([...arr])
                             }}
                         />
                         </View>
                         {galleryType=="manual" &&<Text style={tw`max-w-[100px] text-center`}>
-                          {item.tag}
+                          {item}
                         </Text>}
+                        
                       </View>
                     </TouchableOpacity>
                   ))}
               </View>
             </View>
             <View style={tw`flex-col justify-center items-center mb-2 w-full`}>
-            <Image
-                            source={{uri:pictureLink}}
-                            resizeMethod={'scale'}
-                            resizeMode={'center'}
-                            style={tw`h-16 w-16 bg-gray-300 rounded-sm m-1`}
-                          />
-                          <View
-                style={tw`flex-row justify-center items-center mb-2 w-[50%]`}
-              >
-              <SelectList
-                  
-                  setSelected={(val) => {
-                    setPictureLinkType(val);
-                  }}
-                  data={[ 'GDrive Link','Regular link']}
-                  arrowicon={
-                    <FontAwesome
-                      name="chevron-down"
-                      size={12}
-                      color={'#776548'}
-                    />
-                  }
-                  search={false}
-                  boxStyles={{ width: 140,
-                    height: 35,
-                    backgroundColor: '#FFF',
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: '#776548', }}
-                />
-                </View>
+            
+                           
               <Text style={tw`font-semibold text-lg mt-1 text-[#344869]`}>
-                Enter your picture link:
+                Enter your video link:
               </Text>
               
               <TextBox
                 placeholder="Enter link"
                 onChangeText={(text) => {
-                  if (pictureLinkType === 'GDrive Link') {
-                    // add logic to handle GDrive link
-                    setPictureLink(`https://drive.google.com/thumbnail?id=${text.split('/file/d/')[1].split('/')[0]}&sz=w1000`); 
-                  } else {
-                    setPictureLink(text)
-                  } 
+                   
+                    setVideoLink(text)
+                  
                   }}
                 secureTextEntry={false}
-                value={pictureLink}
+                value={videoLink}
               />
-              {galleryType=="manual" &&<Text style={tw`font-semibold text-lg mt-1 text-[#344869]`}>
-                Choose text to picture:
-              </Text>}
-              {galleryType=="manual" &&<TextBox
-                placeholder="Enter text"
-                onChangeText={(text) => setPictureText(text)}
-                secureTextEntry={false}
-                value={pictureText}
-              />}
+   {/* https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1&loop=1&playlist=tgbNymZ7vqY */}
               <Btn
               onClick={(e) =>{
-                let pic={tag:pictureText,image:pictureLink};
-                let arr=displayPictures;
-                (galleryType=="manual")?arr.push(pic):arr.push(pictureLink)
-                setDisplayPictures([...arr])
+                let arr=displayVideos;
+                arr.push(videoLink)
+                setDisplayVideos([...arr])
               }}
-              title={'Add Picture'}
+              title={'Add Video'}
               style={{ width: '90%', backgroundColor: '#3D1152' }}
             />
               </View>
@@ -184,4 +141,4 @@ const ChoosePicturesModal = ({displayPics,galleryType, vis, onReturn }) => {
   );
 };
 
-export default ChoosePicturesModal;
+export default ChooseVideosModal;

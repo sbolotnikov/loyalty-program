@@ -38,6 +38,17 @@ const CompetitionChoiceModal = ({   vis,   }) => {
         { competitor1: 'Come back', competitor2: 'later!', heat: 'Heat 1' },
       ],
       records: [''],
+      displayedVideos:[""],
+      fontSize: 14,
+      seconds: 8,
+      compLogo:{
+        link:"",
+        name:""
+      },
+      videoChoice:{
+        link:"",
+        name:""
+       },
     });
     console.log(newCompRef);
   };
