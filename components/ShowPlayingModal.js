@@ -16,7 +16,8 @@ import SwitchingImage from './SwitchingImage';
 import ManualImage from './ManualImage';
 import { LinearGradient } from 'expo-linear-gradient';
 import AutoImages from './AutoImages';
-const VideoPlayingModal = ({
+import VideoPlayingComponent from './VideoPlayingComponent';
+const ShowPlayingModal = ({
   videoUri,
   button1,
   compName,
@@ -107,72 +108,11 @@ const VideoPlayingModal = ({
             style={tw`w-full h-full flex justify-start items-center`}
           >
             {mode == 'Video' ? (
-              <>
- 
-                <View
-                  style={[
-                    tw`flex justify-center items-center overflow-hidden`,
-                    {
-                      width: `${dimensions.screen.width}px`,
-                      height: `${dimensions.screen.height}px`,
-                    },
-                  ]}
-                >
-                  {/* <Video
-                  ref={video}
-                  style={{
-                    width: '100%',
-                    height: `${dimensions.screen.height * 0.85}px`,
-                    overflow: 'hidden', 
-                  }}
-                  source={{
-                    uri: videoUri,
-                  }}
-                  isMuted
-                  resizeMode={ResizeMode.CONTAIN}
-                
-                  useNativeControls
-                  shouldPlay
-                  isLooping
-                  onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-                /> */}
-                  {/* <video
-                    autoPlay
-                    muted
-                    loop
-                    width={dimensions.screen.width}
-                    height={dimensions.screen.height}
-                    
-                  >
-                    <source src={videoArr[2]} type="video/mp4" />
-                  </video> */}
-                  {/* <iframe src={videoArr[2]} 
-                  width={dimensions.screen.width * 0.98} 
-                  height={dimensions.screen.height * 0.98} 
-                  allow="autoplay"
-                  frameborder="0"
-                  allowfullscreen=""
-                  sandbox="allow-forms allow-same-origin allow-scripts"></iframe>  */}
-                  <center>
-                    <iframe width={dimensions.screen.width} 
-                    height={dimensions.screen.height} allow="autoplay;fullscreen;" frameborder="0" loop
-                  allowfullscreen="" src={videoUri }>
-                  </iframe>
-                  </center>
-                </View>
-                {/* <View style={[tw`flex-1 justify-center items-center w-full`]}>
-                  <Text
-                    style={[
-                      tw`text-white font-bold text-3xl m-0`,
-                      {
-                        textShadow: '5px 5px #C9AB78',
-                      },
-                    ]}
-                  >
-                    {compName}
-                  </Text>
-                </View> */}
-              </>
+              <VideoPlayingComponent videoUri={videoUri.link}
+                text1={videoUri.name}
+                titleBarHider={titleBarHider}
+                seconds={seconds}/>
+           
             ) : mode == 'Auto' ? (
               <AutoImages picsArray={displayedPicturesAuto} seconds={seconds} />
             ) : mode == 'Manual' ? (
@@ -251,4 +191,4 @@ const VideoPlayingModal = ({
   );
 };
 
-export default VideoPlayingModal;
+export default ShowPlayingModal;

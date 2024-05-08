@@ -5,6 +5,7 @@ import useDimensions from '../hooks/useDimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
+  let videoBG="uUatjRyLUVI"
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeLogoAnim = useRef(new Animated.Value(0)).current;
   console.log(image1, text1);
@@ -69,6 +70,10 @@ const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
     <SafeAreaView
       style={tw`w-full h-full flex justify-start items-center`}
     >
+    <iframe width={dimensions.screen.width} 
+                    height={dimensions.screen.height} allow="autoplay;fullscreen;" frameBorder="0" loop
+                  allowFullScreen="" src={`https://www.youtube.com/embed/${videoBG}?autoplay=1&mute=1&loop=1&playlist=${videoBG}` }>
+                  </iframe>
       <Animated.View // Special animatable View
         style={[
           tw.style(`absolute inset-0 m-auto w-full h-full `),

@@ -13,9 +13,10 @@ import {
   getStudioFullName,
   pickImage,
 } from '../util/functions';
+import { videoSearch } from '../api_functions';
 import useAuth from '../hooks/useAuth';
 import ChooseFiles from '../components/ChooseFiles';
-import VideoPlayingModal from '../components/VideoPlayingModal';
+import ShowPlayingModal from '../components/ShowPlayingModal';
 import PlayerButtons from '../components/svg/PlayerButtons';
 import { Buffer } from 'buffer';
 import useCompetition from '../hooks/useCompetition';
@@ -39,7 +40,7 @@ const CompetitionScreen = () => {
   const [modal4Visible, setModal4Visible] = useState(false);
   const [galleryType, setGalleryType] = useState(null);
   const [galleryArr, setGalleryArr] = useState(null);
-
+  const [videoSearchText, setVideoSearchText] = useState('');
   useEffect(() => {
     setModal1Visible(true);
   }, []);
@@ -67,11 +68,12 @@ const CompetitionScreen = () => {
     titleBarHider,
     setCompID,
   } = useCompetition();
-  console.log(compLogo)
+
   function handleChange(text, eventName) {
     updateDoc(doc(db, 'competitions', id), {
       [eventName]: text,
     });
+
     // setCompArray((prev) => {
     //   return {
     //     ...prev,
@@ -121,6 +123,7 @@ const CompetitionScreen = () => {
     deleteOldImage('competitions', image);
     handleChange(picURL, 'image');
   };
+
   return heatIndex > -1 ? (
     <View
       style={[
@@ -146,8 +149,8 @@ const CompetitionScreen = () => {
           setModal4Visible(false);
         }}
       />
-      <VideoPlayingModal
-        videoUri={videoChoice.link}
+      <ShowPlayingModal
+        videoUri={videoChoice}
         heatText={items[heatIndex]}
         manualPicture={manualPicture}
         displayedPicturesAuto={displayedPicturesAuto}
@@ -182,11 +185,13 @@ const CompetitionScreen = () => {
           style={{
             width: '100%',
             height: '85vh',
-            position: 'relative', 
+            position: 'relative',
             overflowY: 'scroll',
           }}
         >
-          <View style={tw`w-full absolute top-0 left-0 flex flex-col justify-start items-center mt-14`}>
+          <View
+            style={tw`w-full absolute top-0 left-0 flex flex-col justify-start items-center mt-14`}
+          >
             {currentUser.status == 'admin' ? (
               <View style={[tw` w-full`]}>
                 <TextBox
@@ -412,19 +417,18 @@ const CompetitionScreen = () => {
                   </View>
                 )}
                 <View style={tw` w-full flex-col justify-center items-center`}>
-      <View style={{ flexDirection: 'row',marginBottom: 20,}}>
-        <CheckBox
-          value={titleBarHider}
-          onValueChange={(value)=>{
-            handleChange(value, 'titleBarHider')
-            console.log(value)
-            }}
-          style={{alignSelf: 'center'}}
- 
-        />
-        <Text style={tw`ml-2`}>Hide Title Bar</Text>
-      </View>
-    </View>
+                  <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                    <CheckBox
+                      value={titleBarHider}
+                      onValueChange={(value) => {
+                        handleChange(value, 'titleBarHider');
+                        console.log(value);
+                      }}
+                      style={{ alignSelf: 'center' }}
+                    />
+                    <Text style={tw`ml-2`}>Hide Title Bar</Text>
+                  </View>
+                </View>
                 {displayedPictures && (
                   <View
                     style={tw` w-full flex-col justify-center items-center`}
@@ -584,6 +588,46 @@ const CompetitionScreen = () => {
                     <Text style={{ textAlign: 'center', width: 195 }}>
                       Choose Video
                     </Text>
+
+                    {/* set video seach here */}
+                    <TextBox
+                      placeholder="Video search tool"
+                      onChangeText={(text) => setVideoSearchText(text)}
+                      secureTextEntry={false}
+                      value={videoSearchText}
+                    />
+                    <Btn
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        const data1 = await videoSearch(videoSearchText)
+                          
+                            console.log(data1);
+                          
+                            handleChange(
+                          {
+                            // name: data1[0].snippet.description,
+                            name:videoSearchText,
+                            link: `https://www.youtube.com/embed/${data1[0].id.videoId}?autoplay=1&mute=1&loop=1&playlist=${data1[0].id.videoId}`,
+                          },
+                          'videoChoice'
+                        );
+                        // https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1&loop=1&playlist=tgbNymZ7vqY
+                        // if(data.length>0){
+                        //   setVideoFile({uri:data[0].link,name:data[0].title})
+                        // }
+                        // else{
+                        //   setVideoFile({uri:'',name:''})
+                        // }
+
+                        // [0].id.videoId
+                      }}
+                      title="Search"
+                      style={{
+                        width: '48%',
+                        backgroundColor: '#3D1152',
+                        marginTop: 0,
+                      }}
+                    />
                   </View>
                 )}
                 <View style={tw` w-full flex-row justify-center items-start`}>
