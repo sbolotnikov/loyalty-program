@@ -607,7 +607,7 @@ const CompetitionScreen = () => {
                           {
                             // name: data1[0].snippet.description,
                             name:videoSearchText,
-                            link: `https://www.youtube.com/embed/${data1[0].id.videoId}?autoplay=1&mute=1&loop=1&playlist=${data1[0].id.videoId}`,
+                            link: `https://www.youtube.com/embed/${data1[0].id.videoId}?autoplay=1&loop=1&playlist=${data1[0].id.videoId}`,
                           },
                           'videoChoice'
                         );
@@ -625,7 +625,8 @@ const CompetitionScreen = () => {
                       style={{
                         width: '48%',
                         backgroundColor: '#3D1152',
-                        marginTop: 0,
+                        marginTop:'5px',
+                        marginBottom: '5px',
                       }}
                     />
                   </View>
