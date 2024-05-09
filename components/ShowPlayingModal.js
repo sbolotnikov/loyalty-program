@@ -19,6 +19,7 @@ import AutoImages from './AutoImages';
 import VideoPlayingComponent from './VideoPlayingComponent';
 const ShowPlayingModal = ({
   videoUri,
+  videoBG,
   button1,
   compName,
   heatNum,
@@ -77,17 +78,16 @@ const ShowPlayingModal = ({
   // };
   // call the `updateDateTime` function every second
   useEffect(() => {
-  let timerInterval = setInterval(function () {
-     
-    // create a new `Date` object
-    const now = new Date();
-    // get the current date and time as a string
-    const currentDateTime = now.toLocaleString();
-    // update the `textContent` property of the `span` element with the `id` of `datetime`
-    setTimeNow(currentDateTime.split(',')[1]);
-    clearInterval(timerInterval);
-}, 1000);
-  },[vis,timeNow])
+    let timerInterval = setInterval(function () {
+      // create a new `Date` object
+      const now = new Date();
+      // get the current date and time as a string
+      const currentDateTime = now.toLocaleString();
+      // update the `textContent` property of the `span` element with the `id` of `datetime`
+      setTimeNow(currentDateTime.split(',')[1]);
+      clearInterval(timerInterval);
+    }, 1000);
+  }, [vis, timeNow]);
   return (
     <View
       style={tw` flex-1 justify-center items-center w-[100%] h-[100%] absolute top-0 left-0`}
@@ -102,25 +102,34 @@ const ShowPlayingModal = ({
           style={tw`relative  w-[${dimensions.screen.width}px] h-[${dimensions.screen.height}px]`}
         >
           <LinearGradient
-            colors={['yellow','red', 'brown', 'red', "yellow"]}
+            colors={['yellow', 'red', 'brown', 'red', 'yellow']}
             start={{ x: 1, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={tw`w-full h-full flex justify-start items-center`}
           >
             {mode == 'Video' ? (
-              <VideoPlayingComponent videoUri={videoUri.link}
+              <VideoPlayingComponent
+                videoUri={videoUri.link}
                 text1={videoUri.name}
                 titleBarHider={titleBarHider}
-                seconds={seconds}/>
-           
+                seconds={seconds}
+              />
             ) : mode == 'Auto' ? (
-              <AutoImages picsArray={displayedPicturesAuto} seconds={seconds} />
+              <AutoImages
+                picsArray={displayedPicturesAuto}
+                seconds={seconds}
+                videoBG={videoBG.link}
+                text1={manualPicture.name}
+                compLogo={compLogo}
+                titleBarHider={titleBarHider}
+              />
             ) : mode == 'Manual' ? (
               <ManualImage
                 image1={manualPicture.link}
                 text1={manualPicture.name}
                 compLogo={compLogo}
                 titleBarHider={titleBarHider}
+                videoBG={videoBG.link}
                 seconds={seconds}
               />
             ) : mode == 'Default' ? (
@@ -166,24 +175,21 @@ const ShowPlayingModal = ({
               </Text>
             </View>
             <View
-                onClick={(e) => handleSubmit(e, button1)}
+              onClick={(e) => handleSubmit(e, button1)}
+              style={[tw`absolute top-0 right-1`, { cursor: 'pointer' }]}
+            >
+              <Text
+                id="datetime"
                 style={[
-                  tw`absolute top-0 right-1`,
-                  { cursor: 'pointer' },
-                ]} 
+                  tw`text-white font-bold text-3xl m-0`,
+                  {
+                    // textShadow: '5px 5px #C9AB78',
+                  },
+                ]}
               >
-                <Text
-                  id="datetime"
-                  style={[
-                    tw`text-white font-bold text-3xl m-0`,
-                    {
-                      // textShadow: '5px 5px #C9AB78',
-                    },
-                  ]}
-                >
                 {timeNow}
-                </Text>
-              </View>
+              </Text>
+            </View>
           </LinearGradient>
         </View>
       </Modal>

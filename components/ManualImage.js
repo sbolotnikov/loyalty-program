@@ -4,8 +4,8 @@ import tw from 'twrnc';
 import useDimensions from '../hooks/useDimensions';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
-  let videoBG="uUatjRyLUVI"
+const ManualImage = ({ seconds, image1, text1,compLogo,videoBG, titleBarHider }) => {
+  
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeLogoAnim = useRef(new Animated.Value(0)).current;
   console.log(image1, text1);
@@ -19,6 +19,7 @@ const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
   });
   const logo = require('../assets/risingStars.svg');
   const awardsPic = require('../assets/awards.png');
+  let videoBGtrans =videoBG.split('&playlist')[0]+'&mute=1'+ '&playlist'+videoBG.split('&playlist')[1];	
   const winterPic = require('../assets/winterClass.svg');
   const [actPic, setActPic] = useState(winterPic);
   const [actText, setActText] = useState('Fred Astaire presents');
@@ -68,13 +69,13 @@ const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
   }, [dimensions.screen.width]);
   return (
     <SafeAreaView
-      style={tw`w-full h-full flex justify-start items-center`}
+      style={tw`w-full h-full flex justify-start items-center z-0`}
     >
     <iframe width={dimensions.screen.width} 
                     height={dimensions.screen.height} allow="autoplay;fullscreen;" frameBorder="0" loop
-                  allowFullScreen="" src={`https://www.youtube.com/embed/${videoBG}?autoplay=1&mute=1&loop=1&playlist=${videoBG}` }>
+                  allowFullScreen="" src={videoBGtrans }>
                   </iframe>
-      <Animated.View // Special animatable View
+      <Animated.View // Special animatable View   
         style={[
           tw.style(`absolute inset-0 m-auto w-full h-full `),
           { opacity: fadeAnim }, // Bind opacity to animated value
@@ -86,7 +87,7 @@ const ManualImage = ({ seconds, image1, text1,compLogo, titleBarHider }) => {
             source={actPic}
             resizeMethod={'scale'}
             resizeMode={'center'}
-            style={[tw`h-full w-auto my-auto`, {boxShadow: '0 30px 40px rgba(0,0,0,.1)'}]}
+            style={[tw`h-full w-auto my-auto z-10`, {boxShadow: '0 30px 40px rgba(0,0,0,.1)'}]}
           >
             {/* <LinearGradient
         colors={['#4169e1','#4169e1', 'transparent','#4169e1','#4169e1']}

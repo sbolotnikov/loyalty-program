@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ManualImage from './ManualImage';
 
-const AutoImages = ({ picsArray, seconds }) => {
+const AutoImages = ({ picsArray, seconds, image1, text1,compLogo,videoBG, titleBarHider }) => {
   const [activePic, setActivePic] = useState(0);
   let timerIntervalID;
   const nextActive = (num) => {
@@ -27,7 +27,7 @@ const AutoImages = ({ picsArray, seconds }) => {
     nextActive(0);
   }, []);
   return (
-      <ManualImage image1={picsArray[activePic]} seconds={seconds} />
+      <ManualImage image1={picsArray[activePic]} seconds={seconds}  text1={ text1} compLogo={compLogo} videoBG={videoBG} titleBarHider={titleBarHider}/>
 
   );
 };
