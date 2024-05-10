@@ -37,10 +37,11 @@ const CompetitionScreen = () => {
   const [modal1Visible, setModal1Visible] = useState(false);
   const [modal2Visible, setModal2Visible] = useState(false);
   const [modal3Visible, setModal3Visible] = useState(false);
-  const [modal4Visible, setModal4Visible] = useState(false); 
+  const [modal4Visible, setModal4Visible] = useState(false);
   const [galleryType, setGalleryType] = useState(null);
   const [galleryArr, setGalleryArr] = useState(null);
   const [videoSearchText, setVideoSearchText] = useState('');
+  const [urgentMessage, setUrgentMessage] = useState('');
   useEffect(() => {
     setModal1Visible(true);
   }, []);
@@ -67,6 +68,7 @@ const CompetitionScreen = () => {
     videoBGChoice,
     compLogo,
     titleBarHider,
+    showUrgentMessage,
     setCompID,
   } = useCompetition();
 
@@ -163,8 +165,10 @@ const CompetitionScreen = () => {
         mode={mode}
         fontSize={fontSize}
         seconds={seconds}
+        message={message}
         compLogo={compLogo.link}
         titleBarHider={titleBarHider}
+        showUrgentMessage={showUrgentMessage}
         onReturn={(ret) => setModalVisible(false)}
       />
       {galleryType && (
@@ -687,7 +691,7 @@ const CompetitionScreen = () => {
                           {
                             // name: data1[0].snippet.description,
                             name: videoSearchText,
-                            link: `https://www.youtube.com/embed/${data1[0].id.videoId}?autoplay=1&loop=1&playlist=${data1[0].id.videoId}`,
+                            link: `https://www.youtube.com/embed/${data1[0].id.videoId}?autoplay=1&mute=1&loop=1&playlist=${data1[0].id.videoId}`,
                           },
                           'videoChoice'
                         );
@@ -1068,11 +1072,23 @@ const CompetitionScreen = () => {
             )}
             <TextBox
               placeholder="Enter urgent message"
-              onChangeText={(text) => handleChange(text, 'message')}
+              onChangeText={(text) => setUrgentMessage(text)}
               secureTextEntry={false}
-              value={message}
+              value={urgentMessage}
             />
-
+            <View style={tw` w-full flex-col justify-center items-center`}>
+              <View style={{ flexDirection: 'row', marginBottom: 10, marginTop: 10 }}>
+                <CheckBox
+                  value={showUrgentMessage}
+                  onValueChange={(value) => {
+                    handleChange(value, 'showUrgentMessage');
+                    value == true? handleChange(urgentMessage, 'message'): handleChange('', 'message'); 
+                  }}
+                  style={{ alignSelf: 'center' }}
+                />
+                <Text style={tw`ml-2`}>Show Urgent Message</Text>
+              </View>
+            </View>
             <View
               style={tw`flex-row justify-center items-center flex-wrap w-[95%]`}
             >

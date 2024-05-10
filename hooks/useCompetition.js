@@ -31,6 +31,7 @@ export const CompetitionProvider = ({ children }) => {
     manualPicture:{},
     seconds:0,
     titleBarHider:false,
+    showUrgentMessage:false,
   });
   const [compID, setCompID] = useState('');
 
@@ -87,6 +88,7 @@ export const CompetitionProvider = ({ children }) => {
     videoChoice: compArray[0] ? compArray[0].videoChoice:{},
     compLogo: compArray[0] ? compArray[0].compLogo:{},
     titleBarHider: compArray[0] ? compArray[0].titleBarHider:false,
+    showUrgentMessage: compArray[0] ? compArray[0].showUrgentMessage:false,
     displayedPicturesAuto: compArray[0] ? compArray[0].displayedPicturesAuto:[],
     seconds: compArray[0] ? compArray[0].seconds:10,
     manualPicture: compArray[0] ? compArray[0].manualPicture:{},

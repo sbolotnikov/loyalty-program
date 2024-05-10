@@ -30,7 +30,9 @@ const ShowPlayingModal = ({
   displayedPicturesAuto,
   vis,
   compLogo,
+  message,
   titleBarHider,
+  showUrgentMessage,
   onReturn,
   heatText,
 }) => {
@@ -43,8 +45,51 @@ const ShowPlayingModal = ({
   const logo = require('../assets/VERTICAL-FADS-whtgold.png');
   const [timeNow, setTimeNow] = useState('');
   const { dimensions } = useDimensions();
-  // const [firstTime, setFirstTime] = useState(true);
-  const [activePic, setActivePic] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (showUrgentMessage === true){
+    fadeAnim.setValue(0);
+    Animated.timing(fadeAnim, {
+      duration: parseInt((1000) ),
+      easing: Easing.out(Easing.ease),
+      toValue: 1,
+      useNativeDriver: false,
+    }).start(() => {
+        Animated.timing(fadeAnim, {
+            duration: parseInt(1000),
+            toValue: 0,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: false,
+          }).start(
+            () => {
+              Animated.timing(fadeAnim, {
+                duration: parseInt((1000) ),
+                easing: Easing.out(Easing.ease),
+                toValue: 1,
+                useNativeDriver: false,
+              }).start(() => {
+                Animated.timing(fadeAnim, {
+                    duration: parseInt(1000),
+                    toValue: 0,
+                    easing: Easing.inOut(Easing.ease),
+                    useNativeDriver: false,
+                  }).start(
+                    () => {
+                      Animated.timing(fadeAnim, {
+                        duration: parseInt((1000) ),
+                        easing: Easing.out(Easing.ease),
+                        toValue: 1,
+                        useNativeDriver: false,
+                      }).start();
+                    }
+                  );
+            });
+            }
+          );
+    });
+  }
+}, [showUrgentMessage, message]);
 
   // const FadeInView = (props) => {
   //   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
@@ -159,6 +204,22 @@ const ShowPlayingModal = ({
                 <Text>Underfined</Text>
               </View>
             )}
+            {showUrgentMessage &&<Animated.View
+              onClick={(e) => handleSubmit(e, button1)}
+              style={[tw`absolute inset-0 flex justify-center items-center`, { cursor: 'pointer', opacity: fadeAnim }]}
+            >
+              <Text
+                style={[
+                  tw`text-red-600 font-bold  m-0`,
+                  {
+                    textShadow: '5px 5px #C9AB78',
+                    fontSize: fontSize+'px',
+                  },
+                ]}
+              >
+                {message}
+              </Text>
+            </Animated.View>}
             <View
               onClick={(e) => handleSubmit(e, button1)}
               style={[tw`absolute top-0 left-1`, { cursor: 'pointer' }]}
@@ -167,13 +228,15 @@ const ShowPlayingModal = ({
                 style={[
                   tw`text-white font-bold text-3xl m-0`,
                   {
-                    // textShadow: '5px 5px #C9AB78',
+                    textShadow: '5px 5px #C9AB78',
+                    
                   },
                 ]}
               >
                 {heatNum}
               </Text>
             </View>
+            
             <View
               onClick={(e) => handleSubmit(e, button1)}
               style={[tw`absolute top-0 right-1`, { cursor: 'pointer' }]}

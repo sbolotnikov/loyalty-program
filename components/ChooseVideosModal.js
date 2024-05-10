@@ -139,7 +139,7 @@ const ChooseVideosModal = ({videosArray, vis, onReturn }) => {
                 onChangeText={(text) => {
                   if (videoLinkType === 'YouTube Link') {
                     // add logic to handle GDrive link
-                    setVideoLink(`https://www.youtube.com/embed/${text.split('https://youtu.be/')[1].split('?')[0]}?autoplay=1&loop=1&playlist=${text.split('https://youtu.be/')[1].split('?')[0]}`); 
+                    setVideoLink(`https://www.youtube.com/embed/${text.split('https://youtu.be/')[1].split('?')[0]}?autoplay=1&loop=1&mute=1&playlist=${text.split('https://youtu.be/')[1].split('?')[0]}`); 
                     setVideoThumbNailLink(`http://img.youtube.com/vi/${text.split('https://youtu.be/')[1].split('?')[0]}/0.jpg`); 
                   } else {
                     setVideoLink(text)
