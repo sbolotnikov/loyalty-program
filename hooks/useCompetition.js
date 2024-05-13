@@ -32,6 +32,8 @@ export const CompetitionProvider = ({ children }) => {
     seconds:0,
     titleBarHider:false,
     showUrgentMessage:false,
+    savedMessages:[],
+    textColor:"",
   });
   const [compID, setCompID] = useState('');
 
@@ -92,6 +94,8 @@ export const CompetitionProvider = ({ children }) => {
     displayedPicturesAuto: compArray[0] ? compArray[0].displayedPicturesAuto:[],
     seconds: compArray[0] ? compArray[0].seconds:10,
     manualPicture: compArray[0] ? compArray[0].manualPicture:{},
+    savedMessages: compArray[0] ? compArray[0].savedMessages:[],
+    textColor: compArray[0] ? compArray[0].textColor:"#000000",
     setCompID
   };
   

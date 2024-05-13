@@ -4,9 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  ScrollView,
-  Image,
 } from 'react-native';
 
 // Import Document Picker

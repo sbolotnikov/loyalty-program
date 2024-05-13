@@ -12,6 +12,7 @@ import {
   getPositionOfSubstring,
   getStudioFullName,
   pickImage,
+  reverseColor,
 } from '../util/functions';
 import { videoSearch } from '../api_functions';
 import useAuth from '../hooks/useAuth';
@@ -29,6 +30,7 @@ import CountBox from '../components/CountBox';
 import ChoosePicturesModal from '../components/choosePicturesModal';
 import ChooseVideosModal from '../components/ChooseVideosModal';
 import UrgentMessageComponent from '../components/UrgentMessageComponent';
+import ColorChoiceModal from '../components/ColorChoiceModal';
 // import ChooseFilePath from '../components/ChooseFilePath';
 
 const CompetitionScreen = () => {
@@ -39,10 +41,10 @@ const CompetitionScreen = () => {
   const [modal2Visible, setModal2Visible] = useState(false);
   const [modal3Visible, setModal3Visible] = useState(false);
   const [modal4Visible, setModal4Visible] = useState(false);
+  const [modal5Visible, setModal5Visible] = useState(false);
   const [galleryType, setGalleryType] = useState(null);
   const [galleryArr, setGalleryArr] = useState(null);
   const [videoSearchText, setVideoSearchText] = useState('');
-  const [urgentMessage, setUrgentMessage] = useState('');
   useEffect(() => {
     setModal1Visible(true);
   }, []);
@@ -70,6 +72,8 @@ const CompetitionScreen = () => {
     compLogo,
     titleBarHider,
     showUrgentMessage,
+    savedMessages,
+    textColor,
     setCompID,
   } = useCompetition();
 
@@ -142,6 +146,15 @@ const CompetitionScreen = () => {
         vis={modal2Visible}
         onReturn={(ret) => setModal2Visible(false)}
       />
+      <ColorChoiceModal
+        onSelectColor={(ret) => {
+          console.log(ret.hex);
+          handleChange(ret.hex, 'textColor');
+          setModal5Visible(false);
+        }}
+        onClose={(ret) => setModal5Visible(false)}
+        vis={modal5Visible}
+      />
       <ChooseVideosModal
         videosArray={displayedVideos}
         vis={modal4Visible}
@@ -152,6 +165,7 @@ const CompetitionScreen = () => {
           }
           setModal4Visible(false);
         }}
+        
       />
       <ShowPlayingModal
         videoUri={videoChoice}
@@ -170,6 +184,7 @@ const CompetitionScreen = () => {
         compLogo={compLogo.link}
         titleBarHider={titleBarHider}
         showUrgentMessage={showUrgentMessage}
+        textColor={textColor}
         onReturn={(ret) => setModalVisible(false)}
       />
       {galleryType && (
@@ -326,6 +341,14 @@ const CompetitionScreen = () => {
                     <Text style={{ textAlign: 'center', width: 90 }}>
                       Choose font size
                     </Text>
+                  </View>
+                  <View style={tw`flex flex-col justify-center items-center h-[4rem]`}>
+                    <TouchableOpacity
+                      onPress={(e) =>{ setModal5Visible(true)}}
+                      style={{ width: '4.25rem', backgroundColor: reverseColor(textColor), textAlign: 'center', marginTop: 0, marginLeft: '0.25rem', borderRadius: '0.4rem' }}
+                    >
+                    <Text style={[tw`text-xl font-semibold`,{ textAlign: 'center', color:textColor, }]}>{'Text Color'}</Text>
+                    </TouchableOpacity>
                   </View>
                   <View>
                     <CountBox
@@ -596,7 +619,6 @@ const CompetitionScreen = () => {
                       Choose Video
                     </Text>
 
-                   
                     {/* set video seach here */}
                     <TextBox
                       placeholder="Video search tool"
@@ -994,20 +1016,32 @@ const CompetitionScreen = () => {
             ) : (
               <></>
             )}
-            <TextBox
-              placeholder="Enter urgent message"
-              onChangeText={(text) => setUrgentMessage(text)}
-              secureTextEntry={false}
-              value={urgentMessage}
+
+            <UrgentMessageComponent
+              savedMessages={savedMessages}
+              onChange={(text) => {
+                console.log(text);
+                handleChange(text, 'message');
+              }}
+              onMessageArrayChange={(array) => {
+                console.log(array);
+                handleChange(array, 'savedMessages');
+              }}
             />
-            <UrgentMessageComponent placeholder="Enter urgent message" secureTextEntry={false}   onChangeText={(text) => setUrgentMessage(text)} value={urgentMessage} />
+
             <View style={tw` w-full flex-col justify-center items-center`}>
-              <View style={{ flexDirection: 'row', marginBottom: 10, marginTop: 10 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: 10,
+                  marginTop: 10,
+                }}
+              >
                 <CheckBox
                   value={showUrgentMessage}
                   onValueChange={(value) => {
                     handleChange(value, 'showUrgentMessage');
-                    value == true? handleChange(urgentMessage, 'message'): handleChange('', 'message'); 
+                    // value == true? handleChange(urgentMessage, 'message'): handleChange('', 'message');
                   }}
                   style={{ alignSelf: 'center' }}
                 />

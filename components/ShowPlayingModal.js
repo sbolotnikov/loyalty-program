@@ -33,6 +33,7 @@ const ShowPlayingModal = ({
   message,
   titleBarHider,
   showUrgentMessage,
+  textColor,
   onReturn,
   heatText,
 }) => {
@@ -182,7 +183,7 @@ const ShowPlayingModal = ({
                 style={tw`w-full h-full flex justify-center items-center`}
               >
                 <Image
-                  source={logo}
+                  source={compLogo}
                   resizeMethod={'resize'}
                   resizeMode={'center'}
                   style={[tw`h-[750px] w-[760px]`]}
@@ -210,7 +211,7 @@ const ShowPlayingModal = ({
             >
               <Text
                 style={[
-                  tw`text-red-600 font-bold  m-0`,
+                  tw`text-[${textColor}] font-bold  m-0`,
                   {
                     textShadow: '5px 5px #C9AB78',
                     fontSize: fontSize+'px',
@@ -226,7 +227,7 @@ const ShowPlayingModal = ({
             >
               <Text
                 style={[
-                  tw`text-white font-bold text-3xl m-0`,
+                  tw`text-[${textColor}] font-bold text-3xl m-0`,
                   {
                     textShadow: '5px 5px #C9AB78',
                     
@@ -244,7 +245,7 @@ const ShowPlayingModal = ({
               <Text
                 id="datetime"
                 style={[
-                  tw`text-white font-bold text-3xl m-0`,
+                  tw`text-[${textColor}] font-bold text-3xl m-0`,
                   {
                     // textShadow: '5px 5px #C9AB78',
                   },
