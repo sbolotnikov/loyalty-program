@@ -28,6 +28,7 @@ import CompetitionChoiceModal from '../components/CompetitionChoiceModal';
 import CountBox from '../components/CountBox';
 import ChoosePicturesModal from '../components/choosePicturesModal';
 import ChooseVideosModal from '../components/ChooseVideosModal';
+import UrgentMessageComponent from '../components/UrgentMessageComponent';
 // import ChooseFilePath from '../components/ChooseFilePath';
 
 const CompetitionScreen = () => {
@@ -595,84 +596,7 @@ const CompetitionScreen = () => {
                       Choose Video
                     </Text>
 
-                    <View
-                      style={tw` w-full flex-col justify-center items-center`}
-                    >
-                      <SelectDropdown
-                        dropdownBackgroundColor={'white'}
-                        data={displayedVideos
-                          .sort(function (a, b) {
-                            return b.tag == a.tag ? 0 : b.tag > a.tag ? -1 : 1;
-                          })
-                          .map((item) => item.tag)}
-                        defaultValue={videoBGChoice ? videoBGChoice.name : ''}
-                        onSelect={(selectedItem, index) => {
-                          handleChange(
-                            {
-                              name: selectedItem,
-                              link: displayedVideos.sort(function (a, b) {
-                                return b.tag == a.tag
-                                  ? 0
-                                  : b.tag > a.tag
-                                  ? -1
-                                  : 1;
-                              })[index].link,
-                            },
-                            'videoBGChoice'
-                          );
-                        }}
-                        buttonTextAfterSelection={(selectedItem, index) => {
-                          //   console.log(selectedItem, index);
-                          // text represented after item is selected
-                          // if data array is an array of objects then return selectedItem.property to render after item is selected
-                          return selectedItem;
-                        }}
-                        rowTextForSelection={(item, index) => {
-                          // text represented for each item in dropdown
-                          // if data array is an array of objects then return item.property to represent item in dropdown
-                          return item;
-                        }}
-                        buttonStyle={{
-                          width: 240,
-                          height: 35,
-                          backgroundColor: '#FFF',
-                          borderRadius: 8,
-                          borderWidth: 1,
-                          borderColor: '#776548',
-                        }}
-                        buttonTextStyle={{ color: '#444', textAlign: 'left' }}
-                        renderDropdownIcon={(isOpened) => {
-                          return (
-                            <FontAwesome
-                              name={isOpened ? 'chevron-up' : 'chevron-down'}
-                              color={'#776548'}
-                              size={14}
-                            />
-                          );
-                        }}
-                        dropdownStyle={{
-                          backgroundColor: '#EFEFEF',
-                          borderRadius: 8,
-                          borderWidth: 1,
-                          width: 240,
-                          borderColor: '#776548',
-                        }}
-                        rowStyle={{
-                          backgroundColor: '#EFEFEF',
-                          height: 45,
-                          borderBottomColor: '#C5C5C5',
-                        }}
-                        rowTextStyle={{
-                          color: '#444',
-                          textAlign: 'center',
-                          margin: 'auto',
-                          textSize: 18,
-                        }}
-                      />
-                      <Text style={{ textAlign: 'center', width: 195 }}>
-                        Choose Video for background
-                      </Text>
-                    </View>
+                   
                     {/* set video seach here */}
                     <TextBox
                       placeholder="Video search tool"
@@ -1076,6 +1000,7 @@ const CompetitionScreen = () => {
               secureTextEntry={false}
               value={urgentMessage}
             />
+            <UrgentMessageComponent placeholder="Enter urgent message" secureTextEntry={false}   onChangeText={(text) => setUrgentMessage(text)} value={urgentMessage} />
             <View style={tw` w-full flex-col justify-center items-center`}>
               <View style={{ flexDirection: 'row', marginBottom: 10, marginTop: 10 }}>
                 <CheckBox

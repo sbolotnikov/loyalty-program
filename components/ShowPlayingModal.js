@@ -163,7 +163,7 @@ const ShowPlayingModal = ({
               <AutoImages
                 picsArray={displayedPicturesAuto}
                 seconds={seconds}
-                videoBG={videoBG.link}
+                videoBG={videoUri.link}
                 text1={manualPicture.name}
                 compLogo={compLogo}
                 titleBarHider={titleBarHider}
@@ -174,7 +174,7 @@ const ShowPlayingModal = ({
                 text1={manualPicture.name}
                 compLogo={compLogo}
                 titleBarHider={titleBarHider}
-                videoBG={videoBG.link}
+                videoBG={videoUri.link}
                 seconds={seconds}
               />
             ) : mode == 'Default' ? (
