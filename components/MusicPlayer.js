@@ -71,7 +71,7 @@ const MusicPlayer = ({ rateSet, songDuration, startPos, music, onSongEnd }) => {
   }, []);
 
   const UpdateStatus = async (data) => {
-    console.log(songDurationLocal);
+    
     try {
       if (data.didJustFinish) {
         ResetPlayer();

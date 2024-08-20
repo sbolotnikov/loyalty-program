@@ -843,10 +843,10 @@ const CompetitionScreen = () => {
                         }
 
                         decoded = programBuffer.split('Heat 1 ')[1];
-                        decoded = decoded.split('Heat');
+                        decoded = decoded.split('Heat ');
                         decoded[0] = ' 1 ' + decoded[0];
                         for (let i = 0; i < decoded.length; i++) {
-                          decoded[i] = 'Heat' + decoded[i];
+                          decoded[i] = 'Heat_' + decoded[i];
 
                           let sss1 = decoded[i].split('Solo ');
                           if (sss1.length > 1) {
@@ -862,7 +862,7 @@ const CompetitionScreen = () => {
                           if (decoded[i].indexOf('Awards') > -1)
                             decoded.splice(i + 1, 0, 'Awards');
                         }
-
+                        console.log(decoded)
                         let arrayOfStrings = [];
                         let items = [];
                         let heatIDs = [];
@@ -874,6 +874,7 @@ const CompetitionScreen = () => {
                           heatIDs[j] = arrayOfStrings[0].split('  ')[0];
                           dances[j] = dances[j].replace(heatIDs[j] + '  ', '');
                         }
+                        
                         let records = [];
                         let program = [];
                         let group = '';
@@ -893,7 +894,8 @@ const CompetitionScreen = () => {
                           heatIDs[i] = heatIDs[i].split('[')[0];
                           for (let k = 1; k < heat.length - 1; k++) {
                             let rec = heat[k];
-                            if (heat[k].indexOf(' ___') > -1) {
+                            if (heat[k].indexOf('___ ') > -1) {
+                              // console.log(heatIDs[i],heat[k]);
                               records.push(
                                 timeOfHeat +
                                   ' ' +
@@ -901,16 +903,15 @@ const CompetitionScreen = () => {
                                   ' ' +
                                   danceName +
                                   '\n' +
-                                  rec.replace('  ___ ', '') +
+                                  rec.replace('___ ', '') +
                                   '\n' +
                                   group
                               );
                               rec = rec
-                                .replace('  ___ ', '')
+                                .replace('___ ', '')
                                 .replaceAll(',', '')
                                 .trim();
                               let p = 0;
-                              // rec=rec.replace(',','')
                               let studio1 = getStudioFullName(studios, rec);
                               let event1 = group + ' ' + rec.split(' ')[0];
                               if (rec.split(' ')[1] == '') {
@@ -933,9 +934,17 @@ const CompetitionScreen = () => {
                                   p++;
                                 }
                               }
-                              rec = rec.split(studio1)[0];
-                              console.log(rec.split(' ')[1]);
-                              let eventGroup = rec.split(' ')[1];
+                              if (studio1!=="")   rec = rec.split(studio1)[0]
+                              else{
+                                // console.log(rec.split(' ')[0]);
+                                let index1=competitors.findIndex(
+                                  (x) => x.number1 === rec.split(' ')[0]
+                                );
+                                if (index1>-1) studio1 = competitors[index1].studio;
+
+                              }
+                             
+                              let eventGroup = rec.split(' ')[0];
                               if (rec.split(' ')[1] == '')
                                 rec = rec.split(rec.split(' ')[0])[1];
                               else rec = rec.split(competitors[p].number1)[1];

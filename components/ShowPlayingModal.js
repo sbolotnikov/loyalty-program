@@ -7,12 +7,9 @@ import {
   Easing,
   SafeAreaView,
 } from 'react-native';
-import tw from 'twrnc';
-import Btn from './Btn';
-import { Video, ResizeMode } from 'expo-av';
+import tw from 'twrnc'; 
 import { useEffect, useState, useRef } from 'react';
-import useDimensions from '../hooks/useDimensions';
-import SwitchingImage from './SwitchingImage';
+import useDimensions from '../hooks/useDimensions'; 
 import ManualImage from './ManualImage';
 import { LinearGradient } from 'expo-linear-gradient';
 import AutoImages from './AutoImages';
@@ -213,12 +210,13 @@ const ShowPlayingModal = ({
                 style={[
                   tw`text-[${textColor}] font-bold  m-0`,
                   {
-                    textShadow: '5px 5px #C9AB78',
+                    // textShadow: '5px 5px #C9AB78',
                     fontSize: fontSize+'px',
                   },
                 ]}
               >
-                {message}
+                {/* {message} */}
+                {heatNum}
               </Text>
             </Animated.View>}
             <View
@@ -229,12 +227,11 @@ const ShowPlayingModal = ({
                 style={[
                   tw`text-[${textColor}] font-bold text-3xl m-0`,
                   {
-                    textShadow: '5px 5px #C9AB78',
-                    
+                    // textShadow: '5px 5px #C9AB78', 
                   },
                 ]}
               >
-                {heatNum}
+                {/* {heatNum} */}
               </Text>
             </View>
             

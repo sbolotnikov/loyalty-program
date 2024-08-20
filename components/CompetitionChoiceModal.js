@@ -34,6 +34,7 @@ const CompetitionChoiceModal = ({   vis,   }) => {
       heatIndex: 0,
       items: [''],
       message: '',
+      textColor:'#e91e63ff',
       program: [
         { competitor1: 'Come back', competitor2: 'later!', heat: 'Heat 1' },
       ],

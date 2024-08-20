@@ -5,11 +5,12 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/dancerslogo.png",
+    "backgroundColor": "#9A60FF",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#9A60FF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,12 +25,13 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/dancerslogo1.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#9A60FF"
       },
       "package": "host.exp.exponent"
     },
     "web": {
-      "favicon": "./assets/dancerslogo.png"
+      "favicon": "./assets/dancerslogo.png",
+      "backgroundColor": "#9A60FF"
     }
   }
 }

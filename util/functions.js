@@ -117,11 +117,11 @@ import {
     }
     export const getStudioFullName = (array, string) =>{
       let i=0;
-      while ((string.indexOf(array[i].split(' ')[0])<0)&&(i<array.length)){
+      while ((i<array.length)&&(string.indexOf(array[i].split(' ')[0])<0)){
         i++
            
       }
-      return array[i]
+      return (i<array.length)?array[i]:""
     }
 
     export const reverseColor = (str) =>{

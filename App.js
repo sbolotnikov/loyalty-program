@@ -4,12 +4,12 @@ import { store } from './store';
 import { AuthProvider } from './hooks/useAuth';
 import { DimensionsProvider } from './hooks/useDimensions';
 import StackNavigator from './StackNavigator';
-import { CompetitionProvider } from './hooks/useCompetition';
+import { CompetitionProvider } from './hooks/useCompetition'; 
 
 //  need Node 16 and up!!!!!!!!!
 
 export default function App() {
-  return (
+  return ( 
     <NavigationContainer>
       <Provider store={store}>
         <AuthProvider>
@@ -20,6 +20,6 @@ export default function App() {
             </CompetitionProvider>
         </AuthProvider>
       </Provider>
-    </NavigationContainer>
+    </NavigationContainer> 
   );
 }
