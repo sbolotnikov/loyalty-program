@@ -127,7 +127,7 @@ const ShowPlayingModal = ({
       // get the current date and time as a string
       const currentDateTime = now.toLocaleString();
       // update the `textContent` property of the `span` element with the `id` of `datetime`
-      setTimeNow(currentDateTime.split(',')[1]);
+      setTimeNow(currentDateTime.split(',')[1].slice(0,-6));
       clearInterval(timerInterval);
     }, 1000);
   }, [vis, timeNow]);
@@ -215,40 +215,40 @@ const ShowPlayingModal = ({
                   },
                 ]}
               >
-                {/* {message} */}
-                {heatNum}
+                {message}
+               
               </Text>
             </Animated.View>}
-            <View
-              onClick={(e) => handleSubmit(e, button1)}
-              style={[tw`absolute top-0 left-1`, { cursor: 'pointer' }]}
-            >
-              <Text
-                style={[
-                  tw`text-[${textColor}] font-bold text-3xl m-0`,
-                  {
-                    // textShadow: '5px 5px #C9AB78', 
-                  },
-                ]}
-              >
-                {/* {heatNum} */}
-              </Text>
-            </View>
             
             <View
               onClick={(e) => handleSubmit(e, button1)}
-              style={[tw`absolute top-0 right-1`, { cursor: 'pointer' }]}
+              style={[tw`absolute top-0 right-0  flex justify-center items-center`, { cursor: 'pointer', height:fontSize+'px' }]}
             >
               <Text
                 id="datetime"
                 style={[
-                  tw`text-[${textColor}] font-bold text-3xl m-0`,
+                  tw`text-[${textColor}] font-bold`,
                   {
-                    // textShadow: '5px 5px #C9AB78',
+                    fontSize:fontSize+'px'
                   },
                 ]}
               >
                 {timeNow}
+              </Text>
+            </View>
+            <View
+              onClick={(e) => handleSubmit(e, button1)}
+              style={[tw`absolute top-0 right-0 left-0 flex justify-center items-center`, { cursor: 'pointer', height:fontSize+'px' }]}
+            >
+              <Text
+                id="heatID"
+                style={[
+                  tw`text-[${textColor}] font-bold`,
+                  { fontSize: fontSize+'px',
+                  },
+                ]}
+              >
+                {heatNum}
               </Text>
             </View>
           </LinearGradient>
