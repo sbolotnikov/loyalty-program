@@ -841,7 +841,7 @@ const CompetitionScreen = () => {
                               role: role1,
                             });
                         }
-
+                        console.log(competitors);
                         decoded = programBuffer.split('Heat 1 ')[1];
                         decoded = decoded.split('Heat ');
                         decoded[0] = ' 1 ' + decoded[0];
@@ -892,6 +892,7 @@ const CompetitionScreen = () => {
                             } else timeOfHeat = '';
                           } else timeOfHeat = '';
                           heatIDs[i] = heatIDs[i].split('[')[0];
+                          console.log(heat);
                           for (let k = 1; k < heat.length - 1; k++) {
                             let rec = heat[k];
                             if (heat[k].indexOf('___ ') > -1) {
@@ -907,6 +908,7 @@ const CompetitionScreen = () => {
                                   '\n' +
                                   group
                               );
+                               
                               rec = rec
                                 .replace('___ ', '')
                                 .replaceAll(',', '')
@@ -914,12 +916,17 @@ const CompetitionScreen = () => {
                               let p = 0;
                               let studio1 = getStudioFullName(studios, rec);
                               let event1 = group + ' ' + rec.split(' ')[0];
+                              if (rec.indexOf('*') > -1) {
+                                console.log(rec)
+                                rec = rec.replace(/\*/g, "")
+                              }
                               if (rec.split(' ')[1] == '') {
                                 rec = rec.slice(
                                   0,
                                   getPositionOfSubstring(studios, rec)
                                 );
                                 p = 0;
+                                
                                 while (
                                   rec.indexOf(competitors[p].nameFull) < 0 &&
                                   p < competitors.length
@@ -927,27 +934,34 @@ const CompetitionScreen = () => {
                                   p++;
                                 }
                               } else {
+                                let modifiedRec=rec.split(' ')[1];
+                                
                                 while (
-                                  rec.indexOf(competitors[p].number1) < 0 &&
+                                  modifiedRec!==competitors[p].number1 &&
                                   p < competitors.length
                                 ) {
                                   p++;
                                 }
+                                
                               }
                               if (studio1!=="")   rec = rec.split(studio1)[0]
-                              else{
-                                // console.log(rec.split(' ')[0]);
+                              else{ 
                                 let index1=competitors.findIndex(
                                   (x) => x.number1 === rec.split(' ')[0]
                                 );
                                 if (index1>-1) studio1 = competitors[index1].studio;
 
                               }
-                             
+                              
                               let eventGroup = rec.split(' ')[0];
+                              
                               if (rec.split(' ')[1] == '')
                                 rec = rec.split(rec.split(' ')[0])[1];
-                              else rec = rec.split(competitors[p].number1)[1];
+                              else{  
+                                // console.log(rec)
+                                rec = rec.split(competitors[p].number1)[1];
+                                // console.log(rec)
+                              }
                               rec = rec
                                 .replace(competitors[p].nameFull, '')
                                 .trim();
